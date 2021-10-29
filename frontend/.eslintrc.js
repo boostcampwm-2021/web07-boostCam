@@ -23,6 +23,7 @@ module.exports = {
     project: './tsconfig.json',
   },
   ignorePatterns: ['.eslintrc.js'],
+  tsconfigRootDir: __dirname,
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],

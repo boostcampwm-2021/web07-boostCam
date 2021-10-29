@@ -14,6 +14,7 @@ module.exports = {
     node: true,
     jest: true,
   },
+  tsconfigRootDir: __dirname,
   ignorePatterns: ['.eslintrc.js'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
