@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { io } from 'socket.io-client';
 import Screen from './components/Screen';
 
