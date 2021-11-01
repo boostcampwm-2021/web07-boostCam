@@ -21,9 +21,9 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: 'module', // import 사용
     project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
   },
   ignorePatterns: ['.eslintrc.js'],
-  tsconfigRootDir: __dirname,
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
