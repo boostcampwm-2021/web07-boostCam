@@ -1,6 +1,5 @@
 import React from 'react';
 import { io } from 'socket.io-client';
-import UserScreen from './components/UserScreen';
 import ChattingTab from './components/ChattingTab';
 import UserListTab from './components/UserListTab';
 
@@ -18,7 +17,7 @@ function App(): JSX.Element {
 
   return (
     <div className="App">
-      <UserListTab />
+      <UserListTab socket={socket} />
       <ChattingTab socket={socket} />
     </div>
   );
