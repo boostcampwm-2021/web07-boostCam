@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
   height: 90vh;
-  background-color: gray;
+  background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
 `;
 

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Container = styled.div<{ activeTab: string }>`
   width: ${(props) => props.activeTab};
   height: 90vh;
-  background-color: gray;
+  background-color: #c4c4c4;
 `;
 
 type MainScreenProps = {

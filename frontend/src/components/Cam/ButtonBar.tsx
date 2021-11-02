@@ -14,7 +14,7 @@ const Container = styled.div`
   width: 98vw;
   height: 8vh;
   margin-top: 5px;
-  background-color: gray;
+  background-color: #c4c4c4;
 
   display: flex;
   flex-direction: row;
@@ -27,7 +27,7 @@ const Container = styled.div`
 const Button = styled.div`
   width: 8vw;
   height: 7vh;
-  background-color: skyblue;
+  background-color: #a4a4a4;
 
   display: flex;
   flex-direction: column;
@@ -35,6 +35,11 @@ const Button = styled.div`
   align-items: center;
 
   border-radius: 10px;
+
+  &:hover {
+    box-sizing: border-box;
+    border: 5px solid gray;
+  }
 
   svg {
     width: 6vh;
