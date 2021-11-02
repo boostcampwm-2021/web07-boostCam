@@ -12,7 +12,8 @@ const ROOM_ID = 1;
 function UserListTab(props: UserListTabProps): JSX.Element {
   const myPeerRef = useRef<Peer>();
   const { socket } = props;
-  const [screenList, setScreenList] = useState<{ userId: string; stream: MediaStream; peer?: Peer.MediaConnection }[]>(
+  const [localStream, setLocalStream] = useState<MediaStream>();
+  const [screenList, setScreenList] = useState<{ userId: string; stream: MediaStream; peer: Peer.MediaConnection }[]>(
     [],
   );
 
@@ -55,7 +56,7 @@ function UserListTab(props: UserListTabProps): JSX.Element {
         console.log(`User Disconnected: ${userId}`);
 
         setScreenList((prev) => {
-          prev.find((screen) => screen.userId === userId)?.peer?.close();
+          prev.find((screen) => screen.userId === userId)?.peer.close();
           return prev.filter((screen) => screen.userId !== userId);
         });
       });
@@ -66,7 +67,7 @@ function UserListTab(props: UserListTabProps): JSX.Element {
       });
 
       const media = await getUserMedia();
-      setScreenList((prev) => [...prev, { userId: '123', stream: media }]);
+      setLocalStream(media);
 
       myPeer.on('call', (call) => {
         call.answer(media);
@@ -89,6 +90,7 @@ function UserListTab(props: UserListTabProps): JSX.Element {
 
   return (
     <div>
+      <UserScreen stream={localStream} />
       {screenList.map((screen) => (
         <UserScreen key={screen.userId} stream={screen.stream} />
       ))}

@@ -13,7 +13,7 @@ function UserScreen({ stream }: UserScreenProps): JSX.Element {
       return;
     }
     video.srcObject = stream;
-  }, []);
+  });
   // eslint-disable-next-line jsx-a11y/media-has-caption
   return <video ref={videoRef} playsInline autoPlay />;
 }
