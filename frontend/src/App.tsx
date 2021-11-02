@@ -1,7 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
 import { io } from 'socket.io-client';
-import Screen from './components/Screen';
-import ChattingTab from './components/ChattingTab';
+
+import Cam from './components/Cam/Cam';
+
+const Container = styled.div``;
 
 function App(): JSX.Element {
   const socket = io();
@@ -16,10 +19,9 @@ function App(): JSX.Element {
   });
 
   return (
-    <div className="App">
-      {/* <Screen /> */}
-      <ChattingTab socket={socket} />
-    </div>
+    <Container>
+      <Cam socket={socket} />
+    </Container>
   );
 }
 

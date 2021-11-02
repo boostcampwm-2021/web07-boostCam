@@ -1,14 +1,23 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
+import styled from 'styled-components';
 
-interface ChattingTabProps {
+type ChattingTabProps = {
   socket: Socket;
-}
+  isChattingTabActive: boolean;
+};
+
+const Container = styled.div<{ isActive: boolean }>`
+  width: 19vw;
+  height: 80vh;
+  background-color: gray;
+  display: ${(props) => (props.isActive ? 'block' : 'none')};
+`;
 
 function ChattingTab(props: ChattingTabProps): JSX.Element {
   const [chatLogs, setChatLogs] = useState<string[]>([]);
   const [room, setRoom] = useState<string | null>(null);
-  const { socket } = props;
+  const { socket, isChattingTabActive } = props;
 
   const sendMessage = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     const { key, currentTarget } = e;
@@ -45,12 +54,12 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
   });
 
   return (
-    <div>
+    <Container isActive={isChattingTabActive}>
       <div>currentRoom : {room}</div>
       <input type="text" placeholder="참가할 방을 선택하세요" onKeyDown={enterRoom} />
       <div>{currentChatLogs}</div>
       <input type="text" placeholder="내용을 입력하세요." onKeyDown={sendMessage} />
-    </div>
+    </Container>
   );
 }
 
