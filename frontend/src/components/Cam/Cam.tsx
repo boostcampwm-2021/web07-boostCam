@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
 import ButtonBar from './ButtonBar';
