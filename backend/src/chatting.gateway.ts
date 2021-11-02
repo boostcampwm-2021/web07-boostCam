@@ -5,10 +5,10 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-interface messageData {
+type messageData = {
   msg: string;
   room: string;
-}
+};
 
 @WebSocketGateway()
 export class ChattingGateway {
