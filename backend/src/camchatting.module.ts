@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CamChattingController } from './camchatting.controller';
-import { CamChattingService } from './camchatting.service';
-import { CamChattingGateway } from './cam-chatting.gateway';
+import { ChattingGateway } from './chatting.gateway';
 
 @Module({
   imports: [],
-  controllers: [CamChattingController],
-  providers: [CamChattingService, CamChattingGateway],
+  controllers: [],
+  providers: [ChattingGateway],
 })
-export class CamChattingModule {}
+export class ChattingModule {}

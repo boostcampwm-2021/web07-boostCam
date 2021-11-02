@@ -11,7 +11,7 @@ interface messageData {
 }
 
 @WebSocketGateway()
-export class CamChattingGateway {
+export class ChattingGateway {
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('sendMessage')
