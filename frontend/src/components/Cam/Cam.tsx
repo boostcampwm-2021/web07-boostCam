@@ -15,14 +15,15 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-x: hidden;
 `;
 
 const UpperTab = styled.div`
-  margin-top: 10px;
-  width: 100%;
+  margin-top: 5px;
+  width: 98vw;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 `;
 

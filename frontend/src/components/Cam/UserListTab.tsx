@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div<{ isActive: boolean }>`
-  width: 19vw;
-  height: 80vh;
+  width: 18vw;
+  height: 90vh;
   background-color: gray;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
 `;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Container = styled.div<{ activeTab: string }>`
   width: ${(props) => props.activeTab};
-  height: 80vh;
+  height: 90vh;
   background-color: gray;
 `;
 // ${(props) => (props.chattingTab ? 'red' : 'blue')}
@@ -18,8 +18,8 @@ function MainScreen(props: MainScreenProps): JSX.Element {
 
   const countActiveTab = (): string => {
     if (isChattingTabActive && isUserListTabActive) return '60vw';
-    if (isChattingTabActive || isUserListTabActive) return '80vw';
-    return '100vw';
+    if (isChattingTabActive || isUserListTabActive) return '79vw';
+    return '98vw';
   };
 
   return (

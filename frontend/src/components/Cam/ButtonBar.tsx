@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  width: 99vw;
-  height: 10vh;
-  margin-top: 10px;
+  width: 98vw;
+  height: 8vh;
+  margin-top: 5px;
   background-color: gray;
 
   display: flex;
@@ -12,8 +12,8 @@ const Container = styled.div`
 `;
 
 const Button = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 8vh;
+  height: 8vh;
   background-color: skyblue;
 `;
 
