@@ -10,10 +10,9 @@ type UserListTabProps = {
 const ROOM_ID = 1;
 
 function UserListTab(props: UserListTabProps): JSX.Element {
-  const localVideoRef = useRef<HTMLVideoElement>(null);
   const myPeerRef = useRef<Peer>();
   const { socket } = props;
-  const [screenList, setScreenList] = useState<{ userId: string; stream: MediaStream; peer: Peer.MediaConnection }[]>(
+  const [screenList, setScreenList] = useState<{ userId: string; stream: MediaStream; peer?: Peer.MediaConnection }[]>(
     [],
   );
 
@@ -51,11 +50,12 @@ function UserListTab(props: UserListTabProps): JSX.Element {
         path: '/peerjs',
         port: 9000,
       });
+
       socket.on('userDisconnected', ({ userId }) => {
         console.log(`User Disconnected: ${userId}`);
 
         setScreenList((prev) => {
-          prev.find((screen) => screen.userId === userId)?.peer.close();
+          prev.find((screen) => screen.userId === userId)?.peer?.close();
           return prev.filter((screen) => screen.userId !== userId);
         });
       });
@@ -66,10 +66,7 @@ function UserListTab(props: UserListTabProps): JSX.Element {
       });
 
       const media = await getUserMedia();
-      if (!localVideoRef.current) {
-        return;
-      }
-      localVideoRef.current.srcObject = media;
+      setScreenList((prev) => [...prev, { userId: '123', stream: media }]);
 
       myPeer.on('call', (call) => {
         call.answer(media);
@@ -92,9 +89,6 @@ function UserListTab(props: UserListTabProps): JSX.Element {
 
   return (
     <div>
-      <video ref={localVideoRef} playsInline autoPlay>
-        <track kind="captions" />
-      </video>
       {screenList.map((screen) => (
         <UserScreen key={screen.userId} stream={screen.stream} />
       ))}

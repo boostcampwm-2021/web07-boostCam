@@ -4,15 +4,15 @@ type UserScreenProps = {
   stream: MediaStream | undefined;
 };
 
-function UserScreen(props: UserScreenProps): JSX.Element {
+function UserScreen({ stream }: UserScreenProps): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !props.stream) {
+    if (!video || !stream?.active) {
       return;
     }
-    video.srcObject = props.stream;
+    video.srcObject = stream;
   }, []);
   // eslint-disable-next-line jsx-a11y/media-has-caption
   return <video ref={videoRef} playsInline autoPlay />;
