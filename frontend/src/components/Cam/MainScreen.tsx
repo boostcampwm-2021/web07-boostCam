@@ -6,7 +6,6 @@ const Container = styled.div<{ activeTab: string }>`
   height: 90vh;
   background-color: gray;
 `;
-// ${(props) => (props.chattingTab ? 'red' : 'blue')}
 
 type MainScreenProps = {
   tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean };
