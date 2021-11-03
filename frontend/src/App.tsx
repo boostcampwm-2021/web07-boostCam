@@ -7,15 +7,8 @@ const Container = styled.div``;
 
 function App(): JSX.Element {
   const socket = io();
-  socket.on('connect', () => {
-    console.log('connected!');
-  });
 
   socket.emit('message');
-
-  socket.on('receive', (data) => {
-    console.log(data);
-  });
 
   return (
     <Container>
