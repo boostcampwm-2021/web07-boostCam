@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { io } from 'socket.io-client';
-
 import Cam from './components/Cam/Cam';
 
 const Container = styled.div``;
