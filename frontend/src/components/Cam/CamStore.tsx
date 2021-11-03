@@ -9,6 +9,7 @@ export const CamStoreContext = createContext<React.ComponentState>(null);
 function CamStore(props: CamStoreProps): JSX.Element {
   const { children } = props;
   const [localStream, setLocalStream] = useState<MediaStream>(new MediaStream());
+  const [localStatus, setLocalStatus] = useState<{ video: boolean; audio: boolean }>({ video: true, audio: true });
 
   const getUserMedia = async () => {
     try {
@@ -33,7 +34,9 @@ function CamStore(props: CamStoreProps): JSX.Element {
     getUserMedia();
   }, []);
 
-  return <CamStoreContext.Provider value={localStream}>{children}</CamStoreContext.Provider>;
+  return (
+    <CamStoreContext.Provider value={{ localStream, localStatus, setLocalStatus }}>{children}</CamStoreContext.Provider>
+  );
 }
 
 export default CamStore;

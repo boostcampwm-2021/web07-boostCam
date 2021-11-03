@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import UserScreen from './UserScreen';
 import SocketState from '../../atoms/socket';
 import { CamStoreContext } from './CamStore';
+import LocalUserScreen from './LocalUserScreen';
 
 const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
@@ -27,7 +28,7 @@ const ROOM_ID = 1;
 
 function UserListTab(props: UserListProps): JSX.Element {
   const { isUserListTabActive } = props;
-  const localStream = useContext(CamStoreContext);
+  const { localStream, localStatus } = useContext(CamStoreContext);
   const socket = useRecoilValue(SocketState);
 
   const myPeerRef = useRef<Peer>();
@@ -104,9 +105,9 @@ function UserListTab(props: UserListProps): JSX.Element {
 
   return (
     <Container isActive={isUserListTabActive}>
-      <UserScreen stream={localStream} isLocal />
+      <LocalUserScreen stream={localStream} localStatus={localStatus} />
       {screenList.map((screen) => (
-        <UserScreen key={screen.userId} stream={screen.stream} isLocal={false} />
+        <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
       ))}
     </Container>
   );
