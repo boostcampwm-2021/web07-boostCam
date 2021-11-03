@@ -8,8 +8,13 @@ import UserScreen from './UserScreen';
 const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
   height: 90vh;
+  padding: 0 10px;
   background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 type UserListProps = {

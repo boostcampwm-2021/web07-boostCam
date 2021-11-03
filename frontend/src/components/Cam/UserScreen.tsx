@@ -5,7 +5,17 @@ type UserScreenProps = {
   stream: MediaStream | undefined;
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-top: 10px;
+  &:last-child {
+    margin-bottom: 10px;
+  }
+`;
+
+const Video = styled.video`
+  height: auto;
+  width: 100%;
+`;
 
 function UserScreen({ stream }: UserScreenProps): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -21,10 +31,9 @@ function UserScreen({ stream }: UserScreenProps): JSX.Element {
 
   return (
     <Container>
-      <div>this is video</div>
-      <video ref={videoRef} playsInline autoPlay muted width="640" height="320">
+      <Video ref={videoRef} playsInline autoPlay muted>
         <track kind="captions" />
-      </video>
+      </Video>
     </Container>
   );
 }
