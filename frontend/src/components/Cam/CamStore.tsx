@@ -4,9 +4,10 @@ import UserListTab from './UserListTab';
 
 type CamStoreProps = {
   socket: Socket;
+  isUserListTabActive: boolean;
 };
 
-function CamStore({ socket }: CamStoreProps): JSX.Element {
+function CamStore({ socket, isUserListTabActive }: CamStoreProps): JSX.Element {
   const [localStream, setLocalStream] = useState<MediaStream>(new MediaStream());
 
   const getUserMedia = async () => {
@@ -32,7 +33,7 @@ function CamStore({ socket }: CamStoreProps): JSX.Element {
     getUserMedia();
   }, []);
 
-  return <UserListTab socket={socket} localStream={localStream} />;
+  return <UserListTab socket={socket} localStream={localStream} isUserListTabActive={isUserListTabActive} />;
 }
 
 export default CamStore;
