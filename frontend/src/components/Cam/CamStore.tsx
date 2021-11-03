@@ -12,7 +12,7 @@ function CamStore(props: CamStoreProps): JSX.Element {
 
   const getUserMedia = async () => {
     try {
-      const media = await navigator.mediaDevices.getUserMedia({ video: true });
+      const media = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       setLocalStream(media);
     } catch {
       const createEmptyVideoTrack = () => {

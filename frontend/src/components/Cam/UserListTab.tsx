@@ -63,8 +63,12 @@ function UserListTab(props: UserListProps): JSX.Element {
       const myPeer = myPeerRef.current;
       const call = myPeer.call(userId, localStream);
 
+      let flag = false;
       call.on('stream', (userVideoStream: MediaStream) => {
-        console.log('got stream');
+        if (flag) {
+          return;
+        }
+        flag = true;
         setScreenList((prev) => [...prev, { userId, stream: userVideoStream, peer: call }]);
       });
 
@@ -76,10 +80,15 @@ function UserListTab(props: UserListProps): JSX.Element {
     };
 
     const answerToCall = (call: Peer.MediaConnection) => {
-      call.answer(localStream);
+      let flag = false;
       call.on('stream', (userVideoStream: MediaStream) => {
+        if (flag) {
+          return;
+        }
+        flag = true;
         setScreenList((prev) => [...prev, { userId: call.peer, stream: userVideoStream, peer: call }]);
       });
+      call.answer(localStream);
     };
 
     const myPeer = myPeerRef.current;
@@ -95,9 +104,9 @@ function UserListTab(props: UserListProps): JSX.Element {
 
   return (
     <Container isActive={isUserListTabActive}>
-      <UserScreen stream={localStream} />
+      <UserScreen stream={localStream} isLocal />
       {screenList.map((screen) => (
-        <UserScreen key={screen.userId} stream={screen.stream} />
+        <UserScreen key={screen.userId} stream={screen.stream} isLocal={false} />
       ))}
     </Container>
   );

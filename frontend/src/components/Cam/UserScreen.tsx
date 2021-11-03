@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
+  isLocal: boolean;
 };
 
 const Container = styled.div`
@@ -18,7 +19,7 @@ const Video = styled.video`
 `;
 
 function UserScreen(props: UserScreenProps): JSX.Element {
-  const { stream } = props;
+  const { stream, isLocal } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
 
   return (
     <Container>
-      <Video ref={videoRef} playsInline autoPlay muted>
+      <Video ref={videoRef} playsInline autoPlay muted={isLocal}>
         <track kind="captions" />
       </Video>
     </Container>
