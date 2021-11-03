@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+
+import socketState from '../../atoms/socket';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
-  isLocal: boolean;
+  userId: string;
 };
 
 const Container = styled.div`
@@ -19,8 +22,11 @@ const Video = styled.video`
 `;
 
 function UserScreen(props: UserScreenProps): JSX.Element {
-  const { stream, isLocal } = props;
+  const { stream, userId } = props;
+  const socket = useRecoilValue(socketState);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const [status, setStatus] = useState<{ video: boolean; audio: boolean }>({ video: true, audio: true });
 
   useEffect(() => {
     const video = videoRef.current;
@@ -31,9 +37,23 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     video.srcObject = stream;
   });
 
+  useEffect(() => {
+    socket.on('userToggleAudio', (payload) => {
+      if (payload.userId === userId) {
+        setStatus((prev) => ({ audio: !prev.audio, video: prev.video }));
+      }
+    });
+    socket.on('userToggleVideo', (payload) => {
+      if (payload.userId === userId) {
+        setStatus((prev) => ({ audio: prev.audio, video: !prev.video }));
+      }
+    });
+  }, []);
+
   return (
     <Container>
-      <Video ref={videoRef} playsInline autoPlay muted={isLocal}>
+      <div>{`video ${status.video} audio ${status.audio}`}</div>
+      <Video ref={videoRef} playsInline autoPlay muted>
         <track kind="captions" />
       </Video>
     </Container>
