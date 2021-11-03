@@ -17,7 +17,8 @@ const Video = styled.video`
   width: 100%;
 `;
 
-function UserScreen({ stream }: UserScreenProps): JSX.Element {
+function UserScreen(props: UserScreenProps): JSX.Element {
+  const { stream } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {

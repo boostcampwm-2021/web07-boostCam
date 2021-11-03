@@ -30,7 +30,6 @@ function UserListTab(props: UserListProps): JSX.Element {
   const socket = useRecoilValue(SocketState);
 
   const myPeerRef = useRef<Peer>();
-
   const [screenList, setScreenList] = useState<{ userId: string; stream: MediaStream; peer: Peer.MediaConnection }[]>(
     [],
   );
