@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Peer from 'peerjs';
-import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 
 import UserScreen from './UserScreen';
+import SocketState from '../../atoms/socket';
 
 const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
@@ -19,14 +20,14 @@ const Container = styled.div<{ isActive: boolean }>`
 
 type UserListProps = {
   isUserListTabActive: boolean;
-  socket: Socket;
   localStream: MediaStream;
 };
 
 const ROOM_ID = 1;
 
 function UserListTab(props: UserListProps): JSX.Element {
-  const { isUserListTabActive, socket, localStream } = props;
+  const { isUserListTabActive, localStream } = props;
+  const socket = useRecoilValue(SocketState);
 
   const myPeerRef = useRef<Peer>();
 

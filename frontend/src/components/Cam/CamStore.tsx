@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Socket } from 'socket.io-client';
 import UserListTab from './UserListTab';
 
 type CamStoreProps = {
-  socket: Socket;
   isUserListTabActive: boolean;
 };
 
-function CamStore({ socket, isUserListTabActive }: CamStoreProps): JSX.Element {
+function CamStore(props: CamStoreProps): JSX.Element {
+  const { isUserListTabActive } = props;
   const [localStream, setLocalStream] = useState<MediaStream>(new MediaStream());
 
   const getUserMedia = async () => {
@@ -33,7 +32,7 @@ function CamStore({ socket, isUserListTabActive }: CamStoreProps): JSX.Element {
     getUserMedia();
   }, []);
 
-  return <UserListTab socket={socket} localStream={localStream} isUserListTabActive={isUserListTabActive} />;
+  return <UserListTab localStream={localStream} isUserListTabActive={isUserListTabActive} />;
 }
 
 export default CamStore;

@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
-import ButtonBar from './ButtonBar';
 
+import ButtonBar from './ButtonBar';
 import ChattingTab from './ChattingTab';
 import MainScreen from './MainScreen';
-import UserListTab from './UserListTab';
 import CamStore from './CamStore';
 
 const Container = styled.div`
@@ -27,14 +25,9 @@ const UpperTab = styled.div`
   align-items: center;
 `;
 
-type CamProps = {
-  socket: Socket;
-};
-
-function Cam(props: CamProps): JSX.Element {
+function Cam(): JSX.Element {
   const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
-  const { socket } = props;
 
   const handleUserListTabActive = (): void => {
     setUserListTabActive(!isUserListTabActive);
@@ -48,8 +41,8 @@ function Cam(props: CamProps): JSX.Element {
     <Container>
       <UpperTab>
         <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} />
-        <CamStore socket={socket} isUserListTabActive={isUserListTabActive} />
-        <ChattingTab socket={socket} isChattingTabActive={isChattingTabActive} />
+        <CamStore isUserListTabActive={isUserListTabActive} />
+        <ChattingTab isChattingTabActive={isChattingTabActive} />
       </UpperTab>
       <ButtonBar handleTab={{ handleUserListTabActive, handleChattingTabActive }} />
     </Container>
