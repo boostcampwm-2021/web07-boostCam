@@ -1,100 +1,90 @@
 import Peer from 'peerjs';
 import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { Socket } from 'socket.io-client';
 import UserScreen from './UserScreen';
 
 type UserListTabProps = {
   socket: Socket;
+  localStream: MediaStream;
 };
 
 const ROOM_ID = 1;
 
-function UserListTab(props: UserListTabProps): JSX.Element {
+const Container = styled.div``;
+
+function UserListTab({ socket, localStream }: UserListTabProps): JSX.Element {
   const myPeerRef = useRef<Peer>();
-  const { socket } = props;
-  const [localStream, setLocalStream] = useState<MediaStream>();
+
   const [screenList, setScreenList] = useState<{ userId: string; stream: MediaStream; peer: Peer.MediaConnection }[]>(
     [],
   );
 
-  const getUserMedia = async () => {
-    const media = await navigator.mediaDevices.getUserMedia({ video: true });
-    return media;
-  };
-
-  function connectToNewUser(userId: string, stream: MediaStream) {
-    if (!myPeerRef.current) {
-      return;
-    }
-    const myPeer = myPeerRef.current;
-    const call = myPeer.call(userId, stream);
-    let count = 0;
-    call.on('stream', (userVideoStream: MediaStream) => {
-      count += 1;
-      if (count === 2) {
-        return;
-      }
-      setScreenList((prev) => [...prev, { userId, stream: userVideoStream, peer: call }]);
+  useEffect(() => {
+    myPeerRef.current = new Peer(undefined, {
+      host: 'localhost',
+      path: '/peerjs',
+      port: 9000,
     });
 
-    call.on('close', () => {
+    socket.on('userDisconnected', ({ userId }) => {
       setScreenList((prev) => {
+        prev.find((screen) => screen.userId === userId)?.peer.close();
         return prev.filter((screen) => screen.userId !== userId);
       });
     });
-  }
+    const myPeer = myPeerRef.current;
+
+    myPeer?.on('open', (userId) => {
+      socket.emit('joinRoom', { roomId: ROOM_ID, userId });
+    });
+  }, []);
 
   useEffect(() => {
-    const init = async () => {
-      myPeerRef.current = new Peer(undefined, {
-        host: 'localhost',
-        path: '/peerjs',
-        port: 9000,
+    const connectToNewUser = ({ userId }: { userId: string }) => {
+      if (!myPeerRef.current) {
+        return;
+      }
+      const myPeer = myPeerRef.current;
+      const call = myPeer.call(userId, localStream);
+
+      call.on('stream', (userVideoStream: MediaStream) => {
+        console.log('got stream');
+        setScreenList((prev) => [...prev, { userId, stream: userVideoStream, peer: call }]);
       });
 
-      socket.on('userDisconnected', ({ userId }) => {
-        console.log(`User Disconnected: ${userId}`);
-
+      call.on('close', () => {
         setScreenList((prev) => {
-          prev.find((screen) => screen.userId === userId)?.peer.close();
           return prev.filter((screen) => screen.userId !== userId);
         });
       });
+    };
 
-      const myPeer = myPeerRef.current;
-      myPeer.on('open', (userId) => {
-        socket.emit('joinRoom', { roomId: ROOM_ID, userId });
-      });
-
-      const media = await getUserMedia();
-      setLocalStream(media);
-
-      myPeer.on('call', (call) => {
-        call.answer(media);
-        let count = 0;
-        call.on('stream', (userVideoStream: MediaStream) => {
-          count += 1;
-          if (count === 2) {
-            return;
-          }
-          setScreenList((prev) => [...prev, { userId: call.peer, stream: userVideoStream, peer: call }]);
-        });
-      });
-
-      socket.on('userConnected', ({ userId }) => {
-        connectToNewUser(userId, media);
+    const answerToCall = (call: Peer.MediaConnection) => {
+      call.answer(localStream);
+      call.on('stream', (userVideoStream: MediaStream) => {
+        setScreenList((prev) => [...prev, { userId: call.peer, stream: userVideoStream, peer: call }]);
       });
     };
-    init();
-  }, []);
+
+    const myPeer = myPeerRef.current;
+
+    socket.on('userConnected', connectToNewUser);
+    myPeer?.on('call', answerToCall);
+
+    return () => {
+      socket.off('userConnected', connectToNewUser);
+      myPeer?.off('call', answerToCall);
+    };
+  }, [localStream]);
 
   return (
-    <div>
+    <Container>
       <UserScreen stream={localStream} />
       {screenList.map((screen) => (
         <UserScreen key={screen.userId} stream={screen.stream} />
       ))}
-    </div>
+    </Container>
   );
 }
 
