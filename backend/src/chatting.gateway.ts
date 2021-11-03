@@ -14,6 +14,19 @@ type messageData = {
 export class ChattingGateway {
   @WebSocketServer() server: Server;
 
+  afterInit(server: Server) {
+    console.log(`server is started!`);
+  }
+
+  handleConnection(client: Socket, ...args: any[]) {
+    console.log(`${client.id} is connected!`);
+    client.join('init');
+  }
+
+  handleDisconnect(client: Socket) {
+    console.log(`${client.id} is disconnected!`);
+  }
+
   @SubscribeMessage('sendMessage')
   handleMessage(client: Socket, data: messageData): void {
     const addedMsg = `received : ${data.msg}`;
