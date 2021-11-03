@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import UserListTab from './UserListTab';
+import React, { useEffect, useState, createContext } from 'react';
 
 type CamStoreProps = {
-  isUserListTabActive: boolean;
+  children: React.ReactChild[];
 };
 
+export const CamStoreContext = createContext<React.ComponentState>(null);
+
 function CamStore(props: CamStoreProps): JSX.Element {
-  const { isUserListTabActive } = props;
+  const { children } = props;
   const [localStream, setLocalStream] = useState<MediaStream>(new MediaStream());
 
   const getUserMedia = async () => {
@@ -32,7 +33,7 @@ function CamStore(props: CamStoreProps): JSX.Element {
     getUserMedia();
   }, []);
 
-  return <UserListTab localStream={localStream} isUserListTabActive={isUserListTabActive} />;
+  return <CamStoreContext.Provider value={localStream}>{children}</CamStoreContext.Provider>;
 }
 
 export default CamStore;

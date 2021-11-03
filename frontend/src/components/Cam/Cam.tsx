@@ -5,6 +5,7 @@ import ButtonBar from './ButtonBar';
 import ChattingTab from './ChattingTab';
 import MainScreen from './MainScreen';
 import CamStore from './CamStore';
+import UserListTab from './UserListTab';
 
 const Container = styled.div`
   width: 100vw;
@@ -39,12 +40,14 @@ function Cam(): JSX.Element {
 
   return (
     <Container>
-      <UpperTab>
-        <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} />
-        <CamStore isUserListTabActive={isUserListTabActive} />
-        <ChattingTab isChattingTabActive={isChattingTabActive} />
-      </UpperTab>
-      <ButtonBar handleTab={{ handleUserListTabActive, handleChattingTabActive }} />
+      <CamStore>
+        <UpperTab>
+          <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} />
+          <UserListTab isUserListTabActive={isUserListTabActive} />
+          <ChattingTab isChattingTabActive={isChattingTabActive} />
+        </UpperTab>
+        <ButtonBar handleTab={{ handleUserListTabActive, handleChattingTabActive }} />
+      </CamStore>
     </Container>
   );
 }

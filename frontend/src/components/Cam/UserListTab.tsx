@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import Peer from 'peerjs';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
 import UserScreen from './UserScreen';
 import SocketState from '../../atoms/socket';
+import { CamStoreContext } from './CamStore';
 
 const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
@@ -20,13 +21,13 @@ const Container = styled.div<{ isActive: boolean }>`
 
 type UserListProps = {
   isUserListTabActive: boolean;
-  localStream: MediaStream;
 };
 
 const ROOM_ID = 1;
 
 function UserListTab(props: UserListProps): JSX.Element {
-  const { isUserListTabActive, localStream } = props;
+  const { isUserListTabActive } = props;
+  const localStream = useContext(CamStoreContext);
   const socket = useRecoilValue(SocketState);
 
   const myPeerRef = useRef<Peer>();
