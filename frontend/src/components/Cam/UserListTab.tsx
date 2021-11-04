@@ -38,9 +38,9 @@ function UserListTab(props: UserListProps): JSX.Element {
 
   useEffect(() => {
     myPeerRef.current = new Peer(undefined, {
-      host: 'localhost',
+      host: '/',
       path: '/peerjs',
-      port: 9000,
+      port: parseInt(process.env.REACT_APP_PEERJS_PORT as string, 10),
     });
 
     socket.on('userDisconnected', ({ userId }) => {
