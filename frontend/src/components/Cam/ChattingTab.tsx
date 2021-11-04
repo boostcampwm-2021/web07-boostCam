@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Socket } from 'socket.io-client';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
+import socketState from '../../atoms/socket';
+
 type ChattingTabProps = {
-  socket: Socket;
   isChattingTabActive: boolean;
 };
 
@@ -59,10 +60,12 @@ const ChatInput = styled.input`
 `;
 
 function ChattingTab(props: ChattingTabProps): JSX.Element {
+  const { isChattingTabActive } = props;
+
   const [chatLogs, setChatLogs] = useState<string[]>([]);
   const [room, setRoom] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
-  const { socket, isChattingTabActive } = props;
+  const socket = useRecoilValue(socketState);
 
   const sendMessage = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     const { key, currentTarget } = e;

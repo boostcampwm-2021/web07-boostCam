@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 
 import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
 import { ReactComponent as VideoIcon } from '../../assets/icons/video.svg';
@@ -9,6 +10,8 @@ import { ReactComponent as PresenstationIcon } from '../../assets/icons/presenta
 import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
+import { CamStoreContext } from './CamStore';
+import socketState from '../../atoms/socket';
 
 const Container = styled.div`
   width: 98vw;
@@ -54,13 +57,34 @@ type ButtonBarProps = {
 function ButtonBar(props: ButtonBarProps): JSX.Element {
   const { handleTab } = props;
   const { handleUserListTabActive, handleChattingTabActive } = handleTab;
+  const { localStream, setLocalStatus } = useContext(CamStoreContext);
+  const socket = useRecoilValue(socketState);
+
+  const onClickVideoToggleButton = () => {
+    localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
+    setLocalStatus((prev: { video: boolean; audio: boolean }) => ({
+      audio: prev.audio,
+      video: localStream.getVideoTracks()[0].enabled,
+    }));
+    socket.emit('userToggleVideo');
+  };
+
+  const onClickMicToggleButton = () => {
+    localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
+    setLocalStatus((prev: { video: boolean; audio: boolean }) => ({
+      video: prev.video,
+      audio: localStream.getAudioTracks()[0].enabled,
+    }));
+    socket.emit('userToggleAudio');
+  };
+
   return (
     <Container>
-      <Button>
+      <Button onClick={onClickMicToggleButton}>
         <MicIcon />
         <span>마이크</span>
       </Button>
-      <Button>
+      <Button onClick={onClickVideoToggleButton}>
         <VideoIcon />
         <span>비디오</span>
       </Button>
