@@ -28,7 +28,7 @@ const Container = styled.div`
 `;
 
 const Button = styled.div`
-  width: 8vw;
+  min-width: 9vw;
   height: 7vh;
   background-color: #a4a4a4;
 
@@ -40,12 +40,12 @@ const Button = styled.div`
   border-radius: 10px;
 
   &:hover {
-    box-sizing: border-box;
-    border: 5px solid gray;
+    background-color: #f3f1f1;
+    transition: all 0.5s;
   }
 
   svg {
-    width: 6vh;
+    min-width: 6vh;
     height: 6vh;
   }
 `;

@@ -7,12 +7,26 @@ import socketState from '../../atoms/socket';
 type ChattingTabProps = {
   isChattingTabActive: boolean;
 };
-
+// display: ${(props) => (props.isActive ? 'flex' : 'none')};
+// animation: ${(props) => (props.isActive ? 'boxFade 0.5s' : 'boxFade 0.5s reverse')};
 const Container = styled.div<{ isActive: boolean }>`
   width: 27vw;
   height: 90vh;
   background-color: #c4c4c4;
-  display: ${(props) => (props.isActive ? 'flex' : 'none')};
+  display: flex;
+  ${(props) =>
+    props.isActive
+      ? `
+    position: relative;
+    transition: all 0.5s;
+  `
+      : ` 
+      opacity:0;
+      visibility:hidden;
+      position: absolute;
+      right:0px;
+      transition: opacity 0.5s, visibility 0.5s;
+      `};
 
   flex-direction: column;
   justify-content: space-around;
