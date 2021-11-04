@@ -9,8 +9,9 @@ import { CamStoreContext } from './CamStore';
 import LocalUserScreen from './LocalUserScreen';
 
 const Container = styled.div<{ isActive: boolean }>`
+  position: absolute;
   width: 18vw;
-  height: 90vh;
+  max-height: 70vh;
   padding: 0 10px;
   background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
@@ -18,6 +19,8 @@ const Container = styled.div<{ isActive: boolean }>`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  border: 1px solid red;
 `;
 
 type UserListProps = {

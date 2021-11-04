@@ -13,21 +13,14 @@ type MainScreenProps = {
 
 function MainScreen(props: MainScreenProps): JSX.Element {
   const { tabActive } = props;
-  const { isChattingTabActive, isUserListTabActive } = tabActive;
+  const { isChattingTabActive } = tabActive;
 
   const countActiveTab = (): string => {
-    if (isChattingTabActive && isUserListTabActive) return '60vw';
-    if (isChattingTabActive || isUserListTabActive) return '79vw';
+    if (isChattingTabActive) return '79vw';
     return '98vw';
   };
 
-  return (
-    <Container activeTab={countActiveTab()}>
-      <span>{isChattingTabActive ? 'true' : 'false'}</span>
-      <br />
-      <span>{isUserListTabActive ? 'true' : 'false'}</span>
-    </Container>
-  );
+  return <Container activeTab={countActiveTab()}>MainScreen</Container>;
 }
 
 export default MainScreen;
