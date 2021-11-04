@@ -5,9 +5,19 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-type messageData = {
+type CurrentDate = {
+  year: number;
+  month: number;
+  date: number;
+  hour: number;
+  minutes: number;
+};
+
+type MsgInfo = {
   msg: string;
-  room: string;
+  room: string | null;
+  user: string;
+  date: CurrentDate;
 };
 
 @WebSocketGateway()
@@ -28,9 +38,8 @@ export class ChattingGateway {
   }
 
   @SubscribeMessage('sendMessage')
-  handleMessage(client: Socket, data: messageData): void {
-    const addedMsg = `received : ${data.msg}`;
-    client.broadcast.to(data.room).emit('receiveMessage', addedMsg);
+  handleMessage(client: Socket, data: MsgInfo): void {
+    client.broadcast.to(data.room).emit('receiveMessage', data);
   }
 
   @SubscribeMessage('setRoom')

@@ -35,14 +35,36 @@ const ChatLogs = styled.div`
   align-items: center;
 `;
 
-const ChatMessageBox = styled.span`
+const ChatContainer = styled.div<{ isMe: boolean }>`
   width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: ${(props) => (props.isMe ? 'flex-end' : 'flex-start')};
+`;
+
+const ChatTop = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 5px;
+`;
+
+const ChatUserName = styled.div``;
+
+const ChatDate = styled.div``;
+
+const ChatMessageBox = styled.span`
+  max-width: 90%;
 
   word-break: break-all;
   white-space: pre-wrap;
   background-color: skyblue;
   margin: 5px 0;
-  padding: 3px 5px;
+  padding: 5px 10px;
   border-radius: 10px;
   box-sizing: border-box;
 `;
@@ -66,10 +88,36 @@ const ChatTextarea = styled.textarea`
   box-sizing: border-box;
 `;
 
+type CurrentDate = {
+  year: number;
+  month: number;
+  date: number;
+  hour: number;
+  minutes: number;
+};
+
+type MsgInfo = {
+  msg: string;
+  room: string | null;
+  user: string;
+  date: CurrentDate;
+};
+
+const getCurrentDate = (): CurrentDate => {
+  const today: Date = new Date();
+  return {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+    date: today.getDate(),
+    hour: today.getHours(),
+    minutes: today.getMinutes(),
+  };
+};
+
 function ChattingTab(props: ChattingTabProps): JSX.Element {
   const { isChattingTabActive } = props;
 
-  const [chatLogs, setChatLogs] = useState<string[]>([]);
+  const [chatLogs, setChatLogs] = useState<MsgInfo[]>([]);
   const [room, setRoom] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
@@ -84,17 +132,19 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
       e.preventDefault();
       if (!msg.length) currentTarget.value = '';
       else {
+        const currentDate = getCurrentDate();
+        const msgInfo: MsgInfo = { msg, room, user: socket.id, date: currentDate };
         currentTarget.style.height = '50px';
         currentTarget.value = '';
-        socket.emit('sendMessage', { msg, room });
-        setChatLogs((logs) => [...logs, msg]);
+        socket.emit('sendMessage', msgInfo);
+        setChatLogs((logs) => [...logs, msgInfo]);
       }
     }
   };
 
   useEffect(() => {
-    socket.on('receiveMessage', (msg: string) => {
-      setChatLogs((logs) => [...logs, msg]);
+    socket.on('receiveMessage', (data: MsgInfo) => {
+      setChatLogs((logs) => [...logs, data]);
     });
   }, []);
 
@@ -104,8 +154,19 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
     }
   });
 
-  const currentChatLogs = chatLogs.map((msg: string, idx: number): JSX.Element => {
-    return <ChatMessageBox key={`${msg + idx}`}>{msg}</ChatMessageBox>;
+  const currentChatLogs = chatLogs.map((data: MsgInfo): JSX.Element => {
+    const { msg, date, user } = data;
+    const time = `${date.hour}:${date.minutes < 10 ? `0${date.minutes}` : date.minutes}`;
+    const isMe = user === socket.id;
+    return (
+      <ChatContainer key={`${msg + time}`} isMe={isMe}>
+        <ChatTop>
+          <ChatUserName>{user.substring(0, 5)}</ChatUserName>
+          <ChatDate>{time}</ChatDate>
+        </ChatTop>
+        <ChatMessageBox>{msg}</ChatMessageBox>
+      </ChatContainer>
+    );
   });
 
   return (
