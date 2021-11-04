@@ -16,7 +16,7 @@ function MainScreen(props: MainScreenProps): JSX.Element {
   const { isChattingTabActive } = tabActive;
 
   const countActiveTab = (): string => {
-    if (isChattingTabActive) return '79vw';
+    if (isChattingTabActive) return '70vw';
     return '98vw';
   };
 

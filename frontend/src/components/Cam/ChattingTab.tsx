@@ -9,7 +9,7 @@ type ChattingTabProps = {
 };
 
 const Container = styled.div<{ isActive: boolean }>`
-  width: 18vw;
+  width: 27vw;
   height: 90vh;
   background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'flex' : 'none')};
@@ -35,11 +35,11 @@ const ChatLogs = styled.div`
   align-items: center;
 `;
 
-const ChatMessageBox = styled.div`
+const ChatMessageBox = styled.span`
   width: 90%;
 
   word-break: break-all;
-
+  white-space: pre-wrap;
   background-color: skyblue;
   margin: 5px 0;
   padding: 3px 5px;
@@ -47,12 +47,19 @@ const ChatMessageBox = styled.div`
   box-sizing: border-box;
 `;
 
-const ChatInput = styled.input`
+const ChatTextarea = styled.textarea`
   width: 90%;
+  max-height: 100px;
+  height: 50px;
   border: none;
   outline: none;
+  resize: none;
 
-  font-size: 20px;
+  line-height: 15px;
+
+  margin-top: 10px;
+
+  font-size: 12px;
   border: 2px solid gray;
   border-radius: 10px;
   padding: 5px 8px;
@@ -67,12 +74,17 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
 
-  const sendMessage = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    const { key, currentTarget } = e;
-    if (key === 'Enter') {
-      if (!room) alert('먼저 방에 참가해주세요!');
+  const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+    const { key, currentTarget, shiftKey } = e;
+    const msg = currentTarget.value.trim();
+    const currentHeight = currentTarget.scrollHeight;
+    currentTarget.style.height = currentHeight > 50 ? `${currentTarget.scrollHeight}px` : '50px';
+
+    if (!shiftKey && key === 'Enter') {
+      e.preventDefault();
+      if (!msg.length) currentTarget.value = '';
       else {
-        const msg = currentTarget.value;
+        currentTarget.style.height = '50px';
         currentTarget.value = '';
         socket.emit('sendMessage', { msg, room });
         setChatLogs((logs) => [...logs, msg]);
@@ -99,7 +111,7 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
   return (
     <Container isActive={isChattingTabActive}>
       <ChatLogs ref={chatLogsRef}>{currentChatLogs}</ChatLogs>
-      <ChatInput type="text" placeholder="내용을 입력하세요." onKeyDown={sendMessage} />
+      <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={sendMessage} />
     </Container>
   );
 }
