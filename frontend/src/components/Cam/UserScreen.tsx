@@ -38,14 +38,9 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   });
 
   useEffect(() => {
-    socket.on('userToggleAudio', (payload) => {
+    socket.on('userChangeStatus', (payload) => {
       if (payload.userId === userId) {
-        setStatus((prev) => ({ audio: !prev.audio, video: prev.video }));
-      }
-    });
-    socket.on('userToggleVideo', (payload) => {
-      if (payload.userId === userId) {
-        setStatus((prev) => ({ audio: prev.audio, video: !prev.video }));
+        setStatus(payload.status);
       }
     });
   }, []);

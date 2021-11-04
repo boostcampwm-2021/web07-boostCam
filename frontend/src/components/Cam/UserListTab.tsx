@@ -112,6 +112,7 @@ function UserListTab(props: UserListProps): JSX.Element {
       myPeer?.off('call', answerToCall);
     };
   }, [localStream]);
+
   return (
     <Draggable
       defaultPosition={{

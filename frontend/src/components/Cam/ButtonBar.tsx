@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
 
 import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
 import { ReactComponent as VideoIcon } from '../../assets/icons/video.svg';
@@ -11,7 +10,6 @@ import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { CamStoreContext } from './CamStore';
-import socketState from '../../atoms/socket';
 
 const Container = styled.div`
   width: 98vw;
@@ -58,7 +56,6 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
   const { handleTab } = props;
   const { handleUserListTabActive, handleChattingTabActive } = handleTab;
   const { localStream, setLocalStatus } = useContext(CamStoreContext);
-  const socket = useRecoilValue(socketState);
 
   const onClickVideoToggleButton = () => {
     localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
@@ -66,7 +63,6 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
       audio: prev.audio,
       video: localStream.getVideoTracks()[0].enabled,
     }));
-    socket.emit('userToggleVideo');
   };
 
   const onClickMicToggleButton = () => {
@@ -75,7 +71,6 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
       video: prev.video,
       audio: localStream.getAudioTracks()[0].enabled,
     }));
-    socket.emit('userToggleAudio');
   };
 
   return (

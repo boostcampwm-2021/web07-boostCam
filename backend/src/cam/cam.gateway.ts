@@ -14,11 +14,8 @@ export class CamGateway {
     client.on('disconnect', () => {
       client.to(roomId).emit('userDisconnected', { userId });
     });
-    client.on('userToggleAudio', () => {
-      client.to(roomId).emit('userToggleAudio', { userId });
-    });
-    client.on('userToggleVideo', () => {
-      client.to(roomId).emit('userToggleVideo', { userId });
+    client.on('userChangeStatus', ({ userId, status }) => {
+      client.to(roomId).emit('userChangeStatus', { userId, status });
     });
   }
 }
