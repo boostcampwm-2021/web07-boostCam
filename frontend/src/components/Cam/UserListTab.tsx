@@ -36,6 +36,8 @@ function UserListTab(props: UserListProps): JSX.Element {
     [],
   );
 
+  const localUserIdRef = useRef<string>();
+
   useEffect(() => {
     myPeerRef.current = new Peer(undefined, {
       host: '/',
@@ -52,7 +54,7 @@ function UserListTab(props: UserListProps): JSX.Element {
     const myPeer = myPeerRef.current;
 
     myPeer?.on('open', (userId) => {
-      socket.emit('joinRoom', { roomId: ROOM_ID, userId });
+      localUserIdRef.current = userId;
     });
   }, []);
 
@@ -96,6 +98,10 @@ function UserListTab(props: UserListProps): JSX.Element {
 
     socket.on('userConnected', connectToNewUser);
     myPeer?.on('call', answerToCall);
+
+    if (localStream.active) {
+      socket.emit('joinRoom', { roomId: ROOM_ID, userId: localUserIdRef.current });
+    }
 
     return () => {
       socket.off('userConnected', connectToNewUser);
