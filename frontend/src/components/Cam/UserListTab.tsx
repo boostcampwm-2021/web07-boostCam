@@ -52,6 +52,7 @@ function UserListTab(props: UserListProps): JSX.Element {
     const myPeer = myPeerRef.current;
 
     myPeer?.on('open', (userId) => {
+      console.log(`${userId} join room to ${ROOM_ID}`);
       socket.emit('joinRoom', { roomId: ROOM_ID, userId });
     });
   }, []);
@@ -62,6 +63,7 @@ function UserListTab(props: UserListProps): JSX.Element {
         return;
       }
       const myPeer = myPeerRef.current;
+      console.log(`I call to ${userId}`);
       const call = myPeer.call(userId, localStream);
 
       let flag = false;
@@ -69,11 +71,13 @@ function UserListTab(props: UserListProps): JSX.Element {
         if (flag) {
           return;
         }
+        console.log(`stream comes from ${userId}`);
         flag = true;
         setScreenList((prev) => [...prev, { userId, stream: userVideoStream, peer: call }]);
       });
 
       call.on('close', () => {
+        console.log(`User ${userId} is gone`);
         setScreenList((prev) => {
           return prev.filter((screen) => screen.userId !== userId);
         });
@@ -86,6 +90,7 @@ function UserListTab(props: UserListProps): JSX.Element {
         if (flag) {
           return;
         }
+        console.log(`I received the stream from User ${call.peer}`);
         flag = true;
         setScreenList((prev) => [...prev, { userId: call.peer, stream: userVideoStream, peer: call }]);
       });
