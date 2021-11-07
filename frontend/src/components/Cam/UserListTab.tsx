@@ -106,8 +106,8 @@ function UserListTab(props: UserListProps): JSX.Element {
   return (
     <Draggable
       defaultPosition={{
-        x: '0px',
-        y: '0px',
+        x: '62vw',
+        y: '5px',
         childHeight: '90vh',
         childWidth: '18vw',
       }}

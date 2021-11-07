@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 type DraggableProps = {
@@ -12,16 +12,16 @@ type DraggableProps = {
   isActive: boolean;
 };
 
-const Container = styled.div<{ width: string; height: string; isActive: boolean }>`
+const Container = styled.div<{ x: string; y: string; width: string; height: string; isActive: boolean }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'flex' : 'none')};
+  left: ${(props) => props.x};
+  top: ${(props) => props.y};
   position: absolute;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  border: 1px solid red;
   &:hover {
     cursor: pointer;
   }
@@ -30,39 +30,32 @@ const Container = styled.div<{ width: string; height: string; isActive: boolean 
 function Draggable(props: DraggableProps): JSX.Element {
   const { children, defaultPosition, isActive } = props;
   const { x, y, childHeight, childWidth } = defaultPosition;
-
-  const draggableRef = useRef<HTMLDivElement>(null);
-
-  let mouseDownStatus = false;
   let offsetX = 0;
   let offsetY = 0;
 
-  useEffect(() => {
-    if (draggableRef.current) {
-      draggableRef.current.style.left = x;
-      draggableRef.current.style.top = y;
-      draggableRef.current.addEventListener('mousedown', (e) => {
-        offsetX = e.offsetX;
-        offsetY = e.offsetY;
-        mouseDownStatus = true;
-      });
-      draggableRef.current.addEventListener('mouseup', () => {
-        mouseDownStatus = false;
-      });
-      draggableRef.current.addEventListener('mouseleave', () => {
-        mouseDownStatus = false;
-      });
-      draggableRef.current.addEventListener('mousemove', (e) => {
-        if (mouseDownStatus && draggableRef.current) {
-          draggableRef.current.style.left = (e.x - offsetX).toString().concat('px');
-          draggableRef.current.style.top = (e.y - offsetY).toString().concat('px');
-        }
-      });
-    }
-  }, []);
+  const onDragStartInDraggable = (e: React.DragEvent<HTMLDivElement> & { target: HTMLDivElement }) => {
+    offsetX = e.nativeEvent.offsetX;
+    offsetY = e.nativeEvent.offsetY;
+    e.target.style.opacity = '0.5';
+  };
+  const onDragEndInDraggable = (e: React.DragEvent<HTMLDivElement> & { target: HTMLDivElement }) => {
+    const targetStyle = e.target.style;
+    targetStyle.left = (e.pageX - offsetX).toString().concat('px');
+    targetStyle.top = (e.pageY - offsetY).toString().concat('px');
+    targetStyle.opacity = '1';
+  };
 
   return (
-    <Container ref={draggableRef} width={childWidth} height={childHeight} isActive={isActive}>
+    <Container
+      draggable
+      onDragStart={onDragStartInDraggable}
+      onDragEnd={onDragEndInDraggable}
+      width={childWidth}
+      height={childHeight}
+      x={x}
+      y={y}
+      isActive={isActive}
+    >
       {children}
     </Container>
   );
