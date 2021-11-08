@@ -44,11 +44,13 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   });
 
   useEffect(() => {
-    socket.on('userChangeStatus', (payload) => {
+    socket.on('userStatus', (payload) => {
       if (payload.userId === userId) {
         setStatus(payload.status);
       }
     });
+
+    socket.emit('getUserStatus', { userId });
   }, []);
 
   return (

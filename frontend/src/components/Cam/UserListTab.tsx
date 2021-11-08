@@ -28,7 +28,7 @@ type UserListProps = {
   isUserListTabActive: boolean;
 };
 
-const ROOM_ID = 1;
+const ROOM_ID = '1';
 
 function UserListTab(props: UserListProps): JSX.Element {
   const { isUserListTabActive } = props;
@@ -104,7 +104,7 @@ function UserListTab(props: UserListProps): JSX.Element {
     myPeer?.on('call', answerToCall);
 
     if (localStream.active) {
-      socket.emit('joinRoom', { roomId: ROOM_ID, userId: localUserIdRef.current });
+      socket.emit('joinRoom', { roomId: ROOM_ID, userId: localUserIdRef.current, status: localStatus });
     }
 
     return () => {
@@ -114,16 +114,7 @@ function UserListTab(props: UserListProps): JSX.Element {
   }, [localStream]);
 
   useEffect(() => {
-    const sendLocalStatus = () => {
-      socket.emit('userChangeStatus', { userId: localUserIdRef.current, status: localStatus });
-    };
-    socket.on('userConnected', sendLocalStatus);
-
-    socket.emit('userChangeStatus', { userId: localUserIdRef.current, status: localStatus });
-
-    return () => {
-      socket.off('userConnected', sendLocalStatus);
-    };
+    socket.emit('updateUserStatus', { userId: localUserIdRef.current, status: localStatus });
   }, [localStatus]);
 
   return (

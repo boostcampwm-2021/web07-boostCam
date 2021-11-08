@@ -31,6 +31,7 @@ function CamStore(props: CamStoreProps): JSX.Element {
       };
       const track = createEmptyVideoTrack();
       setLocalStream(new MediaStream([track]));
+      setLocalStatus({ video: false, audio: false, stream: false });
     }
   };
 
