@@ -12,8 +12,72 @@ jobs:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     env:
-      CI: ""
       working-directory: ./frontend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Test
+        run: npm run test
+        working-directory: ${{env.working-directory}}
+  backend-ci:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Test
+        run: npm run test
+        working-directory: ${{env.working-directory}}
+  frontend-cd:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Build
+        env:
+          CI: ""
+        run: npm run build
+        working-directory: ${{env.working-directory}}
+      - name: Make zip file
+        run: zip -r frontend-"${${{env.GITHUB_REF}}}".zip
+        working-directory: ${{env.working-directory}}
+  backend-cd:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend
     strategy:
       matrix:
         node-version: [16.x]
@@ -29,6 +93,10 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: ${{env.working-directory}}
-      - name: Test
-        run: npm run test
+      - name: Make zip file
+        run: zip -r backend-"${${{env.GITHUB_REF}}}".zip ./
         working-directory: ${{env.working-directory}}
+      - name: Install aws cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 1.15.85
