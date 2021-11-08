@@ -12,6 +12,7 @@ jobs:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     env:
+      CI: ""
       working-directory: ./frontend
     strategy:
       matrix:
