@@ -71,18 +71,19 @@ jobs:
         run: npm run build
         working-directory: ${{env.working-directory}}
       - name: Make zip file
-        run: zip -r frontend-"${GITHUB_REF_NAME}".zip
+        run: zip -r frontend-"${GITHUB_REF_NAME}".zip ./build
         working-directory: ${{env.working-directory}}
-      - name: Deploy to Object Storage
+      - name: Install aws cli
         uses: unfor19/install-aws-cli-action@v1
         with:
           version: 1.15.85
+      - name: Deploy to Object Storage
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_KEY}}
           BUCKET_NAME: ${{secrets.BUCKET_NAME}}
         working-directory: ${{env.working-directory}}
-        run: aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp backend-"${GITHUB_REF_NAME}".zip s3://"${BUCKET_NAME}"
+        run: aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp frontend-"${GITHUB_REF_NAME}".zip s3://"${BUCKET_NAME}"
   backend-cd:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
@@ -106,10 +107,11 @@ jobs:
       - name: Make zip file
         run: zip -r backend-"${GITHUB_REF_NAME}".zip ./
         working-directory: ${{env.working-directory}}
-      - name: Deploy to Object Storage
+      - name: Install aws cli
         uses: unfor19/install-aws-cli-action@v1
         with:
           version: 1.15.85
+      - name: Deploy to Object Storage
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_KEY}}
