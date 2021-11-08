@@ -12,7 +12,7 @@ type DraggableProps = {
   isActive: boolean;
 };
 
-const Container = styled.div<{ x: string; y: string; width: string; height: string; isActive: boolean }>`
+const Container = styled.div<{ width: string; height: string; x: string; y: string; isActive: boolean }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   display: ${(props) => (props.isActive ? 'flex' : 'none')};
@@ -40,8 +40,8 @@ function Draggable(props: DraggableProps): JSX.Element {
   };
   const onDragEndInDraggable = (e: React.DragEvent<HTMLDivElement> & { target: HTMLDivElement }) => {
     const targetStyle = e.target.style;
-    targetStyle.left = (e.pageX - offsetX).toString().concat('px');
-    targetStyle.top = (e.pageY - offsetY).toString().concat('px');
+    targetStyle.left = `${e.pageX - offsetX}px`;
+    targetStyle.top = `${e.pageY - offsetY}px`;
     targetStyle.opacity = '1';
   };
 

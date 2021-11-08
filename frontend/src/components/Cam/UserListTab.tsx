@@ -7,7 +7,7 @@ import UserScreen from './UserScreen';
 import SocketState from '../../atoms/socket';
 import { CamStoreContext } from './CamStore';
 import LocalUserScreen from './LocalUserScreen';
-import Draggable from './Draggable';
+import Draggable from '../core/Draggable';
 
 const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
