@@ -13,35 +13,41 @@ import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { CamStoreContext } from './CamStore';
 import socketState from '../../atoms/socket';
 
-const Container = styled.div`
+const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
   height: 8vh;
   margin-top: 5px;
-  background-color: #c4c4c4;
 
-  display: flex;
+  display: ${(props) => (props.isMouseOnCamPage ? 'flex' : 'none')};
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
   border-radius: 10px;
+  transition: all 0.5s ease;
 `;
 
-const Button = styled.div`
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Button = styled.div<{ color?: string }>`
   min-width: 9vw;
   height: 7vh;
-  background-color: #a4a4a4;
-
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  color: ${(props) => (props.color ? props.color : '#bbbbbb')};
 
   border-radius: 10px;
-
+  font-size: 12px;
   &:hover {
-    background-color: #f3f1f1;
+    background-color: rgba(240, 240, 240, 0.2);
     transition: all 0.5s;
+    cursor: pointer;
   }
 
   svg {
@@ -51,11 +57,15 @@ const Button = styled.div`
 `;
 
 type ButtonBarProps = {
-  handleTab: { handleUserListTabActive: () => void; handleChattingTabActive: () => void };
+  handleTab: {
+    handleUserListTabActive: () => void;
+    handleChattingTabActive: () => void;
+  };
+  isMouseOnCamPage: boolean;
 };
 
 function ButtonBar(props: ButtonBarProps): JSX.Element {
-  const { handleTab } = props;
+  const { handleTab, isMouseOnCamPage } = props;
   const { handleUserListTabActive, handleChattingTabActive } = handleTab;
   const { localStream, setLocalStatus } = useContext(CamStoreContext);
   const socket = useRecoilValue(socketState);
@@ -79,39 +89,45 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
   };
 
   return (
-    <Container>
-      <Button onClick={onClickMicToggleButton}>
-        <MicIcon />
-        <span>마이크</span>
-      </Button>
-      <Button onClick={onClickVideoToggleButton}>
-        <VideoIcon />
-        <span>비디오</span>
-      </Button>
-      <Button>
-        <IdentificationIcon />
-        <span>닉네임</span>
-      </Button>
-      <Button>
-        <BackgroundIcon />
-        <span>가상 배경</span>
-      </Button>
-      <Button>
-        <PresenstationIcon />
-        <span>화면 공유</span>
-      </Button>
-      <Button onClick={handleUserListTabActive}>
-        <UsersIcon />
-        <span>사용자 목록</span>
-      </Button>
-      <Button onClick={handleChattingTabActive}>
-        <ChatIcon />
-        <span>채팅</span>
-      </Button>
-      <Button>
-        <ExitIcon />
-        <span>나가기</span>
-      </Button>
+    <Container isMouseOnCamPage={isMouseOnCamPage}>
+      <ButtonContainer>
+        <Button onClick={onClickMicToggleButton}>
+          <MicIcon />
+          <span>마이크</span>
+        </Button>
+        <Button onClick={onClickVideoToggleButton}>
+          <VideoIcon />
+          <span>비디오</span>
+        </Button>
+      </ButtonContainer>
+      <ButtonContainer>
+        <Button>
+          <IdentificationIcon />
+          <span>닉네임</span>
+        </Button>
+        <Button>
+          <BackgroundIcon />
+          <span>가상 배경</span>
+        </Button>
+        <Button color="#00ff2e">
+          <PresenstationIcon />
+          <span>화면 공유</span>
+        </Button>
+        <Button onClick={handleUserListTabActive}>
+          <UsersIcon />
+          <span>사용자 목록</span>
+        </Button>
+        <Button onClick={handleChattingTabActive}>
+          <ChatIcon />
+          <span>채팅</span>
+        </Button>
+      </ButtonContainer>
+      <ButtonContainer>
+        <Button color="red">
+          <ExitIcon />
+          <span>나가기</span>
+        </Button>
+      </ButtonContainer>
     </Container>
   );
 }

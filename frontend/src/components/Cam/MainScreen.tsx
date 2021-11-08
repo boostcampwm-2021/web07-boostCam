@@ -1,20 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div<{ activeTab: string[] }>`
+const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>`
   width: ${(props) => props.activeTab[0]};
-  height: 90vh;
-  background-color: #c4c4c4;
-
+  height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
+  background-color: #ffffff;
   transition: all 0.5s ease;
 `;
 
 type MainScreenProps = {
   tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean };
+  isMouseOnCamPage: boolean;
 };
 
 function MainScreen(props: MainScreenProps): JSX.Element {
-  const { tabActive } = props;
+  const { tabActive, isMouseOnCamPage } = props;
   const { isChattingTabActive } = tabActive;
 
   const countActiveTab = (): string[] => {
@@ -28,7 +28,7 @@ function MainScreen(props: MainScreenProps): JSX.Element {
   };
 
   return (
-    <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd}>
+    <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} isMouseOnCamPage={isMouseOnCamPage}>
       MainScreen
     </Container>
   );
