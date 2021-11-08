@@ -12,7 +12,7 @@ jobs:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     env:
-      working-diretory: ./frontend
+      working-directory: ./frontend
     strategy:
       matrix:
         node-version: [16.x]
