@@ -7,6 +7,7 @@ import UserScreen from './UserScreen';
 import SocketState from '../../atoms/socket';
 import { CamStoreContext } from './CamStore';
 import LocalUserScreen from './LocalUserScreen';
+import Draggable from '../core/Draggable';
 
 const Container = styled.div<{ isActive: boolean }>`
   position: absolute;
@@ -111,14 +112,23 @@ function UserListTab(props: UserListProps): JSX.Element {
       myPeer?.off('call', answerToCall);
     };
   }, [localStream]);
-
   return (
-    <Container isActive={isUserListTabActive}>
-      <LocalUserScreen stream={localStream} localStatus={localStatus} />
-      {screenList.map((screen) => (
-        <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
-      ))}
-    </Container>
+    <Draggable
+      defaultPosition={{
+        x: '62vw',
+        y: '5px',
+        childHeight: '90vh',
+        childWidth: '18vw',
+      }}
+      isActive={isUserListTabActive}
+    >
+      <Container isActive={isUserListTabActive}>
+        <LocalUserScreen stream={localStream} localStatus={localStatus} />
+        {screenList.map((screen) => (
+          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
+        ))}
+      </Container>
+    </Draggable>
   );
 }
 
