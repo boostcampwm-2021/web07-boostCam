@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.form`
   display: flex;
@@ -45,7 +46,6 @@ const SubmitButton = styled.button`
   outline: 0;
 
   border-radius: 10px;
-  // padding: 5px 10px;
   cursor: pointer;
   text-align: center;
   box-shadow: 5px 3px 3px #7c7b7b;
@@ -55,18 +55,34 @@ const SubmitButton = styled.button`
     background-color: #26f5f8;
     transition: all 0.3s;
   }
+
+  a {
+    text-decoration: none;
+  }
 `;
 
 function LocalLogin(): JSX.Element {
+  const navigate = useNavigate();
+  const onSumbitLoginForm = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const { currentTarget } = e;
+    const formData: FormData = new FormData(currentTarget);
+
+    formData.forEach((val) => {
+      console.log(val);
+    });
+    navigate('/rooms');
+  };
+
   return (
-    <Container>
+    <Container onSubmit={onSumbitLoginForm}>
       <InputDiv>
         <InputTag>아이디</InputTag>
-        <LoginInput placeholder="아이디를 입력해주세요" />
+        <LoginInput name="id" placeholder="아이디를 입력해주세요" />
       </InputDiv>
       <InputDiv>
         <InputTag>비밀번호</InputTag>
-        <LoginInput type="password" placeholder="비밀번호를 입력해주세요" />
+        <LoginInput name="password" type="password" placeholder="비밀번호를 입력해주세요" />
       </InputDiv>
       <SubmitButton type="submit">로그인</SubmitButton>
     </Container>
