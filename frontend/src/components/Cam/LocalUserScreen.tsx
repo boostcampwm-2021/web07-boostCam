@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import Status from '../../types/cam';
 
 type LocalUserScreenProps = {
   stream: MediaStream | undefined;
-  localStatus: { audio: boolean; video: boolean };
+  localStatus: Status;
 };
 
 const Container = styled.div`

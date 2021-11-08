@@ -10,6 +10,7 @@ import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { CamStoreContext } from './CamStore';
+import Status from '../../types/cam';
 
 const Container = styled.div`
   width: 98vw;
@@ -59,16 +60,16 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
 
   const onClickVideoToggleButton = () => {
     localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
-    setLocalStatus((prev: { video: boolean; audio: boolean }) => ({
-      audio: prev.audio,
+    setLocalStatus((prev: Status) => ({
+      ...prev,
       video: localStream.getVideoTracks()[0].enabled,
     }));
   };
 
   const onClickMicToggleButton = () => {
     localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
-    setLocalStatus((prev: { video: boolean; audio: boolean }) => ({
-      video: prev.video,
+    setLocalStatus((prev: Status) => ({
+      ...prev,
       audio: localStream.getAudioTracks()[0].enabled,
     }));
   };

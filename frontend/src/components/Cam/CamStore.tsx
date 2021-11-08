@@ -1,4 +1,5 @@
 import React, { useEffect, useState, createContext } from 'react';
+import Status from '../../types/cam';
 
 type CamStoreProps = {
   children: React.ReactChild[];
@@ -9,7 +10,11 @@ export const CamStoreContext = createContext<React.ComponentState>(null);
 function CamStore(props: CamStoreProps): JSX.Element {
   const { children } = props;
   const [localStream, setLocalStream] = useState<MediaStream>(new MediaStream());
-  const [localStatus, setLocalStatus] = useState<{ video: boolean; audio: boolean }>({ video: true, audio: true });
+  const [localStatus, setLocalStatus] = useState<Status>({
+    video: false,
+    audio: false,
+    stream: false,
+  });
 
   const getUserMedia = async () => {
     try {
