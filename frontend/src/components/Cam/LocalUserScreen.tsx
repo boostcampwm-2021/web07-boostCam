@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import DefaultScreen from './DefaultScreen';
 import Status from '../../types/cam';
 
 type LocalUserScreenProps = {
@@ -35,9 +36,13 @@ function LocalUserScreen(props: LocalUserScreenProps): JSX.Element {
   return (
     <Container>
       <div>{`video ${localStatus.video} audio ${localStatus.audio}`}</div>
-      <Video ref={videoRef} playsInline autoPlay muted>
-        <track kind="captions" />
-      </Video>
+      {localStatus.stream && localStatus.video ? (
+        <Video ref={videoRef} playsInline autoPlay muted>
+          <track kind="captions" />
+        </Video>
+      ) : (
+        <DefaultScreen />
+      )}
     </Container>
   );
 }

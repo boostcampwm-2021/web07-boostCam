@@ -56,9 +56,12 @@ type ButtonBarProps = {
 function ButtonBar(props: ButtonBarProps): JSX.Element {
   const { handleTab } = props;
   const { handleUserListTabActive, handleChattingTabActive } = handleTab;
-  const { localStream, setLocalStatus } = useContext(CamStoreContext);
+  const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
 
   const onClickVideoToggleButton = () => {
+    if (!localStatus.stream) {
+      return;
+    }
     localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
     setLocalStatus((prev: Status) => ({
       ...prev,
@@ -67,6 +70,9 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
   };
 
   const onClickMicToggleButton = () => {
+    if (!localStatus.stream) {
+      return;
+    }
     localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
     setLocalStatus((prev: Status) => ({
       ...prev,

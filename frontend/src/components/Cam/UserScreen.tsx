@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
+import DefaultScreen from './DefaultScreen';
 import Status from '../../types/cam';
 
 type UserScreenProps = {
@@ -53,9 +54,13 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   return (
     <Container>
       <div>{`video ${status.video} audio ${status.audio}`}</div>
-      <Video ref={videoRef} playsInline autoPlay muted>
-        <track kind="captions" />
-      </Video>
+      {status.stream && status.video ? (
+        <Video ref={videoRef} playsInline autoPlay muted>
+          <track kind="captions" />
+        </Video>
+      ) : (
+        <DefaultScreen />
+      )}
     </Container>
   );
 }
