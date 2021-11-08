@@ -113,6 +113,19 @@ function UserListTab(props: UserListProps): JSX.Element {
     };
   }, [localStream]);
 
+  useEffect(() => {
+    const sendLocalStatus = () => {
+      socket.emit('userChangeStatus', { userId: localUserIdRef.current, status: localStatus });
+    };
+    socket.on('userConnected', sendLocalStatus);
+
+    socket.emit('userChangeStatus', { userId: localUserIdRef.current, status: localStatus });
+
+    return () => {
+      socket.off('userConnected', sendLocalStatus);
+    };
+  }, [localStatus]);
+
   return (
     <Draggable
       defaultPosition={{
