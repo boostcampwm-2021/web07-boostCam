@@ -66,7 +66,6 @@ function UserListTab(props: UserListProps): JSX.Element {
     myPeer?.on('open', (userId) => {
       localUserIdRef.current = userId;
     });
-    console.log(userInfo);
   }, []);
 
   useEffect(() => {
@@ -110,8 +109,10 @@ function UserListTab(props: UserListProps): JSX.Element {
     socket.on('userConnected', connectToNewUser);
     myPeer?.on('call', answerToCall);
 
+    const currentUrl = new URL(window.location.href).searchParams;
+
     if (localStream.active) {
-      socket.emit('joinRoom', { roomId: userInfo?.roomId, userId: localUserIdRef.current });
+      socket.emit('joinRoom', { roomId: currentUrl.get('roomid'), userId: localUserIdRef.current });
     }
 
     return () => {

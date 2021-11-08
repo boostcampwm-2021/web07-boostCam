@@ -115,7 +115,7 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
     if (nickname === null || !nickname.length || Number.isNaN(roomId)) return;
     console.log(receivedData);
     handleUserInfo(receivedData);
-    navigate(`/cam`);
+    navigate(`/cam?roomid=${roomId}`);
   };
 
   const onSumbitJoinForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -126,7 +126,7 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
     formData.forEach((val) => {
       console.log(val);
     });
-    navigate(`/cam`);
+    // navigate(`/cam`);
   };
 
   return (
