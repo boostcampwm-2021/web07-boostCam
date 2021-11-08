@@ -24,14 +24,20 @@ const Container = styled.div<{ isActive: boolean }>`
   border: 1px solid red;
 `;
 
-type UserListProps = {
-  isUserListTabActive: boolean;
+type UserInfo = {
+  roomId: number | null;
+  nickname: string | null;
 };
 
-const ROOM_ID = 1;
+type UserListProps = {
+  isUserListTabActive: boolean;
+  userInfo: UserInfo | null;
+};
+
+// const ROOM_ID = 1;
 
 function UserListTab(props: UserListProps): JSX.Element {
-  const { isUserListTabActive } = props;
+  const { isUserListTabActive, userInfo } = props;
   const { localStream, localStatus } = useContext(CamStoreContext);
   const socket = useRecoilValue(SocketState);
 
@@ -60,6 +66,7 @@ function UserListTab(props: UserListProps): JSX.Element {
     myPeer?.on('open', (userId) => {
       localUserIdRef.current = userId;
     });
+    console.log(userInfo);
   }, []);
 
   useEffect(() => {
@@ -104,7 +111,7 @@ function UserListTab(props: UserListProps): JSX.Element {
     myPeer?.on('call', answerToCall);
 
     if (localStream.active) {
-      socket.emit('joinRoom', { roomId: ROOM_ID, userId: localUserIdRef.current });
+      socket.emit('joinRoom', { roomId: userInfo?.roomId, userId: localUserIdRef.current });
     }
 
     return () => {

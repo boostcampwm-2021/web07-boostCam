@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100vw;
@@ -25,7 +25,7 @@ const MainBox = styled.div`
   align-items: center;
 `;
 
-const DivBox = styled.form`
+const DivForm = styled.form`
   width: 50%;
   height: 45%;
   background-color: skyblue;
@@ -89,11 +89,50 @@ const SubmitButton = styled.button`
   }
 `;
 
-function CamRooms(): JSX.Element {
+type UserInfo = {
+  roomId: number | null;
+  nickname: string | null;
+};
+
+type CamRoomsProps = {
+  handleUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+};
+
+function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
+  const navigate = useNavigate();
+  const onSumbitCreateForm = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const { currentTarget } = e;
+    const formData: FormData = new FormData(currentTarget);
+    const receivedData: UserInfo = { nickname: null, roomId: null };
+    formData.forEach((val, key) => {
+      if (key === 'nickname') receivedData.nickname = val.toString().trim();
+      if (key === 'roomid') receivedData.roomId = parseInt(val.toString(), 10);
+    });
+
+    const { nickname, roomId } = receivedData;
+
+    if (nickname === null || !nickname.length || Number.isNaN(roomId)) return;
+    console.log(receivedData);
+    handleUserInfo(receivedData);
+    navigate(`/cam`);
+  };
+
+  const onSumbitJoinForm = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const { currentTarget } = e;
+    const formData: FormData = new FormData(currentTarget);
+
+    formData.forEach((val) => {
+      console.log(val);
+    });
+    navigate(`/cam`);
+  };
+
   return (
     <Container>
       <MainBox>
-        <DivBox>
+        <DivForm onSubmit={onSumbitCreateForm}>
           <BoxTag>Create Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
@@ -101,11 +140,11 @@ function CamRooms(): JSX.Element {
           </InputDiv>
           <InputDiv>
             <InputTag>Room Number</InputTag>
-            <Input name="roomnumber" placeholder="방 번호를 입력하세요" />
+            <Input name="roomid" placeholder="방 번호를 입력하세요" />
           </InputDiv>
           <SubmitButton type="submit">Create</SubmitButton>
-        </DivBox>
-        <DivBox>
+        </DivForm>
+        <DivForm onSubmit={onSumbitJoinForm}>
           <BoxTag>Join Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
@@ -113,10 +152,10 @@ function CamRooms(): JSX.Element {
           </InputDiv>
           <InputDiv>
             <InputTag>Room Number</InputTag>
-            <Input name="roomnumber" placeholder="방 번호를 입력하세요" />
+            <Input name="roomid" placeholder="방 번호를 입력하세요" />
           </InputDiv>
           <SubmitButton type="submit">Join</SubmitButton>
-        </DivBox>
+        </DivForm>
       </MainBox>
     </Container>
   );
