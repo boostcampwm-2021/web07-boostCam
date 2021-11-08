@@ -17,11 +17,22 @@ const Container = styled.div<{ isActive: boolean }>`
   background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   overflow-y: auto;
+
   &::-webkit-scrollbar {
-    display: none;
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
   }
 
-  border: 1px solid red;
+  &:hover {
+    border: 2px solid #00ff2e;
+  }
 `;
 
 type UserListProps = {
@@ -115,10 +126,8 @@ function UserListTab(props: UserListProps): JSX.Element {
   return (
     <Draggable
       defaultPosition={{
-        x: '62vw',
-        y: '5px',
-        childHeight: '90vh',
-        childWidth: '18vw',
+        x: '0vw',
+        y: '0vh',
       }}
       isActive={isUserListTabActive}
     >
