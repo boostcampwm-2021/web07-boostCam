@@ -1,3 +1,6 @@
-type Status = { video: boolean; audio: boolean; stream: boolean };
+import { MediaConnection } from 'peerjs';
 
-export default Status;
+type Status = { video: boolean; audio: boolean; stream: boolean };
+type Screen = { userId: string; stream: MediaStream; call: MediaConnection };
+
+export type { Status, Screen };

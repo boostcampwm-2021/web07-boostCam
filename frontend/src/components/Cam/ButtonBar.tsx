@@ -10,7 +10,7 @@ import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { CamStoreContext } from './CamStore';
-import Status from '../../types/cam';
+import type { Status } from '../../types/cam';
 
 const Container = styled.div`
   width: 98vw;

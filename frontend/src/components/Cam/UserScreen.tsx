@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
 import DefaultScreen from './DefaultScreen';
-import Status from '../../types/cam';
+import type { Status } from '../../types/cam';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
