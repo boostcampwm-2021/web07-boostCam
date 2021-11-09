@@ -29,7 +29,6 @@ const Container = styled.div<{ isActive: boolean }>`
     background-color: #cccccc;
     border-radius: 10px;
   }
-
   &:hover {
     border: 2px solid #00ff2e;
   }

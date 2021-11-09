@@ -72,7 +72,6 @@ const ChatTop = styled.div<{ isMe: boolean }>`
   flex-direction: row;
   justify-content: ${(props) => (props.isMe ? 'end' : 'start')};
   align-items: center;
-  justify-content: 
   margin-top: 5px;
 `;
 
