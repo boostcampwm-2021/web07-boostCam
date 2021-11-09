@@ -29,7 +29,16 @@ const UpperTab = styled.div`
   position: relative;
 `;
 
-function Cam(): JSX.Element {
+type UserInfo = {
+  roomId: number | null;
+  nickname: string | null;
+};
+
+type CamProps = {
+  userInfo: UserInfo | null;
+};
+
+function Cam({ userInfo }: CamProps): JSX.Element {
   const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
   const [isMouseOnCamPage, setMouseOnCampPage] = useState<boolean>(false);
@@ -57,7 +66,7 @@ function Cam(): JSX.Element {
       <CamStore>
         <UpperTab>
           <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} isMouseOnCamPage={isMouseOnCamPage} />
-          <UserListTab isUserListTabActive={isUserListTabActive} />
+          <UserListTab isUserListTabActive={isUserListTabActive} userInfo={userInfo} />
           <ChattingTab isChattingTabActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage} />
         </UpperTab>
         <ButtonBar
