@@ -1,4 +1,8 @@
-import React, { useEffect, useState, createContext } from 'react';
+import React, { createContext } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import useUserMedia from '../../hooks/useUserMedia';
+import SocketState from '../../atoms/socket';
 
 type CamStoreProps = {
   children: React.ReactChild[];
@@ -8,34 +12,16 @@ export const CamStoreContext = createContext<React.ComponentState>(null);
 
 function CamStore(props: CamStoreProps): JSX.Element {
   const { children } = props;
-  const [localStream, setLocalStream] = useState<MediaStream>(new MediaStream());
-  const [localStatus, setLocalStatus] = useState<{ video: boolean; audio: boolean }>({ video: true, audio: true });
-
-  const getUserMedia = async () => {
-    try {
-      const media = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      setLocalStream(media);
-    } catch {
-      const createEmptyVideoTrack = () => {
-        const canvas = Object.assign(document.createElement('canvas'), { width: 600, height: 480 });
-        canvas?.getContext('2d')?.fillRect(0, 0, 600, 400);
-
-        const stream = canvas.captureStream();
-        const track = stream.getVideoTracks()[0];
-
-        return Object.assign(track, { enabled: false });
-      };
-      const track = createEmptyVideoTrack();
-      setLocalStream(new MediaStream([track]));
-    }
-  };
-
-  useEffect(() => {
-    getUserMedia();
-  }, []);
+  const socket = useRecoilValue(SocketState);
+  const { localStatus, localStream, setLocalStatus, screenList } = useUserMedia({
+    socket,
+    roomId: '1',
+  });
 
   return (
-    <CamStoreContext.Provider value={{ localStream, localStatus, setLocalStatus }}>{children}</CamStoreContext.Provider>
+    <CamStoreContext.Provider value={{ localStream, localStatus, setLocalStatus, screenList }}>
+      {children}
+    </CamStoreContext.Provider>
   );
 }
 

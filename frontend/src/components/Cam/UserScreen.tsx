@@ -3,6 +3,8 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
+import DefaultScreen from './DefaultScreen';
+import type { Status } from '../../types/cam';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
@@ -26,7 +28,11 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   const socket = useRecoilValue(socketState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [status, setStatus] = useState<{ video: boolean; audio: boolean }>({ video: true, audio: true });
+  const [status, setStatus] = useState<Status>({
+    video: false,
+    audio: false,
+    stream: false,
+  });
 
   useEffect(() => {
     const video = videoRef.current;
@@ -38,24 +44,25 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   });
 
   useEffect(() => {
-    socket.on('userToggleAudio', (payload) => {
+    socket.on('userStatus', (payload) => {
       if (payload.userId === userId) {
-        setStatus((prev) => ({ audio: !prev.audio, video: prev.video }));
+        setStatus(payload.status);
       }
     });
-    socket.on('userToggleVideo', (payload) => {
-      if (payload.userId === userId) {
-        setStatus((prev) => ({ audio: prev.audio, video: !prev.video }));
-      }
-    });
+
+    socket.emit('getUserStatus', { userId });
   }, []);
 
   return (
     <Container>
       <div>{`video ${status.video} audio ${status.audio}`}</div>
-      <Video ref={videoRef} playsInline autoPlay muted>
-        <track kind="captions" />
-      </Video>
+      {status.stream && status.video ? (
+        <Video ref={videoRef} playsInline autoPlay muted>
+          <track kind="captions" />
+        </Video>
+      ) : (
+        <DefaultScreen />
+      )}
     </Container>
   );
 }

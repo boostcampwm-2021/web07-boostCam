@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
 
 import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
 import { ReactComponent as VideoIcon } from '../../assets/icons/video.svg';
@@ -11,7 +10,7 @@ import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { CamStoreContext } from './CamStore';
-import socketState from '../../atoms/socket';
+import type { Status } from '../../types/cam';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -67,25 +66,28 @@ type ButtonBarProps = {
 function ButtonBar(props: ButtonBarProps): JSX.Element {
   const { handleTab, isMouseOnCamPage } = props;
   const { handleUserListTabActive, handleChattingTabActive } = handleTab;
-  const { localStream, setLocalStatus } = useContext(CamStoreContext);
-  const socket = useRecoilValue(socketState);
+  const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
 
   const onClickVideoToggleButton = () => {
+    if (!localStatus.stream) {
+      return;
+    }
     localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
-    setLocalStatus((prev: { video: boolean; audio: boolean }) => ({
-      audio: prev.audio,
+    setLocalStatus((prev: Status) => ({
+      ...prev,
       video: localStream.getVideoTracks()[0].enabled,
     }));
-    socket.emit('userToggleVideo');
   };
 
   const onClickMicToggleButton = () => {
+    if (!localStatus.stream) {
+      return;
+    }
     localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
-    setLocalStatus((prev: { video: boolean; audio: boolean }) => ({
-      video: prev.video,
+    setLocalStatus((prev: Status) => ({
+      ...prev,
       audio: localStream.getAudioTracks()[0].enabled,
     }));
-    socket.emit('userToggleAudio');
   };
 
   return (
