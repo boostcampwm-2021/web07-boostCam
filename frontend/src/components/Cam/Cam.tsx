@@ -15,6 +15,8 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: black;
 `;
 
 const UpperTab = styled.div`
@@ -24,7 +26,6 @@ const UpperTab = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
   position: relative;
 `;
 
@@ -40,6 +41,7 @@ type CamProps = {
 function Cam({ userInfo }: CamProps): JSX.Element {
   const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
+  const [isMouseOnCamPage, setMouseOnCampPage] = useState<boolean>(false);
 
   const handleUserListTabActive = (): void => {
     setUserListTabActive(!isUserListTabActive);
@@ -49,15 +51,28 @@ function Cam({ userInfo }: CamProps): JSX.Element {
     setChattingTabActive(!isChattingTabActive);
   };
 
+  const handleMouseOverCamPage = (): void => {
+    setMouseOnCampPage(true);
+  };
+
+  const handleMouseOutCamPage = (e: React.MouseEvent<HTMLDivElement> & { target: HTMLDivElement }): void => {
+    if (!e.target.classList.contains('.cam')) {
+      setMouseOnCampPage(false);
+    }
+  };
+
   return (
-    <Container>
+    <Container className="cam" onMouseOver={handleMouseOverCamPage} onMouseLeave={handleMouseOutCamPage}>
       <CamStore>
         <UpperTab>
-          <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} />
+          <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} isMouseOnCamPage={isMouseOnCamPage} />
           <UserListTab isUserListTabActive={isUserListTabActive} userInfo={userInfo} />
-          <ChattingTab isChattingTabActive={isChattingTabActive} />
+          <ChattingTab isChattingTabActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage} />
         </UpperTab>
-        <ButtonBar handleTab={{ handleUserListTabActive, handleChattingTabActive }} />
+        <ButtonBar
+          handleTab={{ handleUserListTabActive, handleChattingTabActive }}
+          isMouseOnCamPage={isMouseOnCamPage}
+        />
       </CamStore>
     </Container>
   );
