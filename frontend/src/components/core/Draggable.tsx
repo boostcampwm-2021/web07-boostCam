@@ -6,22 +6,16 @@ type DraggableProps = {
   defaultPosition: {
     x: string;
     y: string;
-    childHeight: string;
-    childWidth: string;
   };
   isActive: boolean;
 };
 
-const Container = styled.div<{ width: string; height: string; x: string; y: string; isActive: boolean }>`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+const Container = styled.div<{ x: string; y: string; isActive: boolean }>`
   display: ${(props) => (props.isActive ? 'flex' : 'none')};
   left: ${(props) => props.x};
   top: ${(props) => props.y};
   position: absolute;
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
   &:hover {
     cursor: pointer;
   }
@@ -29,7 +23,7 @@ const Container = styled.div<{ width: string; height: string; x: string; y: stri
 
 function Draggable(props: DraggableProps): JSX.Element {
   const { children, defaultPosition, isActive } = props;
-  const { x, y, childHeight, childWidth } = defaultPosition;
+  const { x, y } = defaultPosition;
   let offsetX = 0;
   let offsetY = 0;
 
@@ -50,8 +44,6 @@ function Draggable(props: DraggableProps): JSX.Element {
       draggable
       onDragStart={onDragStartInDraggable}
       onDragEnd={onDragEndInDraggable}
-      width={childWidth}
-      height={childHeight}
       x={x}
       y={y}
       isActive={isActive}
