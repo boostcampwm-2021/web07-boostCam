@@ -6,9 +6,6 @@ export class CamService {
   private map: Map<string, Array<{ userId: string; status: Status }>>;
   constructor() {
     this.map = new Map();
-    setInterval(() => {
-      console.log(this.map.get('1'));
-    }, 3000);
   }
   createRoom(roomId: string) {
     this.map.set(roomId, []);
