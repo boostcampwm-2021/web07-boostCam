@@ -41,7 +41,10 @@ type CamProps = {
 function Cam({ userInfo }: CamProps): JSX.Element {
   const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
+  const [isScreenShareActive, setScreenShareActive] = useState<boolean>(false);
   const [isMouseOnCamPage, setMouseOnCampPage] = useState<boolean>(false);
+
+  const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
 
   const handleUserListTabActive = (): void => {
     setUserListTabActive(!isUserListTabActive);
@@ -61,16 +64,43 @@ function Cam({ userInfo }: CamProps): JSX.Element {
     }
   };
 
+  const tryShareScreen = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia();
+      stream.getVideoTracks()[0].addEventListener('ended', () => {
+        setScreenStream(null);
+        setScreenShareActive(false);
+      });
+      setScreenStream(stream);
+      setScreenShareActive(true);
+    } catch (error) {
+      // do nothing
+    }
+  };
+  const handleScreenShareActive = (): void => {
+    if (!isScreenShareActive) {
+      tryShareScreen();
+    }
+    if (isScreenShareActive) {
+      setScreenStream(null);
+      setScreenShareActive(false);
+    }
+  };
+
   return (
     <Container className="cam" onMouseOver={handleMouseOverCamPage} onMouseLeave={handleMouseOutCamPage}>
       <CamStore>
         <UpperTab>
-          <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} isMouseOnCamPage={isMouseOnCamPage} />
+          <MainScreen
+            tabActive={{ isUserListTabActive, isChattingTabActive, isScreenShareActive }}
+            isMouseOnCamPage={isMouseOnCamPage}
+            screenStream={screenStream}
+          />
           <UserListTab isUserListTabActive={isUserListTabActive} userInfo={userInfo} />
           <ChattingTab isChattingTabActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage} />
         </UpperTab>
         <ButtonBar
-          handleTab={{ handleUserListTabActive, handleChattingTabActive }}
+          handleTab={{ handleUserListTabActive, handleChattingTabActive, handleScreenShareActive }}
           isMouseOnCamPage={isMouseOnCamPage}
         />
       </CamStore>
