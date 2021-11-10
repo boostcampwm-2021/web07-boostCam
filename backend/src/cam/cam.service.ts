@@ -10,6 +10,9 @@ export class CamService {
   showMap() {
     return this.map;
   }
+  isRoomExist(roomId: string): boolean {
+    return this.map.has(roomId) ? true : false;
+  }
   createRoom(roomId: string): boolean {
     if (this.map.get(roomId)) return false;
     this.map.set(roomId, []);

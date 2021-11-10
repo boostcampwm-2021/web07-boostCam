@@ -18,9 +18,23 @@ export class CamController {
     return `Test Get API 3 received ${id}`;
   }
   @Post('/create-room')
-  test4(@Body() payload: { roomid: string }): string {
+  createRoom(@Body() payload: { roomid: string }): string {
+    const { roomid } = payload;
     let statusCode = 201;
-    if (!this.camService.createRoom(payload.roomid)) statusCode = 500;
+    if (!this.camService.createRoom(roomid)) statusCode = 500;
+    console.log(this.camService.showMap());
+    return Object.assign({
+      statusCode,
+      data: payload,
+      statusMsg: 'created successfully',
+    });
+  }
+
+  @Post('/is-room-exist')
+  isRoomExist(@Body() payload: { roomid: string }): string {
+    const { roomid } = payload;
+    let statusCode = 201;
+    if (!this.camService.isRoomExist(roomid)) statusCode = 500;
     console.log(this.camService.showMap());
     return Object.assign({
       statusCode,

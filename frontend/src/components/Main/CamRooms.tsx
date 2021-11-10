@@ -112,7 +112,7 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
 
     const { nickname, roomId } = receivedData;
 
-    if (nickname === null || !nickname.length || Number.isNaN(roomId)) return;
+    if (!nickname || !roomId) return;
 
     handleUserInfo(receivedData);
     const response = await fetch('/cam/create-room/', {
@@ -129,7 +129,7 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
     else if (statusCode === 500) alert('이미 존재하는 방 입니다.');
   };
 
-  const onSumbitJoinForm = (e: React.FormEvent<HTMLFormElement>): void => {
+  const onSumbitJoinForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const { currentTarget } = e;
     const formData: FormData = new FormData(currentTarget);
@@ -140,10 +140,21 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
     });
 
     const { nickname, roomId } = receivedData;
-    if (nickname === null || !nickname.length || Number.isNaN(roomId)) return;
+    if (!nickname || !roomId) return;
 
     handleUserInfo(receivedData);
-    navigate(`/cam?roomid=${roomId}`);
+    const response = await fetch('/cam/is-room-exist/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        roomid: roomId,
+      }),
+    });
+    const { statusCode } = await response.json();
+    if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
+    else if (statusCode === 500) alert('존재하지 않는 방 입니다.');
   };
 
   return (
@@ -153,11 +164,11 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
           <BoxTag>Create Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
-            <Input name="nickname" placeholder="닉네임을 입력하세요" />
+            <Input name="nickname" placeholder="닉네임을 입력하세요" required />
           </InputDiv>
           <InputDiv>
             <InputTag>Room Number</InputTag>
-            <Input name="roomid" placeholder="방 번호를 입력하세요" />
+            <Input name="roomid" placeholder="방 번호를 입력하세요" required />
           </InputDiv>
           <SubmitButton type="submit">Create</SubmitButton>
         </DivForm>
@@ -165,11 +176,11 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
           <BoxTag>Join Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
-            <Input name="nickname" placeholder="닉네임을 입력하세요" />
+            <Input name="nickname" placeholder="닉네임을 입력하세요" required />
           </InputDiv>
           <InputDiv>
             <InputTag>Room Number</InputTag>
-            <Input name="roomid" placeholder="방 번호를 입력하세요" />
+            <Input name="roomid" placeholder="방 번호를 입력하세요" required />
           </InputDiv>
           <SubmitButton type="submit">Join</SubmitButton>
         </DivForm>
