@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import SharedScreen from './SharedScreen';
 
 const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>`
   width: ${(props) => props.activeTab[0]};
@@ -9,13 +10,14 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>
 `;
 
 type MainScreenProps = {
-  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean };
+  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean; isScreenShareActive: boolean };
   isMouseOnCamPage: boolean;
+  screenStream: MediaStream | null;
 };
 
 function MainScreen(props: MainScreenProps): JSX.Element {
-  const { tabActive, isMouseOnCamPage } = props;
-  const { isChattingTabActive } = tabActive;
+  const { tabActive, isMouseOnCamPage, screenStream } = props;
+  const { isChattingTabActive, isScreenShareActive } = tabActive;
 
   const countActiveTab = (): string[] => {
     if (isChattingTabActive) return ['70vw', '98vw'];
@@ -29,7 +31,7 @@ function MainScreen(props: MainScreenProps): JSX.Element {
 
   return (
     <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} isMouseOnCamPage={isMouseOnCamPage}>
-      MainScreen
+      {isScreenShareActive ? <SharedScreen stream={screenStream} /> : 'Main Screen'}
     </Container>
   );
 }
