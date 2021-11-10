@@ -3,6 +3,8 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
+import useSTT from '../../hooks/useSTT';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   width: 27vw;
@@ -156,6 +158,7 @@ function ChattingTab(): JSX.Element {
   const [room] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
+  const lastResult = useSTT();
 
   const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     const { key, currentTarget, shiftKey } = e;
@@ -188,6 +191,15 @@ function ChattingTab(): JSX.Element {
       chatLogsRef.current.scroll({ top: chatLogsRef.current.scrollHeight, behavior: 'smooth' });
     }
   });
+
+  useEffect(() => {
+    const currentDate = getCurrentDate();
+    if (lastResult.isFinal) {
+      const msgInfo: MsgInfo = { msg: lastResult.text, room, user: socket.id, date: currentDate };
+      socket.emit('sendMessage', msgInfo);
+      setChatLogs((logs) => [...logs, msgInfo]);
+    }
+  }, [lastResult]);
 
   const currentChatLogs = chatLogs.map((data: MsgInfo): JSX.Element => {
     const { msg, date, user } = data;
