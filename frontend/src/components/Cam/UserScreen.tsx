@@ -49,7 +49,6 @@ function UserScreen(props: UserScreenProps): JSX.Element {
         setStatus(payload.status);
       }
     });
-
     socket.emit('getUserStatus', { userId });
   }, []);
 

@@ -56,7 +56,6 @@ export default function useUserMedia({ socket, roomId }: { socket: Socket; roomI
     myPeerRef.current.on('open', (userId) => {
       peerIdRef.current = userId;
     });
-
     getUserMedia();
   }, []);
 
@@ -109,7 +108,7 @@ export default function useUserMedia({ socket, roomId }: { socket: Socket; roomI
   }, [localStream]);
 
   useEffect(() => {
-    socket.emit('updateUserStatus', { userId: peerIdRef.current, status: localStatus });
+    if (peerIdRef.current) socket.emit('updateUserStatus', { status: localStatus });
   }, [localStatus]);
 
   return { localStream, setLocalStream, localStatus, setLocalStatus, screenList };

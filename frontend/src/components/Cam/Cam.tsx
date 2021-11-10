@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+import { useRecoilValue } from 'recoil';
 import ButtonBar from './ButtonBar';
 import ChattingTab from './ChattingTab';
 import MainScreen from './MainScreen';
 import CamStore from './CamStore';
 import UserListTab from './UserListTab';
+
+import socketState from '../../atoms/socket';
 
 const Container = styled.div`
   width: 100vw;
@@ -42,6 +45,7 @@ function Cam({ userInfo }: CamProps): JSX.Element {
   const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
   const [isMouseOnCamPage, setMouseOnCampPage] = useState<boolean>(false);
+  const socket = useRecoilValue(socketState);
 
   const handleUserListTabActive = (): void => {
     setUserListTabActive(!isUserListTabActive);
@@ -60,6 +64,11 @@ function Cam({ userInfo }: CamProps): JSX.Element {
       setMouseOnCampPage(false);
     }
   };
+  useEffect(() => {
+    return () => {
+      socket.emit('exitRoom');
+    };
+  }, []);
 
   return (
     <Container className="cam" onMouseOver={handleMouseOverCamPage} onMouseLeave={handleMouseOutCamPage}>

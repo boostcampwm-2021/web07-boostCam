@@ -25,7 +25,8 @@ export class CamService {
   }
   exitRoom(roomId: string, userId: string) {
     const room = this.map.get(roomId).filter((user) => user.userId !== userId);
-    this.map.set(roomId, room);
+    if (!room.length) this.map.delete(roomId);
+    else this.map.set(roomId, room);
   }
   updateStatus(roomId: string, userId: string, status: Status) {
     const user = this.map.get(roomId).find((user) => user.userId === userId);
