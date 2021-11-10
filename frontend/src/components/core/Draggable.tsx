@@ -28,9 +28,11 @@ function Draggable(props: DraggableProps): JSX.Element {
   let offsetY = 0;
 
   const onDragStartInDraggable = (e: React.DragEvent<HTMLDivElement> & { target: HTMLDivElement }) => {
-    offsetX = e.nativeEvent.offsetX;
-    offsetY = e.nativeEvent.offsetY;
-    e.target.style.opacity = '0.5';
+    setTimeout(() => {
+      offsetX = e.nativeEvent.offsetX;
+      offsetY = e.nativeEvent.offsetY;
+      e.target.style.opacity = '0.5';
+    }, 10);
   };
   const onDragEndInDraggable = (e: React.DragEvent<HTMLDivElement> & { target: HTMLDivElement }) => {
     const targetStyle = e.target.style;
