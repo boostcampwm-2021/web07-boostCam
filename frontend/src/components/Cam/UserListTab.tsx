@@ -33,7 +33,7 @@ const Container = styled.div<{ isActive: boolean }>`
 `;
 
 type UserInfo = {
-  roomId: number | null;
+  roomId: string | null;
   nickname: string | null;
 };
 

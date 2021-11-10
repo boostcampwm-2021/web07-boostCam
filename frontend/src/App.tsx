@@ -7,7 +7,7 @@ import LoginMain from './components/LoginPage/LoginMain';
 import CamRooms from './components/Main/CamRooms';
 
 type UserInfo = {
-  roomId: number | null;
+  roomId: string | null;
   nickname: string | null;
 };
 

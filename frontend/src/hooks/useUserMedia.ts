@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Socket } from 'socket.io-client';
 import type { Status, Screen } from '../types/cam';
 
-export default function useUserMedia({ socket, roomId }: { socket: Socket; roomId: string }): {
+export default function useUserMedia({ socket, roomId }: { socket: Socket; roomId: string | null }): {
   localStream: MediaStream;
   setLocalStream: typeof setLocalStream;
   localStatus: Status;

@@ -30,7 +30,7 @@ const UpperTab = styled.div`
 `;
 
 type UserInfo = {
-  roomId: number | null;
+  roomId: string | null;
   nickname: string | null;
 };
 
