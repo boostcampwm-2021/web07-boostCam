@@ -95,10 +95,11 @@ type UserInfo = {
 };
 
 type CamRoomsProps = {
-  handleUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
 };
 
-function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
+function CamRooms(props: CamRoomsProps): JSX.Element {
+  const { setUserInfo } = props;
   const navigate = useNavigate();
   const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -114,7 +115,7 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
 
     if (!nickname || !roomId) return;
 
-    handleUserInfo(receivedData);
+    setUserInfo(receivedData);
     const response = await fetch('/cam/create-room/', {
       method: 'POST',
       headers: {
@@ -142,7 +143,7 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
     const { nickname, roomId } = receivedData;
     if (!nickname || !roomId) return;
 
-    handleUserInfo(receivedData);
+    setUserInfo(receivedData);
     const response = await fetch('/cam/is-room-exist/', {
       method: 'POST',
       headers: {
