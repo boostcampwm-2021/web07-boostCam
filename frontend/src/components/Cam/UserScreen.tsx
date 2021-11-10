@@ -57,7 +57,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     <Container>
       <div>{`video ${status.video} audio ${status.audio}`}</div>
       {status.stream && status.video ? (
-        <Video ref={videoRef} playsInline autoPlay muted>
+        <Video ref={videoRef} playsInline autoPlay>
           <track kind="captions" />
         </Video>
       ) : (
