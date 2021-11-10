@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>`
   width: ${(props) => props.activeTab[0]};
@@ -8,14 +9,8 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>
   transition: all 0.5s ease;
 `;
 
-type MainScreenProps = {
-  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean };
-  isMouseOnCamPage: boolean;
-};
-
-function MainScreen(props: MainScreenProps): JSX.Element {
-  const { tabActive, isMouseOnCamPage } = props;
-  const { isChattingTabActive } = tabActive;
+function MainScreen(): JSX.Element {
+  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
 
   const countActiveTab = (): string[] => {
     if (isChattingTabActive) return ['70vw', '98vw'];
@@ -23,7 +18,6 @@ function MainScreen(props: MainScreenProps): JSX.Element {
   };
 
   const handleAnimationEnd = (e: React.AnimationEvent<HTMLDivElement>) => {
-    console.log(e.currentTarget.style.animation);
     e.currentTarget.style.animation = 'none';
   };
 

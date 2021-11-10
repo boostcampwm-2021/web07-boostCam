@@ -95,7 +95,7 @@ type UserInfo = {
 };
 
 type CamRoomsProps = {
-  handleUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  handleUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
 function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {

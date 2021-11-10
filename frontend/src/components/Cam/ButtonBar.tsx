@@ -12,6 +12,7 @@ import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { ReactComponent as STTIcon } from '../../assets/icons/speech.svg';
 import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -56,18 +57,9 @@ const Button = styled.div<{ color?: string }>`
   }
 `;
 
-type ButtonBarProps = {
-  handleTab: {
-    handleUserListTabActive: () => void;
-    handleChattingTabActive: () => void;
-  };
-  isMouseOnCamPage: boolean;
-};
-
-function ButtonBar(props: ButtonBarProps): JSX.Element {
-  const { handleTab, isMouseOnCamPage } = props;
-  const { handleUserListTabActive, handleChattingTabActive } = handleTab;
+function ButtonBar(): JSX.Element {
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
+  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
 
   const onClickVideoToggleButton = () => {
     if (!localStatus.stream) {

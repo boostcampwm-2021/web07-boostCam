@@ -6,6 +6,7 @@ import { CamStoreContext } from './CamStore';
 import LocalUserScreen from './LocalUserScreen';
 import Draggable from '../core/Draggable';
 import type { Screen } from '../../types/cam';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ isActive: boolean }>`
   position: absolute;
@@ -32,19 +33,9 @@ const Container = styled.div<{ isActive: boolean }>`
   }
 `;
 
-type UserInfo = {
-  roomId: number | null;
-  nickname: string | null;
-};
-
-type UserListProps = {
-  isUserListTabActive: boolean;
-  userInfo: UserInfo | null;
-};
-
-function UserListTab(props: UserListProps): JSX.Element {
-  const { isUserListTabActive, userInfo } = props;
+function UserListTab(): JSX.Element {
   const { screenList } = useContext(CamStoreContext);
+  const { isUserListTabActive } = useContext(ToggleStoreContext);
 
   return (
     <Draggable

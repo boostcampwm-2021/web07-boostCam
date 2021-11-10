@@ -1,15 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
 
-type ChattingTabProps = {
-  isChattingTabActive: boolean;
-  isMouseOnCamPage: boolean;
-};
-// display: ${(props) => (props.isActive ? 'flex' : 'none')};
-// animation: ${(props) => (props.isActive ? 'boxFade 0.5s' : 'boxFade 0.5s reverse')};
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   width: 27vw;
   height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
@@ -155,11 +149,11 @@ const getCurrentDate = (): CurrentDate => {
   };
 };
 
-function ChattingTab(props: ChattingTabProps): JSX.Element {
-  const { isChattingTabActive, isMouseOnCamPage } = props;
+function ChattingTab(): JSX.Element {
+  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
 
   const [chatLogs, setChatLogs] = useState<MsgInfo[]>([]);
-  const [room, setRoom] = useState<string | null>('init');
+  const [room] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
 

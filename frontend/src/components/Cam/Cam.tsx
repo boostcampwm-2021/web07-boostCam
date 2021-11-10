@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 
 import ButtonBar from './ButtonBar';
@@ -6,6 +6,8 @@ import ChattingTab from './ChattingTab';
 import MainScreen from './MainScreen';
 import CamStore from './CamStore';
 import UserListTab from './UserListTab';
+import ToggleStore from './ToggleStore';
+import { UserInfo } from '../../types/cam';
 
 const Container = styled.div`
   width: 100vw;
@@ -29,50 +31,25 @@ const UpperTab = styled.div`
   position: relative;
 `;
 
-type UserInfo = {
-  roomId: number | null;
-  nickname: string | null;
-};
-
 type CamProps = {
-  userInfo: UserInfo | null;
+  userInfo: UserInfo;
 };
 
-function Cam({ userInfo }: CamProps): JSX.Element {
-  const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
-  const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
-  const [isMouseOnCamPage, setMouseOnCampPage] = useState<boolean>(false);
-
-  const handleUserListTabActive = (): void => {
-    setUserListTabActive(!isUserListTabActive);
-  };
-
-  const handleChattingTabActive = (): void => {
-    setChattingTabActive(!isChattingTabActive);
-  };
-
-  const handleMouseOverCamPage = (): void => {
-    setMouseOnCampPage(true);
-  };
-
-  const handleMouseOutCamPage = (e: React.MouseEvent<HTMLDivElement> & { target: HTMLDivElement }): void => {
-    if (!e.target.classList.contains('.cam')) {
-      setMouseOnCampPage(false);
-    }
-  };
+function Cam(props: CamProps): JSX.Element {
+  const { userInfo } = props;
+  const camRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Container className="cam" onMouseOver={handleMouseOverCamPage} onMouseLeave={handleMouseOutCamPage}>
-      <CamStore>
-        <UpperTab>
-          <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} isMouseOnCamPage={isMouseOnCamPage} />
-          <UserListTab isUserListTabActive={isUserListTabActive} userInfo={userInfo} />
-          <ChattingTab isChattingTabActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage} />
-        </UpperTab>
-        <ButtonBar
-          handleTab={{ handleUserListTabActive, handleChattingTabActive }}
-          isMouseOnCamPage={isMouseOnCamPage}
-        />
+    <Container ref={camRef}>
+      <CamStore userInfo={userInfo}>
+        <ToggleStore camRef={camRef}>
+          <UpperTab>
+            <MainScreen />
+            <UserListTab />
+            <ChattingTab />
+          </UpperTab>
+          <ButtonBar />
+        </ToggleStore>
       </CamStore>
     </Container>
   );

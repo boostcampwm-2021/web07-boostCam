@@ -3,15 +3,17 @@ import { useRecoilValue } from 'recoil';
 
 import useUserMedia from '../../hooks/useUserMedia';
 import SocketState from '../../atoms/socket';
+import { UserInfo } from '../../types/cam';
 
 type CamStoreProps = {
-  children: React.ReactChild[];
+  children: React.ReactChild[] | React.ReactChild;
+  userInfo: UserInfo;
 };
 
 export const CamStoreContext = createContext<React.ComponentState>(null);
 
 function CamStore(props: CamStoreProps): JSX.Element {
-  const { children } = props;
+  const { children, userInfo } = props;
   const socket = useRecoilValue(SocketState);
   const { localStatus, localStream, setLocalStatus, screenList } = useUserMedia({
     socket,
@@ -19,7 +21,7 @@ function CamStore(props: CamStoreProps): JSX.Element {
   });
 
   return (
-    <CamStoreContext.Provider value={{ localStream, localStatus, setLocalStatus, screenList }}>
+    <CamStoreContext.Provider value={{ localStream, localStatus, setLocalStatus, screenList, userInfo }}>
       {children}
     </CamStoreContext.Provider>
   );
