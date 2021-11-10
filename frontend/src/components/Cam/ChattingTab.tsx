@@ -166,8 +166,6 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
   const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     const { key, currentTarget, shiftKey } = e;
     const msg = currentTarget.value.trim();
-    const currentHeight = currentTarget.scrollHeight;
-    currentTarget.style.height = currentHeight > 50 ? `${currentTarget.scrollHeight}px` : '50px';
 
     if (!shiftKey && key === 'Enter') {
       e.preventDefault();
@@ -175,7 +173,6 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
       else {
         const currentDate = getCurrentDate();
         const msgInfo: MsgInfo = { msg, room, user: socket.id, date: currentDate };
-        currentTarget.style.height = '50px';
         currentTarget.value = '';
         socket.emit('sendMessage', msgInfo);
         setChatLogs((logs) => [...logs, msgInfo]);
