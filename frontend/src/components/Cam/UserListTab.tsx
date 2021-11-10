@@ -12,7 +12,7 @@ const Container = styled.div<{ isActive: boolean }>`
   width: 18vw;
   max-height: 70vh;
   padding: 0 10px;
-  background-color: #c4c4c4;
+  background-color: black;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   overflow-y: auto;
 
@@ -45,6 +45,7 @@ type UserListProps = {
 function UserListTab(props: UserListProps): JSX.Element {
   const { isUserListTabActive, userInfo } = props;
   const { screenList } = useContext(CamStoreContext);
+  const screenWidth = '100%';
 
   return (
     <Draggable
@@ -55,9 +56,9 @@ function UserListTab(props: UserListProps): JSX.Element {
       isActive={isUserListTabActive}
     >
       <Container isActive={isUserListTabActive}>
-        <LocalUserScreen />
+        <LocalUserScreen screenWidth={screenWidth} />
         {screenList.map((screen: Screen) => (
-          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
+          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} screenWidth={screenWidth} />
         ))}
       </Container>
     </Draggable>
