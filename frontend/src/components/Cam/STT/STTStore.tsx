@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import useSTT from '../../hooks/useSTT';
+import useSTT from '../../../hooks/useSTT';
 
 export const STTStoreContext = createContext<React.ComponentState>(null);
 

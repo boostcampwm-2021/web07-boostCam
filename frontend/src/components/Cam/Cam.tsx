@@ -10,7 +10,7 @@ import UserListTab from './UserListTab';
 import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
-import STTStore from './STTStore';
+import STTStore from './STT/STTStore';
 
 const Container = styled.div`
   width: 100vw;

@@ -13,7 +13,7 @@ import { ReactComponent as STTIcon } from '../../assets/icons/speech.svg';
 import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';
-import { STTStoreContext } from './STTStore';
+import { STTStoreContext } from './STT/STTStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
