@@ -59,7 +59,8 @@ const Button = styled.div<{ color?: string }>`
 
 function ButtonBar(): JSX.Element {
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
-  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
+  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage, handleScreenShareActive } =
+    useContext(ToggleStoreContext);
 
   const onClickVideoToggleButton = () => {
     if (!localStatus.stream) {
@@ -104,7 +105,7 @@ function ButtonBar(): JSX.Element {
           <BackgroundIcon />
           <span>가상 배경</span>
         </Button>
-        <Button color="#00ff2e">
+        <Button color="#00ff2e" onClick={handleScreenShareActive}>
           <PresenstationIcon />
           <span>화면 공유</span>
         </Button>

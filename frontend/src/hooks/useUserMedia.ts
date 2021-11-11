@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Socket } from 'socket.io-client';
 import type { Status, Screen } from '../types/cam';
 
-export default function useUserMedia({ socket, roomId }: { socket: Socket; roomId: string }): {
+export default function useUserMedia({ socket, roomId }: { socket: Socket; roomId: string | null }): {
   localStream: MediaStream;
   setLocalStream: typeof setLocalStream;
   localStatus: Status;
@@ -56,7 +56,6 @@ export default function useUserMedia({ socket, roomId }: { socket: Socket; roomI
     myPeerRef.current.on('open', (userId) => {
       peerIdRef.current = userId;
     });
-
     getUserMedia();
   }, []);
 
@@ -109,7 +108,7 @@ export default function useUserMedia({ socket, roomId }: { socket: Socket; roomI
   }, [localStream]);
 
   useEffect(() => {
-    socket.emit('updateUserStatus', { userId: peerIdRef.current, status: localStatus });
+    if (peerIdRef.current) socket.emit('updateUserStatus', { status: localStatus });
   }, [localStatus]);
 
   return { localStream, setLocalStream, localStatus, setLocalStatus, screenList };

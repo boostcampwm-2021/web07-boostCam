@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { UserInfo } from '../../types/cam';
 
 const Container = styled.div`
   width: 100vw;
@@ -89,44 +90,68 @@ const SubmitButton = styled.button`
   }
 `;
 
-type UserInfo = {
-  roomId: number | null;
-  nickname: string | null;
-};
-
 type CamRoomsProps = {
-  handleUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
-function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
+function CamRooms(props: CamRoomsProps): JSX.Element {
+  const { setUserInfo } = props;
   const navigate = useNavigate();
-  const onSumbitCreateForm = (e: React.FormEvent<HTMLFormElement>): void => {
+  const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const { currentTarget } = e;
     const formData: FormData = new FormData(currentTarget);
     const receivedData: UserInfo = { nickname: null, roomId: null };
     formData.forEach((val, key) => {
       if (key === 'nickname') receivedData.nickname = val.toString().trim();
-      if (key === 'roomid') receivedData.roomId = parseInt(val.toString(), 10);
+      if (key === 'roomid') receivedData.roomId = val.toString();
     });
 
     const { nickname, roomId } = receivedData;
 
-    if (nickname === null || !nickname.length || Number.isNaN(roomId)) return;
-    console.log(receivedData);
-    handleUserInfo(receivedData);
-    navigate(`/cam?roomid=${roomId}`);
+    if (!nickname || !roomId) return;
+
+    setUserInfo(receivedData);
+    const response = await fetch('/cam/create-room/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        roomid: roomId,
+      }),
+    });
+    const { statusCode } = await response.json();
+    if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
+    else if (statusCode === 500) alert('이미 존재하는 방 입니다.');
   };
 
-  const onSumbitJoinForm = (e: React.FormEvent<HTMLFormElement>): void => {
+  const onSumbitJoinForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const { currentTarget } = e;
     const formData: FormData = new FormData(currentTarget);
-
-    formData.forEach((val) => {
-      console.log(val);
+    const receivedData: UserInfo = { nickname: null, roomId: null };
+    formData.forEach((val, key) => {
+      if (key === 'nickname') receivedData.nickname = val.toString().trim();
+      if (key === 'roomid') receivedData.roomId = val.toString();
     });
-    // navigate(`/cam`);
+
+    const { nickname, roomId } = receivedData;
+    if (!nickname || !roomId) return;
+
+    setUserInfo(receivedData);
+    const response = await fetch('/cam/is-room-exist/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        roomid: roomId,
+      }),
+    });
+    const { statusCode } = await response.json();
+    if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
+    else if (statusCode === 500) alert('존재하지 않는 방 입니다.');
   };
 
   return (
@@ -136,11 +161,11 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
           <BoxTag>Create Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
-            <Input name="nickname" placeholder="닉네임을 입력하세요" />
+            <Input name="nickname" placeholder="닉네임을 입력하세요" required />
           </InputDiv>
           <InputDiv>
             <InputTag>Room Number</InputTag>
-            <Input name="roomid" placeholder="방 번호를 입력하세요" />
+            <Input name="roomid" placeholder="방 번호를 입력하세요" required />
           </InputDiv>
           <SubmitButton type="submit">Create</SubmitButton>
         </DivForm>
@@ -148,11 +173,11 @@ function CamRooms({ handleUserInfo }: CamRoomsProps): JSX.Element {
           <BoxTag>Join Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
-            <Input name="nickname" placeholder="닉네임을 입력하세요" />
+            <Input name="nickname" placeholder="닉네임을 입력하세요" required />
           </InputDiv>
           <InputDiv>
             <InputTag>Room Number</InputTag>
-            <Input name="roomid" placeholder="방 번호를 입력하세요" />
+            <Input name="roomid" placeholder="방 번호를 입력하세요" required />
           </InputDiv>
           <SubmitButton type="submit">Join</SubmitButton>
         </DivForm>

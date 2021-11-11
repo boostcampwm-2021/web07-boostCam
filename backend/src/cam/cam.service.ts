@@ -7,15 +7,26 @@ export class CamService {
   constructor() {
     this.map = new Map();
   }
-  createRoom(roomId: string) {
-    this.map.set(roomId, []);
+  showMap() {
+    return this.map;
   }
-  joinRoom(roomId: string, userId: string, status: Status) {
+  isRoomExist(roomId: string): boolean {
+    return this.map.has(roomId) ? true : false;
+  }
+  createRoom(roomId: string): boolean {
+    if (this.map.get(roomId)) return false;
+    this.map.set(roomId, []);
+    return true;
+  }
+  joinRoom(roomId: string, userId: string, status: Status): boolean {
+    if (!this.map.get(roomId)) return false;
     this.map.get(roomId).push({ userId, status });
+    return true;
   }
   exitRoom(roomId: string, userId: string) {
     const room = this.map.get(roomId).filter((user) => user.userId !== userId);
-    this.map.set(roomId, room);
+    if (!room.length) this.map.delete(roomId);
+    else this.map.set(roomId, room);
   }
   updateStatus(roomId: string, userId: string, status: Status) {
     const user = this.map.get(roomId).find((user) => user.userId === userId);
