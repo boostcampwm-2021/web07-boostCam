@@ -11,7 +11,7 @@ function ToggleStore(props: CamToggleStoreProps): JSX.Element {
   const { children, camRef } = props;
 
   const [isMouseOnCamPage, setMouseOnCamPage] = useState<boolean>(true);
-  const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
+  const [isUserListTabActive, setUserListTabActive] = useState<boolean>(false);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
   const [isScreenShareActive, setScreenShareActive] = useState<boolean>(false);
   const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
