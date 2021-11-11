@@ -20,7 +20,6 @@ function useSTT(): {
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.start();
 
     recognition.onresult = ({ results }: { results: any }) => {
       const last: any = Array.from(results[results.length - 1]);
@@ -30,14 +29,15 @@ function useSTT(): {
         isFinal: results[results.length - 1].isFinal,
       });
     };
+
+    recognition.start();
+
     return recognition;
   };
 
   const toggleSTTActive = () => {
     setSTTActive((prev) => !prev);
   };
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     if (isSTTActive) {
