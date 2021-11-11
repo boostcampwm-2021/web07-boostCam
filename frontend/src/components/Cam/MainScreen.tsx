@@ -13,16 +13,7 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean; n
   height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
   background-color: black;
   display: grid;
-  grid-template-columns: repeat(
-    ${(props) => {
-      let n = 1;
-      while (props.numOfScreen > n ** 2) {
-        n += 1;
-      }
-      return n;
-    }},
-    minmax(30%, auto)
-  );
+  grid-template-columns: repeat(${(props) => Math.ceil(props.numOfScreen ** 0.5)}, minmax(30%, auto));
   grid-auto-rows: minmax(100px, auto);
   gap: 20px;
   justify-items: space-evenly;
