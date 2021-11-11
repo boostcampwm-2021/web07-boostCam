@@ -25,7 +25,7 @@ function useSTT(): {
       const last: any = Array.from(results[results.length - 1]);
 
       setLastResult({
-        text: last.reduce((prev: string, curr: any) => prev + curr.transcript, ''),
+        text: last.reduce((prev: string, curr: any) => prev + curr.transcript, '').trim(),
         isFinal: results[results.length - 1].isFinal,
       });
     };
