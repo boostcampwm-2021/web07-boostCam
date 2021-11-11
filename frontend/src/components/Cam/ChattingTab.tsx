@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
-import useSTT from '../../hooks/useSTT';
+import STTScreen from './STT/STTScreen';
 import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
@@ -31,7 +31,7 @@ const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
 `;
 
 const ChatLogs = styled.div`
-  width: 90%;
+  width: 100%;
   height: 90%;
   background-color: #ffffff;
 
@@ -83,7 +83,6 @@ const ChatDate = styled.div`
 
 const ChatMessageBox = styled.span`
   max-width: 90%;
-
   word-break: break-all;
   white-space: pre-wrap;
   background-color: skyblue;
@@ -94,18 +93,15 @@ const ChatMessageBox = styled.span`
 `;
 
 const ChatTextarea = styled.textarea`
-  width: 90%;
+  width: 100%;
   max-height: 100px;
-  height: 80px;
+  min-height: 80px;
   border: none;
   outline: none;
   resize: none;
-
-  line-height: 22px;
-  margin: 10px 20px;
+  background: none;
 
   font-size: 16px;
-  border-top: 2px solid #999999;
   padding: 10px 8px;
   box-sizing: border-box;
 
@@ -123,6 +119,14 @@ const ChatTextarea = styled.textarea`
     border-radius: 10px;
     padding: 0px 8px;
   }
+`;
+
+const TextContainer = styled.div`
+  box-sizing: border-box;
+  margin: 10px;
+  border: 2px solid #999999;
+  border-radius: 10px;
+  width: -webkit-fill-available;
 `;
 
 type CurrentDate = {
@@ -153,14 +157,20 @@ const getCurrentDate = (): CurrentDate => {
 
 function ChattingTab(): JSX.Element {
   const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
-
   const [chatLogs, setChatLogs] = useState<MsgInfo[]>([]);
   const [room] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
-  const lastResult = useSTT();
 
-  const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+  const sendMessage = (msg: string) => {
+    const currentDate = getCurrentDate();
+    const msgInfo: MsgInfo = { msg, room, user: socket.id, date: currentDate };
+
+    socket.emit('sendMessage', msgInfo);
+    setChatLogs((logs) => [...logs, msgInfo]);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     const { key, currentTarget, shiftKey } = e;
     const msg = currentTarget.value.trim();
 
@@ -168,11 +178,8 @@ function ChattingTab(): JSX.Element {
       e.preventDefault();
       if (!msg.length) currentTarget.value = '';
       else {
-        const currentDate = getCurrentDate();
-        const msgInfo: MsgInfo = { msg, room, user: socket.id, date: currentDate };
+        sendMessage(msg);
         currentTarget.value = '';
-        socket.emit('sendMessage', msgInfo);
-        setChatLogs((logs) => [...logs, msgInfo]);
       }
     }
   };
@@ -189,16 +196,7 @@ function ChattingTab(): JSX.Element {
     }
   });
 
-  useEffect(() => {
-    const currentDate = getCurrentDate();
-    if (lastResult.isFinal) {
-      const msgInfo: MsgInfo = { msg: lastResult.text, room, user: socket.id, date: currentDate };
-      socket.emit('sendMessage', msgInfo);
-      setChatLogs((logs) => [...logs, msgInfo]);
-    }
-  }, [lastResult]);
-
-  const currentChatLogs = chatLogs.map((data: MsgInfo): JSX.Element => {
+  const currentChatLogs = chatLogs.map((data: MsgInfo, index: number): JSX.Element => {
     const { msg, date, user } = data;
     const time = `${date.hour}:${date.minutes < 10 ? `0${date.minutes}` : date.minutes}`;
     const isMe = user === socket.id;
@@ -215,7 +213,7 @@ function ChattingTab(): JSX.Element {
     );
 
     return (
-      <ChatContainer key={`${msg + time}`} isMe={isMe}>
+      <ChatContainer key={`${msg + index}`} isMe={isMe}>
         {chatTopChildren}
         <ChatMessageBox>{msg}</ChatMessageBox>
       </ChatContainer>
@@ -225,7 +223,11 @@ function ChattingTab(): JSX.Element {
   return (
     <Container isActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage}>
       <ChatLogs ref={chatLogsRef}>{currentChatLogs}</ChatLogs>
-      <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={sendMessage} />
+      <TextContainer>
+        {' '}
+        <STTScreen sendMessage={sendMessage} />
+        <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={handleKeyDown} />
+      </TextContainer>
     </Container>
   );
 }

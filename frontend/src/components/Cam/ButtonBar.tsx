@@ -2,7 +2,9 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
+import { ReactComponent as MicDisabledIcon } from '../../assets/icons/mic-disabled.svg';
 import { ReactComponent as VideoIcon } from '../../assets/icons/video.svg';
+import { ReactComponent as VideoDisabledIcon } from '../../assets/icons/video-disabled.svg';
 import { ReactComponent as IdentificationIcon } from '../../assets/icons/identification.svg';
 import { ReactComponent as ChatIcon } from '../../assets/icons/chat.svg';
 import { ReactComponent as PresenstationIcon } from '../../assets/icons/presentation.svg';
@@ -10,9 +12,11 @@ import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { ReactComponent as STTIcon } from '../../assets/icons/speech.svg';
+import { ReactComponent as STTDisabledIcon } from '../../assets/icons/speech-disabled.svg';
 import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';
+import { STTStoreContext } from './STT/STTStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -61,6 +65,7 @@ function ButtonBar(): JSX.Element {
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
   const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage, handleScreenShareActive } =
     useContext(ToggleStoreContext);
+  const { toggleSTTActive, isSTTActive } = useContext(STTStoreContext);
 
   const onClickVideoToggleButton = () => {
     if (!localStatus.stream) {
@@ -88,11 +93,11 @@ function ButtonBar(): JSX.Element {
     <Container isMouseOnCamPage={isMouseOnCamPage}>
       <ButtonContainer>
         <Button onClick={onClickMicToggleButton}>
-          <MicIcon />
+          {localStatus.audio ? <MicIcon /> : <MicDisabledIcon />}
           <span>마이크</span>
         </Button>
         <Button onClick={onClickVideoToggleButton}>
-          <VideoIcon />
+          {localStatus.video ? <VideoIcon /> : <VideoDisabledIcon />}
           <span>비디오</span>
         </Button>
       </ButtonContainer>
@@ -117,8 +122,8 @@ function ButtonBar(): JSX.Element {
           <ChatIcon />
           <span>채팅</span>
         </Button>
-        <Button>
-          <STTIcon />
+        <Button onClick={toggleSTTActive}>
+          {isSTTActive ? <STTIcon /> : <STTDisabledIcon />}
           <span>STT</span>
         </Button>
       </ButtonContainer>
