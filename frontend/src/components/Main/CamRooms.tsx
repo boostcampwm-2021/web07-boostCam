@@ -97,8 +97,8 @@ type CamRoomsProps = {
 function CamRooms(props: CamRoomsProps): JSX.Element {
   const { setUserInfo } = props;
   const navigate = useNavigate();
-  const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+
+  const getUserInfoFromForm = (e: React.FormEvent<HTMLFormElement>): UserInfo => {
     const { currentTarget } = e;
     const formData: FormData = new FormData(currentTarget);
     const receivedData: UserInfo = { nickname: null, roomId: null };
@@ -106,9 +106,13 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
       if (key === 'nickname') receivedData.nickname = val.toString().trim();
       if (key === 'roomid') receivedData.roomId = val.toString();
     });
+    return receivedData;
+  };
 
+  const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    const receivedData: UserInfo = getUserInfoFromForm(e);
     const { nickname, roomId } = receivedData;
-
     if (!nickname || !roomId) return;
 
     setUserInfo(receivedData);
@@ -129,14 +133,7 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
 
   const onSumbitJoinForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    const { currentTarget } = e;
-    const formData: FormData = new FormData(currentTarget);
-    const receivedData: UserInfo = { nickname: null, roomId: null };
-    formData.forEach((val, key) => {
-      if (key === 'nickname') receivedData.nickname = val.toString().trim();
-      if (key === 'roomid') receivedData.roomId = val.toString();
-    });
-
+    const receivedData: UserInfo = getUserInfoFromForm(e);
     const { nickname, roomId } = receivedData;
     if (!nickname || !roomId) return;
 
