@@ -169,10 +169,13 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
   };
 
   const onClickRoomDiv = (e: React.MouseEvent<HTMLDivElement>): void => {
-    if (!userInfo.nickname) return;
-    const { currentTarget } = e;
-    const roomId = currentTarget.dataset.id;
-    navigate(`/cam?roomid=${roomId}`);
+    // eslint-disable-next-line no-alert
+    if (!userInfo.nickname) alert('닉네임을 먼저 설정해주세요!');
+    else {
+      const { currentTarget } = e;
+      const roomId = currentTarget.dataset.id;
+      navigate(`/cam?roomid=${roomId}`);
+    }
   };
 
   const buildRoomList = async (): Promise<void> => {
