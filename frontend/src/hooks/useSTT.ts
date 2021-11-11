@@ -2,10 +2,15 @@
 import { useState, useEffect } from 'react';
 
 function useSTT(): {
-  text: string;
-  isFinal: boolean;
+  lastResult: {
+    text: string;
+    isFinal: boolean;
+  };
+  isSTTActive: boolean;
+  setSTTActive: React.Dispatch<React.SetStateAction<boolean>>;
 } {
   const [lastResult, setLastResult] = useState({ text: '', isFinal: false });
+  const [isSTTActive, setSTTActive] = useState<boolean>(false);
 
   // @ts-expect-error: it only works on Chrome
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -26,7 +31,7 @@ function useSTT(): {
     recognition.start();
   }, []);
 
-  return lastResult;
+  return { lastResult, isSTTActive, setSTTActive };
 }
 
 export default useSTT;

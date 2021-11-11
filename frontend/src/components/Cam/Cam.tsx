@@ -10,6 +10,7 @@ import UserListTab from './UserListTab';
 import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
+import STTStore from './STTStore';
 
 const Container = styled.div`
   width: 100vw;
@@ -73,12 +74,14 @@ function Cam(props: CamProps): JSX.Element {
       ) : (
         <CamStore userInfo={userInfo}>
           <ToggleStore camRef={camRef}>
-            <UpperTab>
-              <MainScreen />
-              <UserListTab />
-              <ChattingTab />
-            </UpperTab>
-            <ButtonBar />
+            <STTStore>
+              <UpperTab>
+                <MainScreen />
+                <UserListTab />
+                <ChattingTab />
+              </UpperTab>
+              <ButtonBar />
+            </STTStore>
           </ToggleStore>
         </CamStore>
       )}

@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
-import useSTT from '../../hooks/useSTT';
+import { STTStoreContext } from './STTStore';
 import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
@@ -153,12 +153,11 @@ const getCurrentDate = (): CurrentDate => {
 
 function ChattingTab(): JSX.Element {
   const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
-
+  const { lastResult } = useContext(STTStoreContext);
   const [chatLogs, setChatLogs] = useState<MsgInfo[]>([]);
   const [room] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
-  const lastResult = useSTT();
 
   const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     const { key, currentTarget, shiftKey } = e;

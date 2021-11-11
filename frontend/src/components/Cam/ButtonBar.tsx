@@ -13,6 +13,7 @@ import { ReactComponent as STTIcon } from '../../assets/icons/speech.svg';
 import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';
+import { STTStoreContext } from './STTStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -61,6 +62,7 @@ function ButtonBar(): JSX.Element {
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
   const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage, handleScreenShareActive } =
     useContext(ToggleStoreContext);
+  const { toggleSTTActive } = useContext(STTStoreContext);
 
   const onClickVideoToggleButton = () => {
     if (!localStatus.stream) {
@@ -118,7 +120,7 @@ function ButtonBar(): JSX.Element {
           <span>채팅</span>
         </Button>
         <Button>
-          <STTIcon />
+          <STTIcon onClick={toggleSTTActive} />
           <span>STT</span>
         </Button>
       </ButtonContainer>
