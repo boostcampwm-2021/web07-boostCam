@@ -59,13 +59,14 @@ type ButtonBarProps = {
   handleTab: {
     handleUserListTabActive: () => void;
     handleChattingTabActive: () => void;
+    handleScreenShareActive: () => void;
   };
   isMouseOnCamPage: boolean;
 };
 
 function ButtonBar(props: ButtonBarProps): JSX.Element {
   const { handleTab, isMouseOnCamPage } = props;
-  const { handleUserListTabActive, handleChattingTabActive } = handleTab;
+  const { handleUserListTabActive, handleChattingTabActive, handleScreenShareActive } = handleTab;
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
 
   const onClickVideoToggleButton = () => {
@@ -111,7 +112,7 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
           <BackgroundIcon />
           <span>가상 배경</span>
         </Button>
-        <Button color="#00ff2e">
+        <Button color="#00ff2e" onClick={handleScreenShareActive}>
           <PresenstationIcon />
           <span>화면 공유</span>
         </Button>

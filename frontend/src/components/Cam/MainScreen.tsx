@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import SharedScreen from './SharedScreen';
 
 import { CamStoreContext } from './CamStore';
 import ScreenRow from './ScreenRow';
@@ -17,8 +18,9 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>
 `;
 
 type MainScreenProps = {
-  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean };
+  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean; isScreenShareActive: boolean };
   isMouseOnCamPage: boolean;
+  screenStream: MediaStream | null;
 };
 
 const getScreenListOfRows = (screenListInfo: Array<Screen>) => {
@@ -44,8 +46,8 @@ const getScreenListOfRows = (screenListInfo: Array<Screen>) => {
 };
 
 function MainScreen(props: MainScreenProps): JSX.Element {
-  const { tabActive, isMouseOnCamPage } = props;
-  const { isChattingTabActive } = tabActive;
+  const { tabActive, isMouseOnCamPage, screenStream } = props;
+  const { isChattingTabActive, isScreenShareActive } = tabActive;
   const { screenList } = useContext(CamStoreContext);
   const screenListOfRows = getScreenListOfRows(screenList);
 
@@ -57,6 +59,14 @@ function MainScreen(props: MainScreenProps): JSX.Element {
   const handleAnimationEnd = (e: React.AnimationEvent<HTMLDivElement>) => {
     e.currentTarget.style.animation = 'none';
   };
+
+  if (isScreenShareActive) {
+    return (
+      <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} isMouseOnCamPage={isMouseOnCamPage}>
+        <SharedScreen stream={screenStream} />
+      </Container>
+    );
+  }
 
   return (
     <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} isMouseOnCamPage={isMouseOnCamPage}>
