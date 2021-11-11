@@ -112,7 +112,7 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     if (!nickname || !roomId) return;
 
     setUserInfo(receivedData);
-    const response = await fetch('/cam/create-room/', {
+    const response = await fetch('/api/cam/room/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -141,15 +141,7 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     if (!nickname || !roomId) return;
 
     setUserInfo(receivedData);
-    const response = await fetch('/cam/is-room-exist/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        roomid: roomId,
-      }),
-    });
+    const response = await fetch(`/api/cam/room/${roomId}`);
     const { statusCode } = await response.json();
     if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
     // eslint-disable-next-line no-alert
