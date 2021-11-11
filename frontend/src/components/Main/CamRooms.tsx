@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { UserInfo } from '../../types/cam';
@@ -26,8 +26,19 @@ const MainBox = styled.div`
   align-items: center;
 `;
 
-const DivForm = styled.form`
-  width: 50%;
+const ListDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const RoomDiv = styled.div`
+  background-color: limegreen;
+`;
+
+const Form = styled.form`
+  width: 40%;
   height: 45%;
   background-color: skyblue;
   border-radius: 20px;
@@ -40,6 +51,10 @@ const DivForm = styled.form`
 
 const BoxTag = styled.span`
   font-size: 25px;
+`;
+
+const BoxMessage = styled.span`
+  font-size: 15px;
 `;
 
 const InputDiv = styled.div`
@@ -91,11 +106,21 @@ const SubmitButton = styled.button`
 `;
 
 type CamRoomsProps = {
+  userInfo: UserInfo;
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
+type Status = { video: boolean; audio: boolean; stream: boolean };
+
+type MapInfo = {
+  userId: string;
+  status: Status;
+};
+
 function CamRooms(props: CamRoomsProps): JSX.Element {
-  const { setUserInfo } = props;
+  const { userInfo, setUserInfo } = props;
+  const [isNicknameAvliable, setIsNicknameAvliable] = useState<boolean>(false);
+  const [roomList, setRoomList] = useState<JSX.Element>();
   const navigate = useNavigate();
 
   const getUserInfoFromForm = (e: React.FormEvent<HTMLFormElement>): UserInfo => {
@@ -131,24 +156,55 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     else if (statusCode === 500) alert('이미 존재하는 방 입니다.');
   };
 
-  const onSumbitJoinForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const onSumbitNicknameForm = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const receivedData: UserInfo = getUserInfoFromForm(e);
-    const { nickname, roomId } = receivedData;
-    if (!nickname || !roomId) return;
 
     setUserInfo(receivedData);
-    const response = await fetch(`/api/cam/room/${roomId}`);
-    const { statusCode } = await response.json();
-    if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
-    // eslint-disable-next-line no-alert
-    else if (statusCode === 500) alert('존재하지 않는 방 입니다.');
+    setIsNicknameAvliable(true);
+    console.log(receivedData);
+    console.log(userInfo);
+    console.log(isNicknameAvliable);
   };
+
+  const onClickRoomDiv = (e: React.MouseEvent<HTMLDivElement>): void => {
+    console.log(userInfo);
+    console.log(isNicknameAvliable);
+    const { currentTarget } = e;
+    const roomId = currentTarget.dataset.id;
+    navigate(`/cam?roomid=${roomId}`);
+  };
+
+  const buildRoomList = async (): Promise<void> => {
+    const response = await fetch('/api/cam/roomlist/');
+    const { data } = await response.json();
+    const { roomListJson } = data;
+
+    const receivedRoomList = JSON.parse(roomListJson);
+
+    const roomListJSX = receivedRoomList.map((val: [string, MapInfo[]]): JSX.Element => {
+      const roomId = val[0];
+      const roomParticipant = val[1].length;
+      return (
+        <RoomDiv key={roomId} onClick={onClickRoomDiv} data-id={roomId}>
+          <span>Room Id : {roomId}</span>
+          <br />
+          <span>User : {roomParticipant}</span>
+        </RoomDiv>
+      );
+    });
+
+    setRoomList(roomListJSX);
+  };
+
+  useEffect(() => {
+    buildRoomList();
+  }, []);
 
   return (
     <Container>
       <MainBox>
-        <DivForm onSubmit={onSumbitCreateForm}>
+        <Form onSubmit={onSumbitCreateForm}>
           <BoxTag>Create Room</BoxTag>
           <InputDiv>
             <InputTag>Nickname</InputTag>
@@ -159,19 +215,17 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
             <Input name="roomid" placeholder="방 번호를 입력하세요" required />
           </InputDiv>
           <SubmitButton type="submit">Create</SubmitButton>
-        </DivForm>
-        <DivForm onSubmit={onSumbitJoinForm}>
-          <BoxTag>Join Room</BoxTag>
+        </Form>
+        <Form onSubmit={onSumbitNicknameForm}>
+          <BoxTag> Set Nickname</BoxTag>
+          <BoxMessage> Current Nickname : {!userInfo.nickname ? 'None' : userInfo.nickname}</BoxMessage>
           <InputDiv>
             <InputTag>Nickname</InputTag>
             <Input name="nickname" placeholder="닉네임을 입력하세요" required />
           </InputDiv>
-          <InputDiv>
-            <InputTag>Room Number</InputTag>
-            <Input name="roomid" placeholder="방 번호를 입력하세요" required />
-          </InputDiv>
-          <SubmitButton type="submit">Join</SubmitButton>
-        </DivForm>
+          <SubmitButton type="submit">닉네임 설정</SubmitButton>
+        </Form>
+        <ListDiv>{roomList}</ListDiv>
       </MainBox>
     </Container>
   );

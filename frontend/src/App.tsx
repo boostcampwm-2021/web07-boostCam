@@ -16,7 +16,7 @@ function App(): JSX.Element {
         <Routes>
           <Route path="/" element={<LoginMain />} />
           <Route path="/cam" element={<Cam userInfo={userInfo} setUserInfo={setUserInfo} />} />
-          <Route path="/rooms" element={<CamRooms setUserInfo={setUserInfo} />} />
+          <Route path="/rooms" element={<CamRooms userInfo={userInfo} setUserInfo={setUserInfo} />} />
         </Routes>
       </RecoilRoot>
     </Router>

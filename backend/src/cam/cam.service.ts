@@ -7,7 +7,7 @@ export class CamService {
   constructor() {
     this.map = new Map();
   }
-  showMap() {
+  getRoomList() {
     return this.map;
   }
   isRoomExist(roomId: string): boolean {

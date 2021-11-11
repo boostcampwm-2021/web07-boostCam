@@ -11,11 +11,10 @@ export class CamController {
     const { roomid } = payload;
     let statusCode = 201;
     if (!this.camService.createRoom(roomid)) statusCode = 500;
-    console.log(this.camService.showMap());
+    console.log(this.camService.getRoomList());
     return Object.assign({
       statusCode,
       data: payload,
-      statusMsg: 'created successfully',
     });
   }
 
@@ -23,11 +22,21 @@ export class CamController {
   isRoomExist(@Param('id') id: string): string {
     let statusCode = 201;
     if (!this.camService.isRoomExist(id)) statusCode = 500;
-    console.log(this.camService.showMap());
+    console.log(this.camService.getRoomList());
     return Object.assign({
       statusCode,
       data: { id },
-      statusMsg: 'created successfully',
+    });
+  }
+
+  @Get('/roomlist')
+  getRoomList(): string {
+    const roomList = this.camService.getRoomList();
+    const roomListJson = JSON.stringify(Array.from(roomList.entries()));
+    console.log(roomList);
+    return Object.assign({
+      statusCode: 201,
+      data: { roomListJson },
     });
   }
 }
