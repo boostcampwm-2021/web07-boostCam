@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
 import { useNavigate } from 'react-router-dom';
-import { UserInfo } from '../../types/cam';
+import { Status, UserInfo } from '../../types/cam';
 
 const Container = styled.div`
   width: 100vw;
@@ -113,8 +114,6 @@ type CamRoomsProps = {
   userInfo: UserInfo;
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
-
-type Status = { video: boolean; audio: boolean; stream: boolean };
 
 type MapInfo = {
   userId: string;
