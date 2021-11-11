@@ -17,6 +17,7 @@ import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';
 import { STTStoreContext } from './STT/STTStore';
+import { SharedScreenStoreContext } from './SharedScreenStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -63,9 +64,10 @@ const Button = styled.div<{ color?: string }>`
 
 function ButtonBar(): JSX.Element {
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
-  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage, handleScreenShareActive } =
-    useContext(ToggleStoreContext);
+  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
   const { toggleSTTActive, isSTTActive } = useContext(STTStoreContext);
+
+  const { handleScreenShareActive } = useContext(SharedScreenStoreContext);
 
   const onClickVideoToggleButton = () => {
     if (!localStatus.stream) {

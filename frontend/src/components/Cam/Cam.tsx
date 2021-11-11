@@ -11,6 +11,7 @@ import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
 import STTStore from './STT/STTStore';
+import SharedScreenStore from './SharedScreenStore';
 
 const Container = styled.div`
   width: 100vw;
@@ -75,12 +76,14 @@ function Cam(props: CamProps): JSX.Element {
         <CamStore userInfo={userInfo}>
           <ToggleStore camRef={camRef}>
             <STTStore>
-              <UpperTab>
-                <MainScreen />
-                <UserListTab />
-                <ChattingTab />
-              </UpperTab>
-              <ButtonBar />
+              <SharedScreenStore>
+                <UpperTab>
+                  <MainScreen />
+                  <UserListTab />
+                  <ChattingTab />
+                </UpperTab>
+                <ButtonBar />
+              </SharedScreenStore>
             </STTStore>
           </ToggleStore>
         </CamStore>
