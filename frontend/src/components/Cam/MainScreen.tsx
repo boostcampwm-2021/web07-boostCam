@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import SharedScreen from './SharedScreen';
 
+import { ToggleStoreContext } from './ToggleStore';
+import SharedScreen from './SharedScreen';
 import { CamStoreContext } from './CamStore';
 import ScreenRow from './ScreenRow';
 import type { Screen } from '../../types/cam';
@@ -16,12 +17,6 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean }>
   align-items: center;
   transition: all 0.5s ease;
 `;
-
-type MainScreenProps = {
-  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean; isScreenShareActive: boolean };
-  isMouseOnCamPage: boolean;
-  screenStream: MediaStream | null;
-};
 
 const getScreenListOfRows = (screenListInfo: Array<Screen>) => {
   const screenListOfRows: Array<Array<Screen>> = [];
@@ -45,11 +40,10 @@ const getScreenListOfRows = (screenListInfo: Array<Screen>) => {
   return screenListOfRows;
 };
 
-function MainScreen(props: MainScreenProps): JSX.Element {
-  const { tabActive, isMouseOnCamPage, screenStream } = props;
-  const { isChattingTabActive, isScreenShareActive } = tabActive;
+function MainScreen(): JSX.Element {
   const { screenList } = useContext(CamStoreContext);
   const screenListOfRows = getScreenListOfRows(screenList);
+  const { isChattingTabActive, isMouseOnCamPage, isScreenShareActive, screenStream } = useContext(ToggleStoreContext);
 
   const countActiveTab = (): string[] => {
     if (isChattingTabActive) return ['70vw', '98vw'];

@@ -5,14 +5,10 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Cam from './components/Cam/Cam';
 import LoginMain from './components/LoginPage/LoginMain';
 import CamRooms from './components/Main/CamRooms';
-
-type UserInfo = {
-  roomId: string | null;
-  nickname: string | null;
-};
+import { UserInfo } from './types/cam';
 
 function App(): JSX.Element {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>({ roomId: null, nickname: null });
+  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: null });
 
   return (
     <Router>

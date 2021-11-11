@@ -1,15 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
+import useSTT from '../../hooks/useSTT';
+import { ToggleStoreContext } from './ToggleStore';
 
-type ChattingTabProps = {
-  isChattingTabActive: boolean;
-  isMouseOnCamPage: boolean;
-};
-// display: ${(props) => (props.isActive ? 'flex' : 'none')};
-// animation: ${(props) => (props.isActive ? 'boxFade 0.5s' : 'boxFade 0.5s reverse')};
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   width: 27vw;
   height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
@@ -155,13 +151,14 @@ const getCurrentDate = (): CurrentDate => {
   };
 };
 
-function ChattingTab(props: ChattingTabProps): JSX.Element {
-  const { isChattingTabActive, isMouseOnCamPage } = props;
+function ChattingTab(): JSX.Element {
+  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
 
   const [chatLogs, setChatLogs] = useState<MsgInfo[]>([]);
-  const [room, setRoom] = useState<string | null>('init');
+  const [room] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
+  const lastResult = useSTT();
 
   const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     const { key, currentTarget, shiftKey } = e;
@@ -191,6 +188,15 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
       chatLogsRef.current.scroll({ top: chatLogsRef.current.scrollHeight, behavior: 'smooth' });
     }
   });
+
+  useEffect(() => {
+    const currentDate = getCurrentDate();
+    if (lastResult.isFinal) {
+      const msgInfo: MsgInfo = { msg: lastResult.text, room, user: socket.id, date: currentDate };
+      socket.emit('sendMessage', msgInfo);
+      setChatLogs((logs) => [...logs, msgInfo]);
+    }
+  }, [lastResult]);
 
   const currentChatLogs = chatLogs.map((data: MsgInfo): JSX.Element => {
     const { msg, date, user } = data;

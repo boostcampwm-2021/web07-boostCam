@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { UserInfo } from '../../types/cam';
 
 const Container = styled.div`
   width: 100vw;
@@ -89,13 +90,8 @@ const SubmitButton = styled.button`
   }
 `;
 
-type UserInfo = {
-  roomId: string | null;
-  nickname: string | null;
-};
-
 type CamRoomsProps = {
-  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
 function CamRooms(props: CamRoomsProps): JSX.Element {

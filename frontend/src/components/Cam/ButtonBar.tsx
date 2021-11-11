@@ -9,8 +9,10 @@ import { ReactComponent as PresenstationIcon } from '../../assets/icons/presenta
 import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
+import { ReactComponent as STTIcon } from '../../assets/icons/speech.svg';
 import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -33,7 +35,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.div<{ color?: string }>`
-  min-width: 9vw;
+  width: 9vw;
   height: 7vh;
   display: flex;
   flex-direction: column;
@@ -55,19 +57,10 @@ const Button = styled.div<{ color?: string }>`
   }
 `;
 
-type ButtonBarProps = {
-  handleTab: {
-    handleUserListTabActive: () => void;
-    handleChattingTabActive: () => void;
-    handleScreenShareActive: () => void;
-  };
-  isMouseOnCamPage: boolean;
-};
-
-function ButtonBar(props: ButtonBarProps): JSX.Element {
-  const { handleTab, isMouseOnCamPage } = props;
-  const { handleUserListTabActive, handleChattingTabActive, handleScreenShareActive } = handleTab;
+function ButtonBar(): JSX.Element {
   const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
+  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage, handleScreenShareActive } =
+    useContext(ToggleStoreContext);
 
   const onClickVideoToggleButton = () => {
     if (!localStatus.stream) {
@@ -123,6 +116,10 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
         <Button onClick={handleChattingTabActive}>
           <ChatIcon />
           <span>채팅</span>
+        </Button>
+        <Button>
+          <STTIcon />
+          <span>STT</span>
         </Button>
       </ButtonContainer>
       <ButtonContainer>
