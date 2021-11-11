@@ -10,11 +10,10 @@ import StreamStatusIndicator from './StreamStatusIndicator';
 type UserScreenProps = {
   stream: MediaStream | undefined;
   userId: string;
-  screenWidth: string;
 };
 
-const Container = styled.div<{ screenWidth: string }>`
-  width: ${(props) => props.screenWidth};
+const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,13 +21,13 @@ const Container = styled.div<{ screenWidth: string }>`
   height: 90%;
 `;
 
-const Video = styled.video<{ screenWidth: string }>`
+const Video = styled.video`
   max-height: 100%;
   width: 100%;
 `;
 
 function UserScreen(props: UserScreenProps): JSX.Element {
-  const { stream, userId, screenWidth } = props;
+  const { stream, userId } = props;
   const socket = useRecoilValue(socketState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -57,9 +56,9 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   }, []);
 
   return (
-    <Container screenWidth={screenWidth}>
+    <Container>
       {status.stream && status.video ? (
-        <Video screenWidth={screenWidth} ref={videoRef} playsInline autoPlay>
+        <Video ref={videoRef} playsInline autoPlay>
           <track kind="captions" />
         </Video>
       ) : (
