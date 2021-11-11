@@ -55,4 +55,44 @@ export class CamGateway {
     const status = this.camService.getStatus(roomId, userId);
     client.emit('userStatus', { userId, status });
   }
+
+  @SubscribeMessage('startScreenShare')
+  handleStartScreenShare(client: Socket, payload: { roomId: string }) {
+    const { roomId } = payload;
+    this.camService.setScreenSharingUser(roomId, client.id);
+
+    client
+      .to(roomId)
+      .emit('screenShareStarted', { screenSharingUserId: client.id });
+  }
+
+  @SubscribeMessage('requestScreenShare')
+  handleRequestScreenShare(
+    client: Socket,
+    payload: { peerId: string; screenSharingUserId: string },
+  ) {
+    const { peerId, screenSharingUserId } = payload;
+    client.to(screenSharingUserId).emit('requestScreenShare', { peerId });
+  }
+
+  @SubscribeMessage('endSharingScreen')
+  handleEndSharingScreen(client: Socket, payload: { roomId: string }) {
+    const { roomId } = payload;
+    this.camService.endSharingScreen(roomId);
+    client.to(roomId).emit('endSharingScreen');
+  }
+
+  @SubscribeMessage('getScreenSharingUser')
+  handleGetScreenSharingUser(client: Socket, payload: { roomId: string }) {
+    const { roomId } = payload;
+    const screenSharingUserInfo =
+      this.camService.getScreenSharingUserInfo(roomId);
+    if (!screenSharingUserInfo || !screenSharingUserInfo.userId) {
+      return;
+    }
+
+    client.emit('getScreenSharingUser', {
+      screenSharingUserId: screenSharingUserInfo.userId,
+    });
+  }
 }
