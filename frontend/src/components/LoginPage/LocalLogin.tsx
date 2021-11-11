@@ -65,12 +65,7 @@ function LocalLogin(): JSX.Element {
   const navigate = useNavigate();
   const onSumbitLoginForm = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const { currentTarget } = e;
-    const formData: FormData = new FormData(currentTarget);
 
-    formData.forEach((val) => {
-      console.log(val);
-    });
     navigate('/rooms');
   };
 
