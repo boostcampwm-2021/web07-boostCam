@@ -23,8 +23,6 @@ export class CamGateway {
     client.data.roomId = roomId;
     client.data.userId = userId;
 
-    console.log(client.data);
-
     client.on('disconnect', () => {
       client.to(roomId).emit('userDisconnected', { userId });
       this.camService.exitRoom(roomId, userId);
