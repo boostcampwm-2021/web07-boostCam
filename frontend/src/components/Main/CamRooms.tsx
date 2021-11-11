@@ -166,14 +166,10 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
 
     setUserInfo(receivedData);
     setIsNicknameAvliable(true);
-    console.log(receivedData);
-    console.log(userInfo);
-    console.log(isNicknameAvliable);
   };
 
   const onClickRoomDiv = (e: React.MouseEvent<HTMLDivElement>): void => {
-    console.log(userInfo);
-    console.log(isNicknameAvliable);
+    if (!userInfo.nickname) return;
     const { currentTarget } = e;
     const roomId = currentTarget.dataset.id;
     navigate(`/cam?roomid=${roomId}`);
@@ -204,6 +200,10 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
   useEffect(() => {
     buildRoomList();
   }, []);
+
+  useEffect(() => {
+    buildRoomList();
+  }, [userInfo]);
 
   return (
     <Container>
