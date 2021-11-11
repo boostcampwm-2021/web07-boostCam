@@ -16,6 +16,7 @@ const Container = styled.div<{ isActive: boolean }>`
   background-color: #c4c4c4;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   overflow-y: auto;
+  z-index: 999;
 
   &::-webkit-scrollbar {
     width: 10px;
