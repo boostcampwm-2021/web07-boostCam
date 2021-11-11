@@ -27,6 +27,7 @@ const MainBox = styled.div`
 `;
 
 const ListDiv = styled.div`
+  width: 33%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -34,11 +35,14 @@ const ListDiv = styled.div`
 `;
 
 const RoomDiv = styled.div`
-  background-color: limegreen;
+  background-color: #4ddddf;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-top: 10px;
 `;
 
 const Form = styled.form`
-  width: 40%;
+  width: 33%;
   height: 45%;
   background-color: skyblue;
   border-radius: 20px;
