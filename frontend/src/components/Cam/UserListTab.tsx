@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import UserScreen from './UserScreen';
@@ -34,7 +34,7 @@ const Container = styled.div<{ isActive: boolean }>`
 `;
 
 type UserInfo = {
-  roomId: number | null;
+  roomId: string | null;
   nickname: string | null;
 };
 

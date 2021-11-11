@@ -13,9 +13,11 @@ export const CamStoreContext = createContext<React.ComponentState>(null);
 function CamStore(props: CamStoreProps): JSX.Element {
   const { children } = props;
   const socket = useRecoilValue(SocketState);
+  const currentURL = new URL(window.location.href);
+  const roomId = currentURL.searchParams.get('roomid');
   const { localStatus, localStream, setLocalStatus, screenList } = useUserMedia({
     socket,
-    roomId: '1',
+    roomId,
   });
 
   return (

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+import { useRecoilValue } from 'recoil';
 import ButtonBar from './ButtonBar';
 import ChattingTab from './ChattingTab';
 import MainScreen from './MainScreen';
 import CamStore from './CamStore';
 import UserListTab from './UserListTab';
+
+import socketState from '../../atoms/socket';
 
 const Container = styled.div`
   width: 100vw;
@@ -30,18 +33,21 @@ const UpperTab = styled.div`
 `;
 
 type UserInfo = {
-  roomId: number | null;
+  roomId: string | null;
   nickname: string | null;
 };
 
 type CamProps = {
   userInfo: UserInfo | null;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
 };
 
-function Cam({ userInfo }: CamProps): JSX.Element {
+function Cam(props: CamProps): JSX.Element {
+  const { userInfo, setUserInfo } = props;
   const [isUserListTabActive, setUserListTabActive] = useState<boolean>(true);
   const [isChattingTabActive, setChattingTabActive] = useState<boolean>(true);
   const [isMouseOnCamPage, setMouseOnCampPage] = useState<boolean>(false);
+  const socket = useRecoilValue(socketState);
 
   const handleUserListTabActive = (): void => {
     setUserListTabActive(!isUserListTabActive);
@@ -61,19 +67,49 @@ function Cam({ userInfo }: CamProps): JSX.Element {
     }
   };
 
+  const onSubmitNicknameForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { currentTarget } = e;
+    const formData: FormData = new FormData(currentTarget);
+    const receivedData: UserInfo = { nickname: null, roomId: null };
+    formData.forEach((val, key) => {
+      if (key === 'nickname') receivedData.nickname = val.toString().trim();
+    });
+    setUserInfo(receivedData);
+  };
+
+  useEffect(() => {
+    return () => {
+      socket.emit('exitRoom');
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
+
   return (
     <Container className="cam" onMouseOver={handleMouseOverCamPage} onMouseLeave={handleMouseOutCamPage}>
-      <CamStore>
-        <UpperTab>
-          <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} isMouseOnCamPage={isMouseOnCamPage} />
-          <UserListTab isUserListTabActive={isUserListTabActive} userInfo={userInfo} />
-          <ChattingTab isChattingTabActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage} />
-        </UpperTab>
-        <ButtonBar
-          handleTab={{ handleUserListTabActive, handleChattingTabActive }}
-          isMouseOnCamPage={isMouseOnCamPage}
-        />
-      </CamStore>
+      {!userInfo?.nickname ? (
+        <div>
+          <form onSubmit={onSubmitNicknameForm}>
+            <input name="nickname" placeholder="닉네임을 입력해주세요" required />
+            <button type="submit">입력</button>
+          </form>
+        </div>
+      ) : (
+        <CamStore>
+          <UpperTab>
+            <MainScreen tabActive={{ isUserListTabActive, isChattingTabActive }} isMouseOnCamPage={isMouseOnCamPage} />
+            <UserListTab isUserListTabActive={isUserListTabActive} userInfo={userInfo} />
+            <ChattingTab isChattingTabActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage} />
+          </UpperTab>
+          <ButtonBar
+            handleTab={{ handleUserListTabActive, handleChattingTabActive }}
+            isMouseOnCamPage={isMouseOnCamPage}
+          />
+        </CamStore>
+      )}
     </Container>
   );
 }
