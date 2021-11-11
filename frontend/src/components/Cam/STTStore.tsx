@@ -9,10 +9,7 @@ type STTStoreProps = {
 
 function STTStore(props: STTStoreProps): JSX.Element {
   const { children } = props;
-  const { lastResult, isSTTActive, setSTTActive } = useSTT();
-  const toggleSTTActive = () => {
-    setSTTActive((prev) => !prev);
-  };
+  const { lastResult, isSTTActive, toggleSTTActive } = useSTT();
 
   return (
     <STTStoreContext.Provider value={{ lastResult, isSTTActive, toggleSTTActive }}>{children}</STTStoreContext.Provider>
