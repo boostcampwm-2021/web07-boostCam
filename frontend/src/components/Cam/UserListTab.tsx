@@ -37,7 +37,6 @@ const Container = styled.div<{ isActive: boolean }>`
 function UserListTab(): JSX.Element {
   const { screenList } = useContext(CamStoreContext);
   const { isUserListTabActive } = useContext(ToggleStoreContext);
-  const screenWidth = '100%';
 
   return (
     <Draggable
@@ -48,9 +47,9 @@ function UserListTab(): JSX.Element {
       isActive={isUserListTabActive}
     >
       <Container isActive={isUserListTabActive}>
-        <LocalUserScreen screenWidth={screenWidth} />
+        <LocalUserScreen />
         {screenList.map((screen: Screen) => (
-          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} screenWidth={screenWidth} />
+          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
         ))}
       </Container>
     </Draggable>

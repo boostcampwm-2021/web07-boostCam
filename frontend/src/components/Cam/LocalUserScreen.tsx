@@ -5,8 +5,8 @@ import DefaultScreen from './DefaultScreen';
 import { CamStoreContext } from './CamStore';
 import StreamStatusIndicator from './StreamStatusIndicator';
 
-const Container = styled.div<{ screenWidth: string }>`
-  width: ${(props) => props.screenWidth};
+const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,17 +14,12 @@ const Container = styled.div<{ screenWidth: string }>`
   height: 90%;
 `;
 
-const Video = styled.video<{ screenWidth: string }>`
+const Video = styled.video`
   max-height: 100%;
   width: 100%;
 `;
 
-type LocalUserScreenProps = {
-  screenWidth: string;
-};
-
-function LocalUserScreen(props: LocalUserScreenProps): JSX.Element {
-  const { screenWidth } = props;
+function LocalUserScreen(): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { localStream, localStatus } = useContext(CamStoreContext);
 
@@ -38,9 +33,9 @@ function LocalUserScreen(props: LocalUserScreenProps): JSX.Element {
   });
 
   return (
-    <Container screenWidth={screenWidth}>
+    <Container>
       {localStatus.stream && localStatus.video ? (
-        <Video screenWidth={screenWidth} ref={videoRef} playsInline autoPlay muted>
+        <Video ref={videoRef} playsInline autoPlay muted>
           <track kind="captions" />
         </Video>
       ) : (
