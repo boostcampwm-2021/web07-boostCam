@@ -3,7 +3,6 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Cam from './components/Cam/Cam';
-import LoginMain from './components/LoginPage/LoginMain';
 import CamRooms from './components/Main/CamRooms';
 import { UserInfo } from './types/cam';
 
