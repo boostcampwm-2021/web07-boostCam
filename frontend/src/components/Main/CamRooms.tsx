@@ -122,7 +122,6 @@ type MapInfo = {
 
 function CamRooms(props: CamRoomsProps): JSX.Element {
   const { userInfo, setUserInfo } = props;
-  const [isNicknameAvliable, setIsNicknameAvliable] = useState<boolean>(false);
   const [roomList, setRoomList] = useState<JSX.Element>();
   const navigate = useNavigate();
 
@@ -164,7 +163,6 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     const receivedData: UserInfo = getUserInfoFromForm(e);
 
     setUserInfo(receivedData);
-    setIsNicknameAvliable(true);
   };
 
   const onClickRoomDiv = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -224,7 +222,7 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
         </Form>
         <Form onSubmit={onSumbitNicknameForm}>
           <BoxTag> Set Nickname</BoxTag>
-          <BoxMessage> Current Nickname : {!userInfo.nickname ? 'None' : userInfo.nickname}</BoxMessage>
+          <BoxMessage> Current Nickname : {userInfo?.nickname || 'None'}</BoxMessage>
           <InputDiv>
             <InputTag>Nickname</InputTag>
             <Input name="nickname" placeholder="닉네임을 입력하세요" required />
