@@ -57,7 +57,7 @@ function Cam(props: CamProps): JSX.Element {
 
   useEffect(() => {
     return () => {
-      socket.emit('exitRoom');
+      if (userInfo?.nickname) socket.emit('exitRoom');
     };
   }, []);
 

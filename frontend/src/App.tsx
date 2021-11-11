@@ -3,7 +3,6 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Cam from './components/Cam/Cam';
-import LoginMain from './components/LoginPage/LoginMain';
 import CamRooms from './components/Main/CamRooms';
 import { UserInfo } from './types/cam';
 
@@ -14,9 +13,8 @@ function App(): JSX.Element {
     <Router>
       <RecoilRoot>
         <Routes>
-          <Route path="/" element={<LoginMain />} />
+          <Route path="/" element={<CamRooms userInfo={userInfo} setUserInfo={setUserInfo} />} />
           <Route path="/cam" element={<Cam userInfo={userInfo} setUserInfo={setUserInfo} />} />
-          <Route path="/rooms" element={<CamRooms setUserInfo={setUserInfo} />} />
         </Routes>
       </RecoilRoot>
     </Router>
