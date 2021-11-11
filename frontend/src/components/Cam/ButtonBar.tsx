@@ -89,6 +89,10 @@ function ButtonBar(): JSX.Element {
     }));
   };
 
+  const handleExit = () => {
+    window.location.href = '/';
+  };
+
   return (
     <Container isMouseOnCamPage={isMouseOnCamPage}>
       <ButtonContainer>
@@ -129,7 +133,7 @@ function ButtonBar(): JSX.Element {
       </ButtonContainer>
       <ButtonContainer>
         <Button color="red">
-          <ExitIcon />
+          <ExitIcon onClick={handleExit} />
           <span>나가기</span>
         </Button>
       </ButtonContainer>

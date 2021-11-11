@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
@@ -11,6 +11,7 @@ import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
 import STTStore from './STT/STTStore';
+import NickNameForm from './NickNameForm';
 
 const Container = styled.div`
   width: 100vw;
@@ -34,29 +35,15 @@ const UpperTab = styled.div`
   position: relative;
 `;
 
-type CamProps = {
-  userInfo: UserInfo | null;
-  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
-};
-
-function Cam(props: CamProps): JSX.Element {
-  const { userInfo, setUserInfo } = props;
+function Cam(): JSX.Element {
+  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: null });
 
   const socket = useRecoilValue(socketState);
   const camRef = useRef<HTMLDivElement>(null);
 
-  const onSubmitNicknameForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { currentTarget } = e;
-    const formData: FormData = new FormData(currentTarget);
-    const receivedData: UserInfo = { nickname: null, roomId: null };
-    formData.forEach((val, key) => {
-      if (key === 'nickname') receivedData.nickname = val.toString().trim();
-    });
-    setUserInfo(receivedData);
-  };
-
   useEffect(() => {
+    const roomId = new URLSearchParams(new URL(window.location.href).search).get('roomid');
+    setUserInfo((prev) => ({ ...prev, roomId }));
     return () => {
       if (userInfo?.nickname) socket.emit('exitRoom');
     };
@@ -65,12 +52,7 @@ function Cam(props: CamProps): JSX.Element {
   return (
     <Container ref={camRef}>
       {!userInfo?.nickname ? (
-        <div>
-          <form onSubmit={onSubmitNicknameForm}>
-            <input name="nickname" placeholder="닉네임을 입력해주세요" required />
-            <button type="submit">입력</button>
-          </form>
-        </div>
+        <NickNameForm setUserInfo={setUserInfo} />
       ) : (
         <CamStore userInfo={userInfo}>
           <ToggleStore camRef={camRef}>
