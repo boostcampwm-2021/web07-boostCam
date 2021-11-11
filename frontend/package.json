@@ -23,6 +23,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+    "postinstall": "patch-package",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -48,6 +49,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^4.0.0",
+    "patch-package": "^6.4.7",
     "prettier": "^2.4.1"
   }
 }

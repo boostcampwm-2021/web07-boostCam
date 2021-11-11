@@ -123,6 +123,7 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     });
     const { statusCode } = await response.json();
     if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
+    // eslint-disable-next-line no-alert
     else if (statusCode === 500) alert('이미 존재하는 방 입니다.');
   };
 
@@ -151,6 +152,7 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     });
     const { statusCode } = await response.json();
     if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
+    // eslint-disable-next-line no-alert
     else if (statusCode === 500) alert('존재하지 않는 방 입니다.');
   };
 
