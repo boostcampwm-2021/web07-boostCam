@@ -38,7 +38,7 @@ function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
       return;
     }
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia();
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
       stream.getVideoTracks()[0].addEventListener('ended', () => {
         setSharedScreen(null);
         sharedScreenSenderRef.current?.stopSharingScreen();
