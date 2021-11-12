@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Cam from './components/Cam/Cam';
 import CamRooms from './components/Main/CamRooms';
-import { UserInfo } from './types/cam';
 
 function App(): JSX.Element {
-  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: null });
-
   return (
     <Router>
       <RecoilRoot>
         <Routes>
-          <Route path="/" element={<CamRooms userInfo={userInfo} setUserInfo={setUserInfo} />} />
-          <Route path="/cam" element={<Cam userInfo={userInfo} setUserInfo={setUserInfo} />} />
+          <Route path="/" element={<CamRooms />} />
+          <Route path="/cam" element={<Cam />} />
         </Routes>
       </RecoilRoot>
     </Router>

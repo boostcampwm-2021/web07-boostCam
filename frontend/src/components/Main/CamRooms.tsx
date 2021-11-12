@@ -2,51 +2,57 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { useNavigate } from 'react-router-dom';
-import { Status, UserInfo } from '../../types/cam';
+import { Status } from '../../types/cam';
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #c4c4c4;
+  background-color: #009b9f;
 
   display: flex;
-  flex-direction: column;
   justify-content: space-around;
   align-items: center;
 `;
 
 const MainBox = styled.div`
-  min-width: 700px;
-  min-height: 600px;
-  background-color: skyblue;
+  min-width: 600px;
+  min-height: 450px;
+  width: 50%;
+  height: 50%;
+  border: 2px solid #12cdd1;
   border-radius: 20px;
 
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
 `;
 
 const ListDiv = styled.div`
-  width: 33%;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 `;
 
 const RoomDiv = styled.div`
-  background-color: #4ddddf;
+  width: 200px;
   padding: 10px 15px;
+  border: 2px solid #12cdd1;
   border-radius: 10px;
-  margin-top: 10px;
+  margin: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #12cdd1;
+    transition: all 0.3s;
+  }
 `;
 
 const Form = styled.form`
-  width: 33%;
+  width: 50%;
   height: 45%;
-  background-color: skyblue;
   border-radius: 20px;
+  padding: 20px 0;
+  margin: 30px 0;
 
   display: flex;
   flex-direction: column;
@@ -58,22 +64,14 @@ const BoxTag = styled.span`
   font-size: 25px;
 `;
 
-const BoxMessage = styled.span`
-  font-size: 15px;
-`;
-
 const InputDiv = styled.div`
   width: 60%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
   &:last-child {
     margin-top: 15px;
   }
-`;
-
-const InputTag = styled.span`
-  width: 100%;
 `;
 
 const Input = styled.input`
@@ -81,7 +79,6 @@ const Input = styled.input`
   outline: none;
   padding: 8px 10px;
   margin-top: 10px;
-
   border-radius: 10px;
 `;
 
@@ -89,19 +86,19 @@ const SubmitButton = styled.button`
   width: 60%;
   margin-top: 15px;
   height: 35px;
-  background-color: #4ddddf;
+  background: none;
 
   border: 0;
   outline: 0;
 
   border-radius: 10px;
+  border: 2px solid #12cdd1;
   cursor: pointer;
   text-align: center;
-  box-shadow: 5px 3px 3px #7c7b7b;
   transition: all 0.3s;
 
   &:hover {
-    background-color: #26f5f8;
+    background-color: #12cdd1;
     transition: all 0.3s;
   }
 
@@ -110,39 +107,22 @@ const SubmitButton = styled.button`
   }
 `;
 
-type CamRoomsProps = {
-  userInfo: UserInfo;
-  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
-};
-
 type MapInfo = {
   userId: string;
   status: Status;
 };
 
-function CamRooms(props: CamRoomsProps): JSX.Element {
-  const { userInfo, setUserInfo } = props;
+function CamRooms(): JSX.Element {
   const [roomList, setRoomList] = useState<JSX.Element>();
   const navigate = useNavigate();
 
-  const getUserInfoFromForm = (e: React.FormEvent<HTMLFormElement>): UserInfo => {
-    const { currentTarget } = e;
-    const formData: FormData = new FormData(currentTarget);
-    const receivedData: UserInfo = { nickname: null, roomId: null };
-    formData.forEach((val, key) => {
-      if (key === 'nickname') receivedData.nickname = val.toString().trim();
-      if (key === 'roomid') receivedData.roomId = val.toString();
-    });
-    return receivedData;
-  };
-
   const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    const receivedData: UserInfo = getUserInfoFromForm(e);
-    const { nickname, roomId } = receivedData;
-    if (!nickname || !roomId) return;
+    const roomId = new FormData(e.currentTarget).get('roomid')?.toString().trim();
+    if (!roomId) {
+      return;
+    }
 
-    setUserInfo(receivedData);
     const response = await fetch('/api/cam/room/', {
       method: 'POST',
       headers: {
@@ -158,21 +138,10 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     else if (statusCode === 500) alert('이미 존재하는 방 입니다.');
   };
 
-  const onSumbitNicknameForm = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const receivedData: UserInfo = getUserInfoFromForm(e);
-
-    setUserInfo(receivedData);
-  };
-
   const onClickRoomDiv = (e: React.MouseEvent<HTMLDivElement>): void => {
-    // eslint-disable-next-line no-alert
-    if (!userInfo.nickname) alert('닉네임을 먼저 설정해주세요!');
-    else {
-      const { currentTarget } = e;
-      const roomId = currentTarget.dataset.id;
-      navigate(`/cam?roomid=${roomId}`);
-    }
+    const { currentTarget } = e;
+    const roomId = currentTarget.dataset.id;
+    navigate(`/cam?roomid=${roomId}`);
   };
 
   const buildRoomList = async (): Promise<void> => {
@@ -201,33 +170,15 @@ function CamRooms(props: CamRoomsProps): JSX.Element {
     buildRoomList();
   }, []);
 
-  useEffect(() => {
-    buildRoomList();
-  }, [userInfo]);
-
   return (
     <Container>
       <MainBox>
         <Form onSubmit={onSumbitCreateForm}>
           <BoxTag>Create Room</BoxTag>
           <InputDiv>
-            <InputTag>Nickname</InputTag>
-            <Input name="nickname" placeholder="닉네임을 입력하세요" required />
-          </InputDiv>
-          <InputDiv>
-            <InputTag>Room Number</InputTag>
-            <Input name="roomid" placeholder="방 번호를 입력하세요" required />
+            <Input name="roomid" placeholder="방 이름을 입력하세요" required />
           </InputDiv>
           <SubmitButton type="submit">Create</SubmitButton>
-        </Form>
-        <Form onSubmit={onSumbitNicknameForm}>
-          <BoxTag> Set Nickname</BoxTag>
-          <BoxMessage> Current Nickname : {userInfo?.nickname || 'None'}</BoxMessage>
-          <InputDiv>
-            <InputTag>Nickname</InputTag>
-            <Input name="nickname" placeholder="닉네임을 입력하세요" required />
-          </InputDiv>
-          <SubmitButton type="submit">닉네임 설정</SubmitButton>
         </Form>
         <ListDiv>{roomList}</ListDiv>
       </MainBox>
