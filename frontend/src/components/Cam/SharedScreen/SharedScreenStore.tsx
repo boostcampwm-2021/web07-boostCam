@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import SharedScreenReceiver from '../../hooks/SharedScreenReceiver';
-import SocketState from '../../atoms/socket';
-import SharedScreenSender from '../../hooks/SharedScreenSender';
+import SharedScreenReceiver from './SharedScreenReceiver';
+import SocketState from '../../../atoms/socket';
+import SharedScreenSender from './SharedScreenSender';
 
 type SharedScreenStoreProps = {
   children: React.ReactChild[] | React.ReactChild;

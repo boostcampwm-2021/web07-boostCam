@@ -17,7 +17,7 @@ import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';
 import { STTStoreContext } from './STT/STTStore';
-import { SharedScreenStoreContext } from './SharedScreenStore';
+import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;

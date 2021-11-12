@@ -11,7 +11,7 @@ import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
 import STTStore from './STT/STTStore';
-import SharedScreenStore from './SharedScreenStore';
+import SharedScreenStore from './SharedScreen/SharedScreenStore';
 
 const Container = styled.div`
   width: 100vw;
