@@ -26,9 +26,11 @@ function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
 
   useEffect(() => {
     if (!roomId) {
-      return;
+      return undefined;
     }
+
     sharedScreenReceiverRef.current = new SharedScreenReceiver(socket, roomId, setSharedScreen);
+    return () => sharedScreenReceiverRef.current?.close();
   }, []);
 
   const tryShareScreen = async () => {
@@ -59,6 +61,7 @@ function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
       setSharedScreen(null);
       setSharedFromMe(false);
       sharedScreenSenderRef.current?.stopSharingScreen();
+      sharedScreenSenderRef.current = undefined;
     }
   };
 
