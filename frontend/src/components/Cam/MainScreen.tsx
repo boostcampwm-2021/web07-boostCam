@@ -2,11 +2,12 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { ToggleStoreContext } from './ToggleStore';
-import SharedScreen from './SharedScreen';
+import SharedScreen from './SharedScreen/SharedScreen';
 import { CamStoreContext } from './CamStore';
 import type { Screen } from '../../types/cam';
 import LocalUserScreen from './LocalUserScreen';
 import UserScreen from './UserScreen';
+import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
 
 const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean; numOfScreen: number }>`
   width: ${(props) => props.activeTab[0]};
@@ -23,7 +24,8 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean; n
 
 function MainScreen(): JSX.Element {
   const { screenList } = useContext(CamStoreContext);
-  const { isChattingTabActive, isMouseOnCamPage, isScreenShareActive, screenStream } = useContext(ToggleStoreContext);
+  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
+  const { sharedScreen } = useContext(SharedScreenStoreContext);
 
   const countActiveTab = (): string[] => {
     if (isChattingTabActive) return ['70vw', '98vw'];
@@ -34,7 +36,7 @@ function MainScreen(): JSX.Element {
     e.currentTarget.style.animation = 'none';
   };
 
-  if (isScreenShareActive) {
+  if (sharedScreen !== null) {
     return (
       <Container
         activeTab={countActiveTab()}
@@ -42,7 +44,7 @@ function MainScreen(): JSX.Element {
         isMouseOnCamPage={isMouseOnCamPage}
         numOfScreen={1}
       >
-        <SharedScreen stream={screenStream} />
+        <SharedScreen stream={sharedScreen} />
       </Container>
     );
   }

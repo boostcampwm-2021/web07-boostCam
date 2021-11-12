@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import Status from 'src/types/cam';
 
+type RoomId = string;
+type SocketId = string;
+type ScreenSharingUserId = SocketId;
+
 @Injectable()
 export class CamService {
   private map: Map<string, Array<{ userId: string; status: Status }>>;
+  private sharedScreen: Map<RoomId, { userId: string | null }>;
   constructor() {
     this.map = new Map();
+    this.sharedScreen = new Map();
   }
   getRoomList() {
     return this.map;
@@ -16,6 +22,7 @@ export class CamService {
   createRoom(roomId: string): boolean {
     if (this.map.get(roomId)) return false;
     this.map.set(roomId, []);
+    this.sharedScreen.set(roomId, { userId: null });
     return true;
   }
   joinRoom(roomId: string, userId: string, status: Status): boolean {
@@ -37,5 +44,21 @@ export class CamService {
   getStatus(roomId: string, userId: string) {
     if (!this.map.get(roomId)) return false;
     return this.map.get(roomId).find((user) => user.userId === userId).status;
+  }
+
+  setScreenSharingUser(roomId: RoomId, userId: ScreenSharingUserId) {
+    this.sharedScreen.set(roomId, { userId });
+  }
+
+  endSharingScreen(roomId: RoomId) {
+    this.sharedScreen.set(roomId, { userId: null });
+  }
+
+  getScreenSharingUserInfo(roomId: RoomId) {
+    if (this.sharedScreen.has(roomId)) {
+      return this.sharedScreen.get(roomId);
+    }
+
+    return null;
   }
 }

@@ -11,6 +11,7 @@ import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
 import STTStore from './STT/STTStore';
+import SharedScreenStore from './SharedScreen/SharedScreenStore';
 import NickNameForm from './NickNameForm';
 
 const Container = styled.div`
@@ -57,12 +58,14 @@ function Cam(): JSX.Element {
         <CamStore userInfo={userInfo}>
           <ToggleStore camRef={camRef}>
             <STTStore>
-              <UpperTab>
-                <MainScreen />
-                <UserListTab />
-                <ChattingTab />
-              </UpperTab>
-              <ButtonBar />
+              <SharedScreenStore>
+                <UpperTab>
+                  <MainScreen />
+                  <UserListTab />
+                  <ChattingTab />
+                </UpperTab>
+                <ButtonBar />
+              </SharedScreenStore>
             </STTStore>
           </ToggleStore>
         </CamStore>
