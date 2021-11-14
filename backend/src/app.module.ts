@@ -5,7 +5,7 @@ import { ChattingModule } from './chatting.module';
 import { CamModule } from './cam/cam.module';
 
 @Module({
-  imports: [ChattingModule, CamModule],
+  imports: [CamModule],
   controllers: [AppController],
   providers: [AppService],
 })

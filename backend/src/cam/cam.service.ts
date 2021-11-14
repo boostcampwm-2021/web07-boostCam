@@ -5,9 +5,15 @@ type RoomId = string;
 type SocketId = string;
 type ScreenSharingUserId = SocketId;
 
+type CamMap = {
+  userId: string;
+  userNickname: string;
+  status: Status;
+};
+
 @Injectable()
 export class CamService {
-  private map: Map<string, Array<{ userId: string; status: Status }>>;
+  private map: Map<string, Array<CamMap>>;
   private sharedScreen: Map<RoomId, { userId: string | null }>;
   constructor() {
     this.map = new Map();
@@ -25,9 +31,14 @@ export class CamService {
     this.sharedScreen.set(roomId, { userId: null });
     return true;
   }
-  joinRoom(roomId: string, userId: string, status: Status): boolean {
+  joinRoom(
+    roomId: string,
+    userId: string,
+    userNickname: string,
+    status: Status,
+  ): boolean {
     if (!this.map.get(roomId)) return false;
-    this.map.get(roomId).push({ userId, status });
+    this.map.get(roomId).push({ userId, userNickname, status });
     return true;
   }
   exitRoom(roomId: string, userId: string) {

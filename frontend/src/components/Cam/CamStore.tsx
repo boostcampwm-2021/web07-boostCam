@@ -20,6 +20,7 @@ function CamStore(props: CamStoreProps): JSX.Element {
   const { localStatus, localStream, setLocalStatus, screenList } = useUserMedia({
     socket,
     roomId,
+    userInfo,
   });
 
   return (
