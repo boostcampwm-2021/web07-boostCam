@@ -1,22 +1,12 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 
-import Status from 'src/types/cam';
+import { Status, MessageInfo, CamMap } from 'src/types/cam';
 import { CamService } from './cam.service';
 
-type CurrentDate = {
-  year: number;
-  month: number;
-  date: number;
-  hour: number;
-  minutes: number;
-};
-
-type MsgInfo = {
-  msg: string;
-  room: string | null;
-  user: string;
-  date: CurrentDate;
+type RoomInfo = {
+  socketId: string;
+  userNickname: string;
 };
 
 @WebSocketGateway()
@@ -45,7 +35,7 @@ export class CamGateway {
   ): void {
     const { roomId, userId, userNickname, status } = payload;
     client.join(roomId);
-    this.camService.joinRoom(roomId, userId, userNickname, status);
+    this.camService.joinRoom(roomId, userId, client.id, userNickname, status);
     client.to(roomId).emit('userConnected', { userId });
 
     client.data.roomId = roomId;
@@ -128,8 +118,15 @@ export class CamGateway {
   }
 
   @SubscribeMessage('sendMessage')
-  handleSendMessage(client: Socket, payload: MsgInfo): void {
+  handleSendMessage(client: Socket, payload: MessageInfo): void {
     const { roomId } = client.data;
-    client.broadcast.to(roomId).emit('receiveMessage', payload);
+    const roomInfo: CamMap[] = this.camService.getRoomInfobyRoomId(roomId);
+    const nicknameInfo: RoomInfo[] = roomInfo.map((data) => {
+      const { socketId, userNickname } = data;
+      return { socketId, userNickname };
+    });
+    client.broadcast
+      .to(roomId)
+      .emit('receiveMessage', { payload, nicknameInfo });
   }
 }

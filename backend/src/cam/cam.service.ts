@@ -1,15 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import Status from 'src/types/cam';
+import { Status, CamMap } from 'src/types/cam';
 
 type RoomId = string;
 type SocketId = string;
 type ScreenSharingUserId = SocketId;
-
-type CamMap = {
-  userId: string;
-  userNickname: string;
-  status: Status;
-};
 
 @Injectable()
 export class CamService {
@@ -22,8 +16,11 @@ export class CamService {
   getRoomList() {
     return this.map;
   }
+  getRoomInfobyRoomId(roomId: string) {
+    return this.map.get(roomId);
+  }
   isRoomExist(roomId: string): boolean {
-    return this.map.has(roomId) ? true : false;
+    return this.map.has(roomId);
   }
   createRoom(roomId: string): boolean {
     if (this.map.get(roomId)) return false;
@@ -34,11 +31,12 @@ export class CamService {
   joinRoom(
     roomId: string,
     userId: string,
+    socketId: string,
     userNickname: string,
     status: Status,
   ): boolean {
     if (!this.map.get(roomId)) return false;
-    this.map.get(roomId).push({ userId, userNickname, status });
+    this.map.get(roomId).push({ userId, socketId, userNickname, status });
     return true;
   }
   exitRoom(roomId: string, userId: string) {
