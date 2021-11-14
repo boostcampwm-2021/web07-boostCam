@@ -1,5 +1,9 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
 
 import { Status, MessageInfo, CamMap } from 'src/types/cam';
 import { CamService } from './cam.service';
@@ -11,6 +15,7 @@ type RoomInfo = {
 
 @WebSocketGateway()
 export class CamGateway {
+  @WebSocketServer() server: Server;
   constructor(private camService: CamService) {
     this.camService.createRoom('1');
   }
@@ -128,6 +133,13 @@ export class CamGateway {
     client.broadcast
       .to(roomId)
       .emit('receiveMessage', { payload, nicknameInfo });
+  }
+
+  @SubscribeMessage('changeRoomList')
+  handleChangeRoomList(): void {
+    const roomList = this.camService.getRoomList();
+    const roomListJson = JSON.stringify(Array.from(roomList.entries()));
+    this.server.emit('getRoomList', roomListJson);
   }
 
   @SubscribeMessage('changeNickname')

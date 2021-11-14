@@ -47,6 +47,7 @@ function Cam(): JSX.Element {
     setUserInfo((prev) => ({ ...prev, roomId }));
     return () => {
       socket.emit('exitRoom');
+      socket.emit('changeRoomList');
     };
   }, []);
 

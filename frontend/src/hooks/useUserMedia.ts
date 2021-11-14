@@ -56,6 +56,7 @@ export default function useUserMedia(props: UseUserMediaProps): {
         status: newStatus,
       });
     }
+    socket.emit('changeRoomList');
   };
 
   useEffect(() => {
