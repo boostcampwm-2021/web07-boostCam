@@ -202,6 +202,9 @@ function ChattingTab(): JSX.Element {
       setChatLogs((logs) => [...logs, payload]);
       setNicknameList(nicknameInfo);
     });
+    socket.on('getNicknameList', (nicknameInfo: RoomInfo[]) => {
+      setNicknameList(nicknameInfo);
+    });
     console.log(`nickname : ${userInfo.nickname}`);
   }, []);
 
@@ -219,7 +222,7 @@ function ChattingTab(): JSX.Element {
     const chatTopChildren = isMe ? (
       <ChatTop isMe={isMe}>
         <ChatDate>{time}</ChatDate>
-        <ChatUserName isMe={isMe}>{nickname}</ChatUserName>
+        <ChatUserName isMe={isMe}>{userInfo.nickname}</ChatUserName>
       </ChatTop>
     ) : (
       <ChatTop isMe={isMe}>

@@ -54,6 +54,13 @@ export class CamService {
     if (!this.map.get(roomId)) return false;
     return this.map.get(roomId).find((user) => user.userId === userId).status;
   }
+  changeNickname(roomId: string, socketId: string, userNickname: string) {
+    if (!this.map.get(roomId)) return false;
+    const user = this.map
+      .get(roomId)
+      .find((user) => user.socketId === socketId);
+    user.userNickname = userNickname;
+  }
 
   setScreenSharingUser(roomId: RoomId, userId: ScreenSharingUserId) {
     this.sharedScreen.set(roomId, { userId });

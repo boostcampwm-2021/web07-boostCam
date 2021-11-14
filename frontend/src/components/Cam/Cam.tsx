@@ -55,7 +55,7 @@ function Cam(): JSX.Element {
       {!userInfo?.nickname ? (
         <NickNameForm setUserInfo={setUserInfo} />
       ) : (
-        <CamStore userInfo={userInfo}>
+        <CamStore userInfo={userInfo} setUserInfo={setUserInfo}>
           <ToggleStore camRef={camRef}>
             <STTStore>
               <SharedScreenStore>

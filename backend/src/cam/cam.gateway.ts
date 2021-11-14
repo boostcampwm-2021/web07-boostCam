@@ -129,4 +129,20 @@ export class CamGateway {
       .to(roomId)
       .emit('receiveMessage', { payload, nicknameInfo });
   }
+
+  @SubscribeMessage('changeNickname')
+  handleChangeNickname(
+    client: Socket,
+    payload: { userNickname: string },
+  ): void {
+    const { roomId } = client.data;
+    const { userNickname } = payload;
+    this.camService.changeNickname(roomId, client.id, userNickname);
+    const roomInfo: CamMap[] = this.camService.getRoomInfobyRoomId(roomId);
+    const nicknameInfo: RoomInfo[] = roomInfo.map((data) => {
+      const { socketId, userNickname } = data;
+      return { socketId, userNickname };
+    });
+    client.broadcast.to(roomId).emit('getNicknameList', nicknameInfo);
+  }
 }
