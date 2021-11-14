@@ -46,7 +46,7 @@ function Cam(): JSX.Element {
     const roomId = new URLSearchParams(new URL(window.location.href).search).get('roomid');
     setUserInfo((prev) => ({ ...prev, roomId }));
     return () => {
-      if (userInfo?.nickname) socket.emit('exitRoom');
+      socket.emit('exitRoom');
     };
   }, []);
 
