@@ -5,6 +5,8 @@ import { Socket } from 'socket.io-client';
 class SharedScreenReceiver {
   private readonly peer: Peer;
 
+  private call?: Peer.MediaConnection;
+
   constructor(
     private readonly socket: Socket,
     private readonly roomId: string,
@@ -31,20 +33,27 @@ class SharedScreenReceiver {
     });
 
     this.peer.on('call', (call) => {
+      this.call = call;
       call.answer(undefined);
       call.on('stream', (screenStream) => {
         this.setSharedScreen(screenStream);
       });
       call.on('close', () => {
+        this.peer.connections[call.peer] = null;
+        this.call = undefined;
         this.setSharedScreen(null);
       });
     });
 
     this.peer.on('disconnected', () => {
+      this.call?.close();
+      this.call = undefined;
       this.setSharedScreen(null);
     });
 
     this.socket.on('endSharingScreen', () => {
+      this.call?.close();
+      this.call = undefined;
       this.setSharedScreen(null);
     });
   }
@@ -54,6 +63,7 @@ class SharedScreenReceiver {
   }
 
   close(): void {
+    this.call?.close();
     this.peer.destroy();
     this.socket.removeAllListeners('screenShareStarted');
     this.socket.removeAllListeners('endSharingScreen');

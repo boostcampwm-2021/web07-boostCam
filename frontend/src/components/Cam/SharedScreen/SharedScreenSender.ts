@@ -48,6 +48,7 @@ class SharedScreenSender {
     this.connections.forEach((connection) => {
       connection.close();
     });
+    this.connections = [];
   }
 }
 
