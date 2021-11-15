@@ -8,11 +8,6 @@ import { Socket, Server } from 'socket.io';
 import { Status, MessageInfo, CamMap } from 'src/types/cam';
 import { CamService } from './cam.service';
 
-type RoomInfo = {
-  socketId: string;
-  userNickname: string;
-};
-
 @WebSocketGateway()
 export class CamGateway {
   @WebSocketServer() server: Server;
@@ -125,11 +120,7 @@ export class CamGateway {
   @SubscribeMessage('sendMessage')
   handleSendMessage(client: Socket, payload: MessageInfo): void {
     const { roomId } = client.data;
-    const roomInfo: CamMap[] = this.camService.getRoomInfobyRoomId(roomId);
-    const nicknameInfo: RoomInfo[] = roomInfo.map((data) => {
-      const { socketId, userNickname } = data;
-      return { socketId, userNickname };
-    });
+    const nicknameInfo = this.camService.getRoomNicknameList(roomId);
     client.broadcast
       .to(roomId)
       .emit('receiveMessage', { payload, nicknameInfo });
@@ -150,11 +141,7 @@ export class CamGateway {
     const { roomId } = client.data;
     const { userNickname } = payload;
     this.camService.changeNickname(roomId, client.id, userNickname);
-    const roomInfo: CamMap[] = this.camService.getRoomInfobyRoomId(roomId);
-    const nicknameInfo: RoomInfo[] = roomInfo.map((data) => {
-      const { socketId, userNickname } = data;
-      return { socketId, userNickname };
-    });
+    const nicknameInfo = this.camService.getRoomNicknameList(roomId);
     client.broadcast.to(roomId).emit('getNicknameList', nicknameInfo);
   }
 }

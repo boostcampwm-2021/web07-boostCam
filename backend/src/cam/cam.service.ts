@@ -4,6 +4,10 @@ import { Status, CamMap } from 'src/types/cam';
 type RoomId = string;
 type SocketId = string;
 type ScreenSharingUserId = SocketId;
+type RoomInfo = {
+  socketId: string;
+  userNickname: string;
+};
 
 @Injectable()
 export class CamService {
@@ -16,8 +20,12 @@ export class CamService {
   getRoomList() {
     return this.map;
   }
-  getRoomInfobyRoomId(roomId: string) {
-    return this.map.get(roomId);
+  getRoomNicknameList(roomId: string): RoomInfo[] {
+    const roomInfo: CamMap[] = this.map.get(roomId);
+    return roomInfo.map((data) => {
+      const { socketId, userNickname } = data;
+      return { socketId, userNickname };
+    });
   }
   isRoomExist(roomId: string): boolean {
     return this.map.has(roomId);

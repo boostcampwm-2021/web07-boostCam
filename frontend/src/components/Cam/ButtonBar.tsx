@@ -144,8 +144,8 @@ function ButtonBar(): JSX.Element {
           </Button>
         </ButtonContainer>
         <ButtonContainer>
-          <Button color="red">
-            <ExitIcon onClick={handleExit} />
+          <Button color="red" onClick={handleExit}>
+            <ExitIcon />
             <span>나가기</span>
           </Button>
         </ButtonContainer>
