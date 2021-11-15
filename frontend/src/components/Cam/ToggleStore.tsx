@@ -25,6 +25,7 @@ function ToggleStore(props: CamToggleStoreProps): JSX.Element {
       value={{
         isUserListTabActive,
         isChattingTabActive,
+        setUserListTabActive,
         handleUserListTabActive,
         handleChattingTabActive,
       }}
