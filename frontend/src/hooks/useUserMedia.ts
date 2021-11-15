@@ -29,7 +29,6 @@ export default function useUserMedia(props: UseUserMediaProps): {
   const peerIdRef = useRef<string>();
 
   const getUserMedia = async () => {
-    console.log(userInfo);
     try {
       const media = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       const newStatus = { video: true, audio: true, stream: true };

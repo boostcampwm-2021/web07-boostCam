@@ -205,7 +205,6 @@ function ChattingTab(): JSX.Element {
     socket.on('getNicknameList', (nicknameInfo: RoomInfo[]) => {
       setNicknameList(nicknameInfo);
     });
-    console.log(`nickname : ${userInfo.nickname}`);
   }, []);
 
   useEffect(() => {
