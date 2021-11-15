@@ -9,7 +9,6 @@ import { ReactComponent as IdentificationIcon } from '../../assets/icons/identif
 import { ReactComponent as ChatIcon } from '../../assets/icons/chat.svg';
 import { ReactComponent as PresenstationIcon } from '../../assets/icons/presentation.svg';
 import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
-import { ReactComponent as BackgroundIcon } from '../../assets/icons/background.svg';
 import { ReactComponent as ExitIcon } from '../../assets/icons/exit.svg';
 import { ReactComponent as STTIcon } from '../../assets/icons/speech.svg';
 import { ReactComponent as STTDisabledIcon } from '../../assets/icons/speech-disabled.svg';
@@ -146,17 +145,13 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
             <IdentificationIcon />
             <span>닉네임</span>
           </Button>
-          <Button>
-            <BackgroundIcon />
-            <span>가상 배경</span>
+          <Button onClick={handleUserListTabActive}>
+            <UsersIcon />
+            <span>사용자 목록</span>
           </Button>
           <Button color="#00ff2e" onClick={handleScreenShareActive}>
             <PresenstationIcon />
             <span>화면 공유</span>
-          </Button>
-          <Button onClick={handleUserListTabActive}>
-            <UsersIcon />
-            <span>사용자 목록</span>
           </Button>
           <Button onClick={handleChattingTabActive}>
             <ChatIcon />
