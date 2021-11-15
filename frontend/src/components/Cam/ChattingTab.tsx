@@ -8,23 +8,13 @@ import { ToggleStoreContext } from './ToggleStore';
 import { CamStoreContext } from './CamStore';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
-  width: 27vw;
   height: 90vh;
   background-color: #ffffff;
   display: flex;
-  ${(props) =>
-    props.isActive
-      ? `
-    position: relative;
-    transition: all 0.5s;
-  `
-      : ` 
-      opacity:0;
-      visibility:hidden;
-      position: absolute;
-      right:0px;
-      transition: opacity 0.5s, visibility 0.5s;
-      `};
+  transition: right 0.5s;
+  position: absolute;
+  width: 27vw;
+  right: ${(props) => (props.isActive ? '0' : '-30vw')};
 
   flex-direction: column;
   justify-content: space-around;
