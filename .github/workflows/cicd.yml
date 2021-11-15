@@ -1,0 +1,122 @@
+name: ci-cd
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  frontend-ci:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Test
+        run: npm run test
+        working-directory: ${{env.working-directory}}
+      - name: Build
+        run: npm run build
+        working-directory: ${{env.working-directory}}
+  backend-ci:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Test
+        run: npm run test
+        working-directory: ${{env.working-directory}}
+      - name: Build
+        run: npm run build
+        working-directory: ${{env.working-directory}}
+  frontend-cd:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Build
+        run: npm run build
+        working-directory: ${{env.working-directory}}
+      - name: Make zip file
+        run: zip -r frontend.zip ./build
+        working-directory: ${{env.working-directory}}
+      - name: Install aws cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 1.15.85
+      - name: Deploy to Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_KEY}}
+          BUCKET_NAME: ${{secrets.BUCKET_NAME}}
+        working-directory: ${{env.working-directory}}
+        run: aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp frontend.zip s3://"${BUCKET_NAME}"
+  backend-cd:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{env.working-directory}}
+      - name: Build
+        run: npm run build
+        working-directory: ${{env.working-directory}}
+      - name: Make zip file
+        run: zip -r backend.zip ./backend
+      - name: Install aws cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 1.15.85
+      - name: Deploy to Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_KEY}}
+          BUCKET_NAME: ${{secrets.BUCKET_NAME}}
+        run: aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp backend.zip s3://"${BUCKET_NAME}"

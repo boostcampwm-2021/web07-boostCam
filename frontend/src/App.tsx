@@ -1,18 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
 import { RecoilRoot } from 'recoil';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Cam from './components/Cam/Cam';
-
-const Container = styled.div``;
+import CamRooms from './components/Main/CamRooms';
 
 function App(): JSX.Element {
   return (
-    <RecoilRoot>
-      <Container>
-        <Cam />
-      </Container>
-    </RecoilRoot>
+    <Router>
+      <RecoilRoot>
+        <Routes>
+          <Route path="/" element={<CamRooms />} />
+          <Route path="/cam" element={<Cam />} />
+        </Routes>
+      </RecoilRoot>
+    </Router>
   );
 }
 

@@ -3,6 +3,9 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
+import DefaultScreen from './DefaultScreen';
+import type { Status } from '../../types/cam';
+import StreamStatusIndicator from './StreamStatusIndicator';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
@@ -10,14 +13,16 @@ type UserScreenProps = {
 };
 
 const Container = styled.div`
-  margin-top: 10px;
-  &:last-child {
-    margin-bottom: 10px;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
 `;
 
 const Video = styled.video`
-  height: auto;
+  max-height: 100%;
   width: 100%;
 `;
 
@@ -26,7 +31,11 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   const socket = useRecoilValue(socketState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [status, setStatus] = useState<{ video: boolean; audio: boolean }>({ video: true, audio: true });
+  const [status, setStatus] = useState<Status>({
+    video: false,
+    audio: false,
+    stream: false,
+  });
 
   useEffect(() => {
     const video = videoRef.current;
@@ -38,24 +47,24 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   });
 
   useEffect(() => {
-    socket.on('userToggleAudio', (payload) => {
+    socket.on('userStatus', (payload) => {
       if (payload.userId === userId) {
-        setStatus((prev) => ({ audio: !prev.audio, video: prev.video }));
+        setStatus(payload.status);
       }
     });
-    socket.on('userToggleVideo', (payload) => {
-      if (payload.userId === userId) {
-        setStatus((prev) => ({ audio: prev.audio, video: !prev.video }));
-      }
-    });
+    socket.emit('getUserStatus', { userId });
   }, []);
 
   return (
     <Container>
-      <div>{`video ${status.video} audio ${status.audio}`}</div>
-      <Video ref={videoRef} playsInline autoPlay muted>
-        <track kind="captions" />
-      </Video>
+      {status.stream && status.video ? (
+        <Video ref={videoRef} playsInline autoPlay>
+          <track kind="captions" />
+        </Video>
+      ) : (
+        <DefaultScreen />
+      )}
+      <StreamStatusIndicator micStatus={status.audio} videoStatus={status.video} />
     </Container>
   );
 }

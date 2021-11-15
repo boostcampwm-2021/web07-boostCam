@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div<{ activeTab: string[] }>`
-  width: ${(props) => props.activeTab[0]};
-  height: 90vh;
-  background-color: #c4c4c4;
+import { ToggleStoreContext } from './ToggleStore';
+import SharedScreen from './SharedScreen/SharedScreen';
+import { CamStoreContext } from './CamStore';
+import type { Screen } from '../../types/cam';
+import LocalUserScreen from './LocalUserScreen';
+import UserScreen from './UserScreen';
+import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
 
+const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean; numOfScreen: number }>`
+  width: ${(props) => props.activeTab[0]};
+  height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
+  background-color: black;
+  display: grid;
+  grid-template-columns: repeat(${(props) => Math.ceil(props.numOfScreen ** 0.5)}, minmax(30%, auto));
+  grid-auto-rows: minmax(100px, auto);
+  gap: 20px;
+  justify-items: space-evenly;
+  align-items: center;
   transition: all 0.5s ease;
 `;
 
-type MainScreenProps = {
-  tabActive: { isUserListTabActive: boolean; isChattingTabActive: boolean };
-};
-
-function MainScreen(props: MainScreenProps): JSX.Element {
-  const { tabActive } = props;
-  const { isChattingTabActive } = tabActive;
+function MainScreen(): JSX.Element {
+  const { screenList } = useContext(CamStoreContext);
+  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
+  const { sharedScreen } = useContext(SharedScreenStoreContext);
 
   const countActiveTab = (): string[] => {
     if (isChattingTabActive) return ['70vw', '98vw'];
@@ -23,13 +33,33 @@ function MainScreen(props: MainScreenProps): JSX.Element {
   };
 
   const handleAnimationEnd = (e: React.AnimationEvent<HTMLDivElement>) => {
-    console.log(e.currentTarget.style.animation);
     e.currentTarget.style.animation = 'none';
   };
 
+  if (sharedScreen !== null) {
+    return (
+      <Container
+        activeTab={countActiveTab()}
+        onAnimationEnd={handleAnimationEnd}
+        isMouseOnCamPage={isMouseOnCamPage}
+        numOfScreen={1}
+      >
+        <SharedScreen stream={sharedScreen} />
+      </Container>
+    );
+  }
+
   return (
-    <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd}>
-      MainScreen
+    <Container
+      activeTab={countActiveTab()}
+      onAnimationEnd={handleAnimationEnd}
+      isMouseOnCamPage={isMouseOnCamPage}
+      numOfScreen={screenList.length + 1}
+    >
+      <LocalUserScreen />
+      {screenList.map((screen: Screen) => (
+        <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
+      ))}
     </Container>
   );
 }

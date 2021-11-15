@@ -1,18 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
+import STTScreen from './STT/STTScreen';
+import { ToggleStoreContext } from './ToggleStore';
 
-type ChattingTabProps = {
-  isChattingTabActive: boolean;
-};
-// display: ${(props) => (props.isActive ? 'flex' : 'none')};
-// animation: ${(props) => (props.isActive ? 'boxFade 0.5s' : 'boxFade 0.5s reverse')};
-const Container = styled.div<{ isActive: boolean }>`
+const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   width: 27vw;
-  height: 90vh;
-  background-color: #c4c4c4;
+  height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
+  background-color: #ffffff;
   display: flex;
   ${(props) =>
     props.isActive
@@ -34,19 +31,27 @@ const Container = styled.div<{ isActive: boolean }>`
 `;
 
 const ChatLogs = styled.div`
-  width: 90%;
+  width: 100%;
   height: 90%;
-  background-color: gray;
+  background-color: #ffffff;
 
   overflow-y: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
+  }
 `;
 
 const ChatContainer = styled.div<{ isMe: boolean }>`
@@ -57,23 +62,27 @@ const ChatContainer = styled.div<{ isMe: boolean }>`
   align-items: ${(props) => (props.isMe ? 'flex-end' : 'flex-start')};
 `;
 
-const ChatTop = styled.div`
+const ChatTop = styled.div<{ isMe: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: ${(props) => (props.isMe ? 'end' : 'start')};
   align-items: center;
-
   margin-top: 5px;
 `;
 
-const ChatUserName = styled.div``;
+const ChatUserName = styled.div<{ isMe: boolean }>`
+  font-weight: 500;
+  font-size: 18px;
+  margin-${(props) => (props.isMe ? 'left' : 'right')}:10px;
+`;
 
-const ChatDate = styled.div``;
+const ChatDate = styled.div`
+  color: #333333;
+`;
 
 const ChatMessageBox = styled.span`
   max-width: 90%;
-
   word-break: break-all;
   white-space: pre-wrap;
   background-color: skyblue;
@@ -84,22 +93,40 @@ const ChatMessageBox = styled.span`
 `;
 
 const ChatTextarea = styled.textarea`
-  width: 90%;
+  width: 100%;
   max-height: 100px;
-  height: 50px;
+  min-height: 80px;
   border: none;
   outline: none;
   resize: none;
+  background: none;
 
-  line-height: 15px;
-
-  margin-top: 10px;
-
-  font-size: 12px;
-  border: 2px solid gray;
-  border-radius: 10px;
-  padding: 5px 8px;
+  font-size: 16px;
+  padding: 10px 8px;
   box-sizing: border-box;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    padding: 0px 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+    padding: 0px 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
+    padding: 0px 8px;
+  }
+`;
+
+const TextContainer = styled.div`
+  box-sizing: border-box;
+  margin: 10px;
+  border: 2px solid #999999;
+  border-radius: 10px;
+  width: -webkit-fill-available;
 `;
 
 type CurrentDate = {
@@ -128,30 +155,31 @@ const getCurrentDate = (): CurrentDate => {
   };
 };
 
-function ChattingTab(props: ChattingTabProps): JSX.Element {
-  const { isChattingTabActive } = props;
-
+function ChattingTab(): JSX.Element {
+  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
   const [chatLogs, setChatLogs] = useState<MsgInfo[]>([]);
-  const [room, setRoom] = useState<string | null>('init');
+  const [room] = useState<string | null>('init');
   const chatLogsRef = useRef<HTMLDivElement>(null);
   const socket = useRecoilValue(socketState);
 
-  const sendMessage = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+  const sendMessage = (msg: string) => {
+    const currentDate = getCurrentDate();
+    const msgInfo: MsgInfo = { msg, room, user: socket.id, date: currentDate };
+
+    socket.emit('sendMessage', msgInfo);
+    setChatLogs((logs) => [...logs, msgInfo]);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     const { key, currentTarget, shiftKey } = e;
     const msg = currentTarget.value.trim();
-    const currentHeight = currentTarget.scrollHeight;
-    currentTarget.style.height = currentHeight > 50 ? `${currentTarget.scrollHeight}px` : '50px';
 
     if (!shiftKey && key === 'Enter') {
       e.preventDefault();
       if (!msg.length) currentTarget.value = '';
       else {
-        const currentDate = getCurrentDate();
-        const msgInfo: MsgInfo = { msg, room, user: socket.id, date: currentDate };
-        currentTarget.style.height = '50px';
+        sendMessage(msg);
         currentTarget.value = '';
-        socket.emit('sendMessage', msgInfo);
-        setChatLogs((logs) => [...logs, msgInfo]);
       }
     }
   };
@@ -168,25 +196,38 @@ function ChattingTab(props: ChattingTabProps): JSX.Element {
     }
   });
 
-  const currentChatLogs = chatLogs.map((data: MsgInfo): JSX.Element => {
+  const currentChatLogs = chatLogs.map((data: MsgInfo, index: number): JSX.Element => {
     const { msg, date, user } = data;
     const time = `${date.hour}:${date.minutes < 10 ? `0${date.minutes}` : date.minutes}`;
     const isMe = user === socket.id;
+    const chatTopChildren = isMe ? (
+      <ChatTop isMe={isMe}>
+        <ChatDate>{time}</ChatDate>
+        <ChatUserName isMe={isMe}>{user.substring(0, 5)}</ChatUserName>
+      </ChatTop>
+    ) : (
+      <ChatTop isMe={isMe}>
+        <ChatUserName isMe={isMe}>{user.substring(0, 5)}</ChatUserName>
+        <ChatDate>{time}</ChatDate>
+      </ChatTop>
+    );
+
     return (
-      <ChatContainer key={`${msg + time}`} isMe={isMe}>
-        <ChatTop>
-          <ChatUserName>{user.substring(0, 5)}</ChatUserName>
-          <ChatDate>{time}</ChatDate>
-        </ChatTop>
+      <ChatContainer key={`${msg + index}`} isMe={isMe}>
+        {chatTopChildren}
         <ChatMessageBox>{msg}</ChatMessageBox>
       </ChatContainer>
     );
   });
 
   return (
-    <Container isActive={isChattingTabActive}>
+    <Container isActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage}>
       <ChatLogs ref={chatLogsRef}>{currentChatLogs}</ChatLogs>
-      <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={sendMessage} />
+      <TextContainer>
+        {' '}
+        <STTScreen sendMessage={sendMessage} />
+        <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={handleKeyDown} />
+      </TextContainer>
     </Container>
   );
 }

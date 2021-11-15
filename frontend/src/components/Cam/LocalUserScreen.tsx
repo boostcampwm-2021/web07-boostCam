@@ -1,42 +1,47 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-type LocalUserScreenProps = {
-  stream: MediaStream | undefined;
-  localStatus: { audio: boolean; video: boolean };
-};
+import DefaultScreen from './DefaultScreen';
+import { CamStoreContext } from './CamStore';
+import StreamStatusIndicator from './StreamStatusIndicator';
 
 const Container = styled.div`
-  margin-top: 10px;
-  &:last-child {
-    margin-bottom: 10px;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
 `;
 
 const Video = styled.video`
-  height: auto;
+  max-height: 100%;
   width: 100%;
 `;
 
-function LocalUserScreen(props: LocalUserScreenProps): JSX.Element {
-  const { stream, localStatus } = props;
+function LocalUserScreen(): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { localStream, localStatus } = useContext(CamStoreContext);
 
   useEffect(() => {
     const video = videoRef.current;
 
-    if (!video || !stream?.active) {
+    if (!video || !localStream?.active) {
       return;
     }
-    video.srcObject = stream;
+    video.srcObject = localStream;
   });
 
   return (
     <Container>
-      <div>{`video ${localStatus.video} audio ${localStatus.audio}`}</div>
-      <Video ref={videoRef} playsInline autoPlay muted>
-        <track kind="captions" />
-      </Video>
+      {localStatus.stream && localStatus.video ? (
+        <Video ref={videoRef} playsInline autoPlay muted>
+          <track kind="captions" />
+        </Video>
+      ) : (
+        <DefaultScreen />
+      )}
+      <StreamStatusIndicator micStatus={localStatus.audio} videoStatus={localStatus.video} />
     </Container>
   );
 }
