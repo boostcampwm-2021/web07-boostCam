@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { RefObject, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
@@ -25,13 +25,15 @@ const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   height: 8vh;
   margin-top: 5px;
 
-  display: ${(props) => (props.isMouseOnCamPage ? 'flex' : 'none')};
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 
   border-radius: 10px;
-  transition: all 0.5s ease;
+  transition: bottom 0.5s ease;
+  position: absolute;
+  bottom: ${(props) => (props.isMouseOnCamPage ? '0' : '-8vh')};
 `;
 
 const ButtonContainer = styled.div`
@@ -63,10 +65,17 @@ const Button = styled.div<{ color?: string }>`
   }
 `;
 
-function ButtonBar(): JSX.Element {
+type ButtonBarProps = {
+  camRef: RefObject<HTMLDivElement> | null;
+};
+
+function ButtonBar(props: ButtonBarProps): JSX.Element {
+  const { camRef } = props;
+
+  const [isMouseOnCamPage, setMouseOnCamPage] = useState<boolean>(true);
   const [isActiveNicknameModal, setIsActiveNicknameModal] = useState<boolean>(false);
   const { localStream, setLocalStatus, localStatus, setUserInfo } = useContext(CamStoreContext);
-  const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
+  const { handleUserListTabActive, handleChattingTabActive } = useContext(ToggleStoreContext);
   const { toggleSTTActive, isSTTActive } = useContext(STTStoreContext);
 
   const { handleScreenShareActive } = useContext(SharedScreenStoreContext);
@@ -100,6 +109,21 @@ function ButtonBar(): JSX.Element {
   const handleExit = () => {
     window.location.href = '/';
   };
+
+  const handleMouseOverCamPage = (): void => {
+    setMouseOnCamPage(true);
+  };
+
+  const handleMouseLeaveCamPage = (): void => {
+    setMouseOnCamPage(false);
+  };
+
+  useEffect(() => {
+    if (camRef?.current) {
+      camRef.current.onmouseover = handleMouseOverCamPage;
+      camRef.current.onmouseleave = handleMouseLeaveCamPage;
+    }
+  }, []);
 
   return (
     <>

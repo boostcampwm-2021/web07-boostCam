@@ -9,7 +9,7 @@ import { CamStoreContext } from './CamStore';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   width: 27vw;
-  height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
+  height: 90vh;
   background-color: #ffffff;
   display: flex;
   ${(props) =>
