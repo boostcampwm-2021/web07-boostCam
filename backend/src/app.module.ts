@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { CamModule } from './cam/cam.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRoot(ormConfig()),
     CamModule,
     UserModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
