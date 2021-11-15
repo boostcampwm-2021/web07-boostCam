@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
@@ -18,6 +18,7 @@ import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';
 import { STTStoreContext } from './STT/STTStore';
 import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
+import NicknameModal from './NicknameModal';
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   width: 98vw;
@@ -63,7 +64,8 @@ const Button = styled.div<{ color?: string }>`
 `;
 
 function ButtonBar(): JSX.Element {
-  const { localStream, setLocalStatus, localStatus } = useContext(CamStoreContext);
+  const [isActiveNicknameModal, setIsActiveNicknameModal] = useState<boolean>(false);
+  const { localStream, setLocalStatus, localStatus, setUserInfo } = useContext(CamStoreContext);
   const { handleUserListTabActive, handleChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
   const { toggleSTTActive, isSTTActive } = useContext(STTStoreContext);
 
@@ -91,55 +93,64 @@ function ButtonBar(): JSX.Element {
     }));
   };
 
+  const onClickNicknameChangeButton = () => {
+    setIsActiveNicknameModal(true);
+  };
+
   const handleExit = () => {
     window.location.href = '/';
   };
 
   return (
-    <Container isMouseOnCamPage={isMouseOnCamPage}>
-      <ButtonContainer>
-        <Button onClick={onClickMicToggleButton}>
-          {localStatus.audio ? <MicIcon /> : <MicDisabledIcon />}
-          <span>마이크</span>
-        </Button>
-        <Button onClick={onClickVideoToggleButton}>
-          {localStatus.video ? <VideoIcon /> : <VideoDisabledIcon />}
-          <span>비디오</span>
-        </Button>
-      </ButtonContainer>
-      <ButtonContainer>
-        <Button>
-          <IdentificationIcon />
-          <span>닉네임</span>
-        </Button>
-        <Button>
-          <BackgroundIcon />
-          <span>가상 배경</span>
-        </Button>
-        <Button color="#00ff2e" onClick={handleScreenShareActive}>
-          <PresenstationIcon />
-          <span>화면 공유</span>
-        </Button>
-        <Button onClick={handleUserListTabActive}>
-          <UsersIcon />
-          <span>사용자 목록</span>
-        </Button>
-        <Button onClick={handleChattingTabActive}>
-          <ChatIcon />
-          <span>채팅</span>
-        </Button>
-        <Button onClick={toggleSTTActive}>
-          {isSTTActive ? <STTIcon /> : <STTDisabledIcon />}
-          <span>STT</span>
-        </Button>
-      </ButtonContainer>
-      <ButtonContainer>
-        <Button color="red">
-          <ExitIcon onClick={handleExit} />
-          <span>나가기</span>
-        </Button>
-      </ButtonContainer>
-    </Container>
+    <>
+      {isActiveNicknameModal && (
+        <NicknameModal setUserInfo={setUserInfo} setIsActiveNicknameModal={setIsActiveNicknameModal} />
+      )}
+      <Container isMouseOnCamPage={isMouseOnCamPage}>
+        <ButtonContainer>
+          <Button onClick={onClickMicToggleButton}>
+            {localStatus.audio ? <MicIcon /> : <MicDisabledIcon />}
+            <span>마이크</span>
+          </Button>
+          <Button onClick={onClickVideoToggleButton}>
+            {localStatus.video ? <VideoIcon /> : <VideoDisabledIcon />}
+            <span>비디오</span>
+          </Button>
+        </ButtonContainer>
+        <ButtonContainer>
+          <Button onClick={onClickNicknameChangeButton}>
+            <IdentificationIcon />
+            <span>닉네임</span>
+          </Button>
+          <Button>
+            <BackgroundIcon />
+            <span>가상 배경</span>
+          </Button>
+          <Button color="#00ff2e" onClick={handleScreenShareActive}>
+            <PresenstationIcon />
+            <span>화면 공유</span>
+          </Button>
+          <Button onClick={handleUserListTabActive}>
+            <UsersIcon />
+            <span>사용자 목록</span>
+          </Button>
+          <Button onClick={handleChattingTabActive}>
+            <ChatIcon />
+            <span>채팅</span>
+          </Button>
+          <Button onClick={toggleSTTActive}>
+            {isSTTActive ? <STTIcon /> : <STTDisabledIcon />}
+            <span>STT</span>
+          </Button>
+        </ButtonContainer>
+        <ButtonContainer>
+          <Button color="red" onClick={handleExit}>
+            <ExitIcon />
+            <span>나가기</span>
+          </Button>
+        </ButtonContainer>
+      </Container>
+    </>
   );
 }
 

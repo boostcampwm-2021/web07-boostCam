@@ -46,7 +46,8 @@ function Cam(): JSX.Element {
     const roomId = new URLSearchParams(new URL(window.location.href).search).get('roomid');
     setUserInfo((prev) => ({ ...prev, roomId }));
     return () => {
-      if (userInfo?.nickname) socket.emit('exitRoom');
+      socket.emit('exitRoom');
+      socket.emit('changeRoomList');
     };
   }, []);
 
@@ -55,7 +56,7 @@ function Cam(): JSX.Element {
       {!userInfo?.nickname ? (
         <NickNameForm setUserInfo={setUserInfo} />
       ) : (
-        <CamStore userInfo={userInfo}>
+        <CamStore userInfo={userInfo} setUserInfo={setUserInfo}>
           <ToggleStore camRef={camRef}>
             <STTStore>
               <SharedScreenStore>
