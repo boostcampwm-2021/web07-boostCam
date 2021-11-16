@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { CamModule } from './cam/cam.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { ChannelModule } from './channel/channel.module';
 import { MessageModule } from './message/message.module';
 import { EmoticonModule } from './emoticon/emoticon.module';
 import { ServerModule } from './server/server.module';
@@ -20,6 +21,7 @@ import { CamsModule } from './cams/cams.module';
     TypeOrmModule.forRoot(ormConfig()),
     CamModule,
     UserModule,
+    ChannelModule,
     MessageModule,
     EmoticonModule,
     ServerModule,
