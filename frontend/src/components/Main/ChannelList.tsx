@@ -4,7 +4,10 @@ import { useRecoilValue } from 'recoil';
 
 import { useNavigate } from 'react-router-dom';
 import socketState from '../../atoms/socket';
-import { ReactComponent as Hash } from '../../assets/icons/hash.svg';
+
+import { BoostCamMainIcons } from '../../utils/SvgIcons';
+
+const { Hash } = BoostCamMainIcons;
 
 const Container = styled.div`
   width: 100%;
