@@ -80,6 +80,7 @@ const tmpUrl: string[] = [
 function ServerListTab(): JSX.Element {
   const [serverList, setServerList] = useState<ServerData[]>([]);
   const { selectedServer, setSelectedServer } = useContext(MainStoreContext);
+  const initChannel = '1';
   const navigate = useNavigate();
 
   const onClickServerIcon = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -108,10 +109,10 @@ function ServerListTab(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    // navigate(`?serverId=${selectedServer}`, { replace: true });
     navigate({
       search: `?${createSearchParams({
         serverId: selectedServer,
+        channelId: initChannel,
       })}`,
     });
   }, [selectedServer]);

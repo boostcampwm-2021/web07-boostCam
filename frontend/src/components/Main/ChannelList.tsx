@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
@@ -77,7 +77,7 @@ const HashIcon = styled(Hash)`
 
 function ChannelList(): JSX.Element {
   const [channelList, setChannelList] = useState<ChannelData[]>([]);
-  const { selectedChannel, setSelectedChannel } = useContext(MainStoreContext);
+  const { selectedServer, selectedChannel, setSelectedChannel } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
   const onClickChannelBlock = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -97,7 +97,12 @@ function ChannelList(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    navigate(`?channelId=${selectedChannel}`, { replace: false });
+    navigate({
+      search: `?${createSearchParams({
+        serverId: selectedServer,
+        channelId: selectedChannel,
+      })}`,
+    });
   }, [selectedChannel]);
 
   const listElements = channelList.map((val: ChannelData): JSX.Element => {
