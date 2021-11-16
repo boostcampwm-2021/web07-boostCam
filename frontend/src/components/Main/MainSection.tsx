@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
 
-import { useNavigate } from 'react-router-dom';
-import socketState from '../../atoms/socket';
 import RoomListSection from './RoomListSection';
 import ContentsSection from './ContentsSection';
 import MainHeader from './MainHeader';
@@ -25,9 +22,6 @@ const MainBody = styled.div`
 `;
 
 function MainSection(): JSX.Element {
-  const socket = useRecoilValue(socketState);
-  const navigate = useNavigate();
-
   useEffect(() => {}, []);
 
   return (
