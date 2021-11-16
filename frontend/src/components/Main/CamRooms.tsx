@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import { Status } from '../../types/cam';
 import socketState from '../../atoms/socket';
+import userState from '../../atoms/user';
 
 const Container = styled.div`
   width: 100vw;
@@ -117,6 +118,7 @@ type MapInfo = {
 function CamRooms(): JSX.Element {
   const socket = useRecoilValue(socketState);
   const [roomList, setRoomList] = useState<JSX.Element[]>();
+  const loggedInUser = useRecoilValue(userState);
   const navigate = useNavigate();
 
   const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -193,7 +195,7 @@ function CamRooms(): JSX.Element {
           <SubmitButton type="submit">Create</SubmitButton>
         </Form>
         <ListDiv>{roomList}</ListDiv>
-        <Link to="/login">Login</Link>
+        {loggedInUser === null ? <Link to="/login">Login</Link> : <Link to="/logout">Logout</Link>}
       </MainBox>
     </Container>
   );
