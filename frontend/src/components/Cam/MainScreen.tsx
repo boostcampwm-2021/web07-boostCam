@@ -9,9 +9,9 @@ import LocalUserScreen from './LocalUserScreen';
 import UserScreen from './UserScreen';
 import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
 
-const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean; numOfScreen: number }>`
+const Container = styled.div<{ activeTab: string[]; numOfScreen: number }>`
   width: ${(props) => props.activeTab[0]};
-  height: ${(props) => (props.isMouseOnCamPage ? '90vh' : '98vh')};
+  height: 90vh;
   background-color: black;
   display: grid;
   grid-template-columns: repeat(${(props) => Math.ceil(props.numOfScreen ** 0.5)}, minmax(30%, auto));
@@ -24,7 +24,7 @@ const Container = styled.div<{ activeTab: string[]; isMouseOnCamPage: boolean; n
 
 function MainScreen(): JSX.Element {
   const { screenList } = useContext(CamStoreContext);
-  const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
+  const { isChattingTabActive } = useContext(ToggleStoreContext);
   const { sharedScreen } = useContext(SharedScreenStoreContext);
 
   const countActiveTab = (): string[] => {
@@ -38,24 +38,14 @@ function MainScreen(): JSX.Element {
 
   if (sharedScreen !== null) {
     return (
-      <Container
-        activeTab={countActiveTab()}
-        onAnimationEnd={handleAnimationEnd}
-        isMouseOnCamPage={isMouseOnCamPage}
-        numOfScreen={1}
-      >
+      <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} numOfScreen={1}>
         <SharedScreen stream={sharedScreen} />
       </Container>
     );
   }
 
   return (
-    <Container
-      activeTab={countActiveTab()}
-      onAnimationEnd={handleAnimationEnd}
-      isMouseOnCamPage={isMouseOnCamPage}
-      numOfScreen={screenList.length + 1}
-    >
+    <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} numOfScreen={screenList.length + 1}>
       <LocalUserScreen />
       {screenList.map((screen: Screen) => (
         <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
