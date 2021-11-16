@@ -13,10 +13,14 @@ import { MessageModule } from './message/message.module';
 import { EmoticonModule } from './emoticon/emoticon.module';
 import { ServerModule } from './server/server.module';
 import { CamsModule } from './cams/cams.module';
+import { LoginModule } from './login/login.module';
+import githubConfig from './config/github.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load: [githubConfig],
+      envFilePath: ['.env', '.env.github'],
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(ormConfig()),
