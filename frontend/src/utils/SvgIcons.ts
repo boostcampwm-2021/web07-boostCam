@@ -11,6 +11,7 @@ import { ReactComponent as STTIcon } from '../assets/icons/speech.svg';
 import { ReactComponent as STTDisabledIcon } from '../assets/icons/speech-disabled.svg';
 
 import { ReactComponent as Hash } from '../assets/icons/hash.svg';
+import { ReactComponent as Plus } from '../assets/icons/plus.svg';
 
 export const ButtonBarIcons = {
   MicIcon,
@@ -28,4 +29,6 @@ export const ButtonBarIcons = {
 
 export const BoostCamMainIcons = {
   Hash,
+  Plus,
+  UsersIcon,
 };

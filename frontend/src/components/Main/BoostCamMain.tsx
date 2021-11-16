@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
 
-import { useNavigate } from 'react-router-dom';
-import socketState from '../../atoms/socket';
 import ServerListTab from './ServerListTab';
 import MainSection from './MainSection';
 
@@ -18,9 +15,6 @@ const Container = styled.div`
 `;
 
 function BoostCamMain(): JSX.Element {
-  const socket = useRecoilValue(socketState);
-  const navigate = useNavigate();
-
   useEffect(() => {}, []);
 
   return (
