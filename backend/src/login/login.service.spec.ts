@@ -1,7 +1,10 @@
+import { User } from '../user/user.entity';
+import { Repository } from 'typeorm';
 import { LoginService } from './login.service';
 
 describe('LoginService', () => {
   let service: LoginService;
+  let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const githubConfig = {
@@ -9,8 +12,8 @@ describe('LoginService', () => {
       clientSecret: 'string',
       callbackURL: 'string',
     };
-
-    service = new LoginService(githubConfig);
+    userRepository = null;
+    service = new LoginService(githubConfig, userRepository);
   });
 
   it('should be defined', () => {
