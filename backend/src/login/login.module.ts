@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from 'src/user/user.module';
+
+import { UserModule } from '../user/user.module';
 import { LoginController } from './login.controller';
 import { LoginService } from './login.service';
 
