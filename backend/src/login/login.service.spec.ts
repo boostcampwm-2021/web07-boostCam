@@ -1,6 +1,3 @@
-import { ConfigModule } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
-import githubConfig from '../config/github.config';
 import { LoginService } from './login.service';
 
 describe('LoginService', () => {
