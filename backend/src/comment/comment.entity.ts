@@ -19,5 +19,5 @@ export class Comment {
   createdAt: Date;
 
   @ManyToOne(() => User)
-  author: User;
+  sender: User;
 }
