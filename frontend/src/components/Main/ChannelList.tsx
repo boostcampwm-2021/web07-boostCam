@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
-
 import { useNavigate } from 'react-router-dom';
-import socketState from '../../atoms/socket';
+import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
+import { ChannelData } from '../../types/main';
 
 const { Hash } = BoostCamMainIcons;
 
@@ -34,6 +32,8 @@ const ChannelListHeader = styled.div`
   }
 `;
 
+const ChannelListHeaderSpan = styled.span``;
+
 const ChannelListBody = styled.div`
   width: 100%;
   display: flex;
@@ -45,7 +45,7 @@ const ChannelListBody = styled.div`
   font-size: 15px;
 `;
 
-const ChannelNameBlock = styled.div`
+const ChannelNameBlock = styled.div<{ selected: boolean }>`
   width: 100%;
   height: 25px;
 
@@ -55,11 +55,12 @@ const ChannelNameBlock = styled.div`
   align-items: center;
 
   box-sizing: border-box;
-  margin-top: 5px;
-  padding-left: 25px;
+  padding: 15px 0px 15px 25px;
+  ${(props) => (props.selected ? 'background-color:#21557C;' : '')}
+
   &:hover {
     cursor: pointer;
-    background-color: #321832;
+    background-color: ${(props) => (props.selected ? '#21557C' : '#321832')};
   }
 `;
 
@@ -74,36 +75,46 @@ const HashIcon = styled(Hash)`
 `;
 
 function ChannelList(): JSX.Element {
-  const socket = useRecoilValue(socketState);
+  const [channelList, setChannelList] = useState<ChannelData[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState<string>('1');
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
+  const onClickChannelBlock = (e: React.MouseEvent<HTMLDivElement>) => {
+    const channelId = e.currentTarget.dataset.id;
+    if (channelId) setSelectedChannel(channelId);
+  };
+
+  const getChannelList = async (): Promise<void> => {
+    const response = await fetch('/api/channel/list');
+    const list = await response.json();
+
+    setChannelList(list.data);
+  };
+
+  useEffect(() => {
+    getChannelList();
+  }, []);
+
+  useEffect(() => {
+    navigate(`?channelId=${selectedChannel}`, { replace: false });
+  }, [selectedChannel]);
+
+  const listElements = channelList.map((val: ChannelData): JSX.Element => {
+    const selected = val.id === selectedChannel;
+    return (
+      <ChannelNameBlock key={val.id} data-id={val.id} selected={selected} onClick={onClickChannelBlock}>
+        <HashIcon />
+        <ChannelNameSpan>{val.name}</ChannelNameSpan>
+      </ChannelNameBlock>
+    );
+  });
 
   return (
     <Container>
-      <ChannelListHeader>채널</ChannelListHeader>
-      <ChannelListBody>
-        <ChannelNameBlock>
-          <HashIcon />
-          <ChannelNameSpan>Channel 1</ChannelNameSpan>
-        </ChannelNameBlock>
-        <ChannelNameBlock>
-          <HashIcon />
-          <ChannelNameSpan>Channel 2</ChannelNameSpan>
-        </ChannelNameBlock>
-        <ChannelNameBlock>
-          <HashIcon />
-          <ChannelNameSpan>Channel 3</ChannelNameSpan>
-        </ChannelNameBlock>
-        <ChannelNameBlock>
-          <HashIcon />
-          <ChannelNameSpan>Channel 4</ChannelNameSpan>
-        </ChannelNameBlock>
-        <ChannelNameBlock>
-          <HashIcon />
-          <ChannelNameSpan>Channel 5</ChannelNameSpan>
-        </ChannelNameBlock>
-      </ChannelListBody>
+      <ChannelListHeader>
+        <ChannelListHeaderSpan>채널</ChannelListHeaderSpan>
+      </ChannelListHeader>
+      <ChannelListBody>{listElements}</ChannelListBody>
     </Container>
   );
 }

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import ServerListTab from './ServerListTab';
 import MainSection from './MainSection';
+import MainStore from './MainStore';
 
 const Container = styled.div`
   width: 100vw;
@@ -19,8 +20,10 @@ function BoostCamMain(): JSX.Element {
 
   return (
     <Container>
-      <ServerListTab />
-      <MainSection />
+      <MainStore>
+        <ServerListTab />
+        <MainSection />
+      </MainStore>
     </Container>
   );
 }

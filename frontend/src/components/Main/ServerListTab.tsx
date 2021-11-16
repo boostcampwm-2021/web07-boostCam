@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
+import { ServerData } from '../../types/main';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -17,8 +19,6 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
 `;
-
-// border: 5px solid ${(props) => (props.selected ? 'gray' : 'white')};
 
 const ServerIconBox = styled.div<{ selected: boolean }>`
   width: 60px;
@@ -70,20 +70,6 @@ const PlusIcon = styled(Plus)`
   fill: #a69c96;
 `;
 
-type User = {
-  githubId: string;
-  id: string;
-  nickname: string;
-  profile: string;
-};
-
-type ServerListData = {
-  description: string;
-  id: string;
-  name: string;
-  owner: User;
-};
-
 const tmpUrl: string[] = [
   'https://miro.medium.com/max/2000/0*wwsAZUu1oClOuat-.png',
   'https://miro.medium.com/max/2000/0*Jx_rwR_dmW4y1g-7.png',
@@ -91,32 +77,47 @@ const tmpUrl: string[] = [
 ];
 
 function ServerListTab(): JSX.Element {
-  const [serverList, setServerList] = useState<JSX.Element[]>();
-  const currentServer = '1';
+  const [serverList, setServerList] = useState<ServerData[]>([]);
+  const [selectedServer, setSelectedServer] = useState<string>('1');
+  const navigate = useNavigate();
 
-  const buildServerListIcons = async () => {
+  const onClickServerIcon = (e: React.MouseEvent<HTMLDivElement>) => {
+    const serverId = e.currentTarget.dataset.id;
+    if (serverId) setSelectedServer(serverId);
+  };
+
+  const getServerList = async (): Promise<void> => {
     const response = await fetch('/api/server/list');
     const list = await response.json();
 
-    const listElements = list.data.map((val: ServerListData, idx: number): JSX.Element => {
-      const flag = currentServer === val.id;
-      return (
-        <ServerIconBox key={val.id} data-id={val.id} selected={flag}>
-          <ServerImg imgUrl={tmpUrl[idx]} />
-        </ServerIconBox>
-      );
-    });
-
-    setServerList(listElements);
+    setServerList(list.data);
   };
 
+  const listElements = serverList.map((val: ServerData, idx: number): JSX.Element => {
+    const selected = selectedServer === val.id;
+    return (
+      <ServerIconBox key={val.id} data-id={val.id} selected={selected} onClick={onClickServerIcon}>
+        <ServerImg imgUrl={tmpUrl[idx]} />
+      </ServerIconBox>
+    );
+  });
+
   useEffect(() => {
-    buildServerListIcons();
+    getServerList();
   }, []);
+
+  useEffect(() => {
+    // navigate(`?serverId=${selectedServer}`, { replace: true });
+    navigate({
+      search: `?${createSearchParams({
+        serverId: selectedServer,
+      })}`,
+    });
+  }, [selectedServer]);
 
   return (
     <Container>
-      {serverList}
+      {listElements}
       <AddServerButton>
         <PlusIcon />
       </AddServerButton>
