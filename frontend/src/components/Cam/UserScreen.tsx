@@ -21,9 +21,10 @@ const Container = styled.div`
   height: 90%;
 `;
 
-const Video = styled.video`
+const Video = styled.video<{ isSpeaking: boolean }>`
   max-height: 100%;
   width: 100%;
+  border: ${(props) => (props.isSpeaking ? '2px solid green' : 'none')};
 `;
 
 function UserScreen(props: UserScreenProps): JSX.Element {
@@ -35,6 +36,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     video: false,
     audio: false,
     stream: false,
+    speaking: false,
   });
 
   useEffect(() => {
@@ -58,7 +60,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   return (
     <Container>
       {status.stream && status.video ? (
-        <Video ref={videoRef} playsInline autoPlay>
+        <Video ref={videoRef} playsInline autoPlay isSpeaking={status.speaking}>
           <track kind="captions" />
         </Video>
       ) : (

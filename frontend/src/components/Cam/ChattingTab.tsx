@@ -154,7 +154,7 @@ const getCurrentDate = (): CurrentDate => {
 
 function ChattingTab(): JSX.Element {
   const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
-  const { userInfo } = useContext(CamStoreContext);
+  const { userInfo, setLocalStatus } = useContext(CamStoreContext);
   const socket = useRecoilValue(socketState);
   const [chatLogs, setChatLogs] = useState<MessageInfo[]>([]);
   const [nicknameList, setNicknameList] = useState<RoomInfo[]>([
@@ -233,7 +233,7 @@ function ChattingTab(): JSX.Element {
     <Container isActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage}>
       <ChatLogs ref={chatLogsRef}>{currentChatLogs}</ChatLogs>
       <TextContainer>
-        <STTScreen sendMessage={sendMessage} />
+        <STTScreen sendMessage={sendMessage} setLocalStatus={setLocalStatus} />
         <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={handleKeyDown} />
       </TextContainer>
     </Container>
