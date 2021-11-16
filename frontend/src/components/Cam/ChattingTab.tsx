@@ -11,10 +11,11 @@ const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   height: 90vh;
   background-color: #ffffff;
   display: flex;
-  transition: right 0.5s;
+  transition: right 0.5s, opacity 0.5s;
   position: absolute;
   width: 27vw;
   right: ${(props) => (props.isActive ? '0' : '-30vw')};
+  opacity: ${(props) => (props.isActive ? '1' : '0')};
 
   flex-direction: column;
   justify-content: space-around;
@@ -232,7 +233,6 @@ function ChattingTab(): JSX.Element {
     <Container isActive={isChattingTabActive} isMouseOnCamPage={isMouseOnCamPage}>
       <ChatLogs ref={chatLogsRef}>{currentChatLogs}</ChatLogs>
       <TextContainer>
-        {' '}
         <STTScreen sendMessage={sendMessage} />
         <ChatTextarea placeholder="내용을 입력하세요." onKeyDown={handleKeyDown} />
       </TextContainer>
