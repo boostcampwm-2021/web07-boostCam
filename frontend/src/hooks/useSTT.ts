@@ -43,9 +43,8 @@ function useSTT(): {
       recognition.continuous = true;
       recognition.interimResults = true;
 
-      recognition.onresult = handleResult;
-
-      recognition.onsoundend = () => {
+      recognition.addEventListener('result', handleResult);
+      recognition.onaudioend = () => {
         makeNewRecognition();
       };
 
@@ -53,6 +52,9 @@ function useSTT(): {
       recognitionRef.current = recognition;
     };
 
+    if (recognitionRef.current) {
+      recognitionRef.current.onaudioend = null;
+    }
     makeNewRecognition();
   }, [isSTTActive]);
 
