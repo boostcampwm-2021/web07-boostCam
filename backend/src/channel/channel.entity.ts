@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Server } from 'src/server/server.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Channel {
@@ -11,6 +12,6 @@ export class Channel {
   @Column()
   description: string;
 
-  @Column({ type: 'bigint' })
-  serverId: number;
+  @ManyToOne(() => Server)
+  server: Server;
 }

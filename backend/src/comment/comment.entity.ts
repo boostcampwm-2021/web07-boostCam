@@ -1,3 +1,4 @@
+import { Message } from 'src/message/message.entity';
 import {
   Entity,
   Column,
@@ -20,4 +21,7 @@ export class Comment {
 
   @ManyToOne(() => User)
   sender: User;
+
+  @ManyToOne(() => Message)
+  message: Message;
 }

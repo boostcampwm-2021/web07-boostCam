@@ -1,3 +1,4 @@
+import { Channel } from 'src/channel/channel.entity';
 import { User } from 'src/user/user.entity';
 import {
   Entity,
@@ -9,14 +10,14 @@ import {
 
 @Entity()
 export class Message {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @Column()
   contents: string;
 
-  @Column()
-  channelId: string;
+  @ManyToOne(() => Channel)
+  channel: Channel;
 
   @CreateDateColumn()
   createdAt: Date;
