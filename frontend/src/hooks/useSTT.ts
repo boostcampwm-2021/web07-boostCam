@@ -18,25 +18,12 @@ function useSTT(): {
   // @ts-expect-error: it only works on Chrome
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  const makeNewRecognition = () => {
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.start();
-
-    return recognition;
-  };
-
   const toggleSTTActive = () => {
     setSTTActive((prev) => !prev);
   };
 
   useEffect(() => {
-    recognitionRef?.current?.abort();
-    recognitionRef.current = makeNewRecognition();
-
-    recognitionRef.current.onresult = ({ results }: { results: any }) => {
+    const handleResult = ({ results }: { results: any }) => {
       const last: any = Array.from(results[results.length - 1]);
       if (isSTTActive) {
         setLastResult({
@@ -50,6 +37,23 @@ function useSTT(): {
         setIsSpeaking(true);
       }
     };
+
+    const makeNewRecognition = () => {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onresult = handleResult;
+
+      recognition.onsoundend = () => {
+        makeNewRecognition();
+      };
+
+      recognition.start();
+      recognitionRef.current = recognition;
+    };
+
+    makeNewRecognition();
   }, [isSTTActive]);
 
   return { lastResult, isSTTActive, isSpeaking, toggleSTTActive };
