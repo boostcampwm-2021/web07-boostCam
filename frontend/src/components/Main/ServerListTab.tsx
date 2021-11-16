@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { ServerData } from '../../types/main';
+import { MainStoreContext } from './MainStore';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -78,7 +79,7 @@ const tmpUrl: string[] = [
 
 function ServerListTab(): JSX.Element {
   const [serverList, setServerList] = useState<ServerData[]>([]);
-  const [selectedServer, setSelectedServer] = useState<string>('1');
+  const { selectedServer, setSelectedServer } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
   const onClickServerIcon = (e: React.MouseEvent<HTMLDivElement>) => {
