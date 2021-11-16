@@ -13,6 +13,7 @@ import { MessageModule } from './message/message.module';
 import { EmoticonModule } from './emoticon/emoticon.module';
 import { ServerModule } from './server/server.module';
 import { CamsModule } from './cams/cams.module';
+import { UserServerModule } from './user-server/user-server.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CamsModule } from './cams/cams.module';
     EmoticonModule,
     ServerModule,
     CamsModule,
+    UserServerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

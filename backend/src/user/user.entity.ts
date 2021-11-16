@@ -20,8 +20,4 @@ export class User {
 
   @Column()
   profile: string;
-
-  @ManyToMany(() => Server)
-  @JoinTable()
-  servers: Server[];
 }
