@@ -13,7 +13,7 @@ export class Server {
   id: number;
 
   @Column()
-  desc: string;
+  description: string;
 
   @Column()
   name: string;
