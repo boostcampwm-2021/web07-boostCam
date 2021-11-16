@@ -57,7 +57,7 @@ function Cam(): JSX.Element {
         <NickNameForm setUserInfo={setUserInfo} />
       ) : (
         <CamStore userInfo={userInfo} setUserInfo={setUserInfo}>
-          <ToggleStore camRef={camRef}>
+          <ToggleStore>
             <STTStore>
               <SharedScreenStore>
                 <UpperTab>
@@ -65,7 +65,7 @@ function Cam(): JSX.Element {
                   <UserListTab />
                   <ChattingTab />
                 </UpperTab>
-                <ButtonBar />
+                <ButtonBar camRef={camRef} />
               </SharedScreenStore>
             </STTStore>
           </ToggleStore>

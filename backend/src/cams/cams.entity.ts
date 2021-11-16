@@ -2,26 +2,23 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Server } from '../server/server.entity';
 
 @Entity()
-export class User {
+export class Cams {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column({ type: 'bigint' })
-  githubId: number;
+  @Column()
+  name: string;
 
   @Column()
-  nickname: string;
+  url: string;
 
-  @Column()
-  profile: string;
-
-  @ManyToMany(() => Server)
-  @JoinTable()
-  servers: Server[];
+  @ManyToOne(() => Server)
+  @JoinColumn({ referencedColumnName: 'id' })
+  server: Server;
 }
