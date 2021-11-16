@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
+import { useNavigate, Link } from 'react-router-dom';
 
-import { useNavigate } from 'react-router-dom';
 import { Status } from '../../types/cam';
 import socketState from '../../atoms/socket';
 
@@ -193,6 +193,7 @@ function CamRooms(): JSX.Element {
           <SubmitButton type="submit">Create</SubmitButton>
         </Form>
         <ListDiv>{roomList}</ListDiv>
+        <Link to="/login">Login</Link>
       </MainBox>
     </Container>
   );
