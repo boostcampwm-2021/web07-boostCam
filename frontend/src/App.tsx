@@ -14,7 +14,7 @@ function App(): JSX.Element {
         <Routes>
           <Route path="/" element={<CamRooms />} />
           <Route path="/login" element={<LoginMain />} />
-          <Route path="/login/github" element={<LoginCallback />} />
+          <Route path="/login/github" element={<LoginCallback service="github" />} />
           <Route path="/cam" element={<Cam />} />
         </Routes>
       </RecoilRoot>
