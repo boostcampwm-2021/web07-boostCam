@@ -4,7 +4,7 @@ import { ServerInfo } from '../../types/server';
 import ServerIcon from './ServerIcon';
 import { ServerStoreContext } from './ServerStore';
 
-const Container = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;

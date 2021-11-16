@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { ServerStoreContext } from './ServerStore';
 
-const Container = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -14,7 +15,8 @@ const Container = styled.form`
 `;
 
 function NavigationBar(): JSX.Element {
-  return <Container>서버이름</Container>;
+  const { currentServer } = useContext(ServerStoreContext);
+  return <Container>{currentServer.name}</Container>;
 }
 
 export default NavigationBar;
