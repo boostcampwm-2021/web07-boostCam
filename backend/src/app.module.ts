@@ -32,6 +32,7 @@ import githubConfig from './config/github.config';
     EmoticonModule,
     ServerModule,
     CamsModule,
+    LoginModule,
   ],
   controllers: [AppController],
   providers: [AppService],
