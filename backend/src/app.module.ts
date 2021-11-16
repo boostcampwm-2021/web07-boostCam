@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
 import { EmoticonModule } from './emoticon/emoticon.module';
+import { ServerModule } from './server/server.module';
+import { CamsModule } from './cams/cams.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { EmoticonModule } from './emoticon/emoticon.module';
     UserModule,
     MessageModule,
     EmoticonModule,
+    ServerModule,
+    CamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
