@@ -23,6 +23,7 @@ export default function useUserMedia(props: UseUserMediaProps): {
     video: false,
     audio: false,
     stream: false,
+    speaking: false,
   });
   const [screenList, setScreenList] = useState<Screen[]>([]);
   const myPeerRef = useRef<Peer>();
@@ -31,7 +32,7 @@ export default function useUserMedia(props: UseUserMediaProps): {
   const getUserMedia = async () => {
     try {
       const media = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      const newStatus = { video: true, audio: true, stream: true };
+      const newStatus = { video: true, audio: true, stream: true, speaking: false };
       setLocalStream(media);
       setLocalStatus(newStatus);
       socket.emit('joinRoom', {
@@ -45,7 +46,7 @@ export default function useUserMedia(props: UseUserMediaProps): {
       const stream = canvas.captureStream();
       const track = stream.getVideoTracks()[0];
 
-      const newStatus = { video: false, audio: false, stream: false };
+      const newStatus = { video: false, audio: false, stream: false, speaking: false };
       setLocalStream(new MediaStream([track]));
       setLocalStatus(newStatus);
       socket.emit('joinRoom', {
@@ -127,7 +128,9 @@ export default function useUserMedia(props: UseUserMediaProps): {
   }, [localStream]);
 
   useEffect(() => {
-    if (peerIdRef.current) socket.emit('updateUserStatus', { status: localStatus });
+    if (peerIdRef.current && localStatus.stream) {
+      socket.emit('updateUserStatus', { status: localStatus });
+    }
   }, [localStatus]);
 
   return { localStream, setLocalStream, localStatus, setLocalStatus, screenList };
