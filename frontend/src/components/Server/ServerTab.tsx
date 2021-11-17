@@ -2,8 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ServerInfo } from '../../types/server';
-import Dropdown from '../core/Dropdown';
-import DropdownMenu from '../core/DropdownMenu';
 import ServerIcon from './ServerIcon';
 import { ServerStoreContext } from './ServerStore';
 

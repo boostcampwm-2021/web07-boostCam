@@ -1,6 +1,7 @@
-import React from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+
+import { MainStoreContext } from '../MainStore';
 
 const Container = styled.div`
   position: fixed;
@@ -85,10 +86,12 @@ const SubmitButton = styled.button`
   }
 `;
 
-function NicknameModal(): JSX.Element {
+function JoinChannelModal(): JSX.Element {
+  const { setIsJoinModalOpen } = useContext(MainStoreContext);
+
   return (
     <Container>
-      <ModalBackground />
+      <ModalBackground onClick={() => setIsJoinModalOpen(false)} />
       <ModalBox>
         <Form>
           <Input name="nickname" placeholder="닉네임을 입력해주세요" required />
@@ -99,4 +102,4 @@ function NicknameModal(): JSX.Element {
   );
 }
 
-export default NicknameModal;
+export default JoinChannelModal;

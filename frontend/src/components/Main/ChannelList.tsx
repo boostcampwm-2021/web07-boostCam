@@ -108,9 +108,15 @@ function ChannelList(): JSX.Element {
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const [isListOpen, setIsListOpen] = useState<boolean>(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
-  const [isJoinModalOpen, setIsJoinModalOpen] = useState<boolean>(false);
-  const { selectedServer, selectedChannel, setSelectedChannel } = useContext(MainStoreContext);
+  const {
+    selectedServer,
+    selectedChannel,
+    isCreateModalOpen,
+    isJoinModalOpen,
+    setSelectedChannel,
+    setIsCreateModalOpen,
+    setIsJoinModalOpen,
+  } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
   const onClickChannelBlock = (e: React.MouseEvent<HTMLDivElement>) => {
