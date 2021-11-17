@@ -24,7 +24,7 @@ export class ChannelController {
       statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
     });
   }
-  @Get(':id') async findOne(@Param('id') id: number): Promise<Channel> {
+  @Get(':id') async findOne(@Param('id') id: string): Promise<Channel> {
     const foundServer = await this.channelService.findOne(+id);
     return Object.assign({
       data: foundServer,
