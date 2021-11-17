@@ -6,6 +6,7 @@ import { CamStoreContext } from './CamStore';
 import StreamStatusIndicator from './StreamStatusIndicator';
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -21,7 +22,7 @@ const Video = styled.video`
 
 function LocalUserScreen(): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { localStream, localStatus } = useContext(CamStoreContext);
+  const { localStream, localStatus, userInfo } = useContext(CamStoreContext);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -41,7 +42,11 @@ function LocalUserScreen(): JSX.Element {
       ) : (
         <DefaultScreen />
       )}
-      <StreamStatusIndicator micStatus={localStatus.audio} videoStatus={localStatus.video} />
+      <StreamStatusIndicator
+        micStatus={localStatus.audio}
+        videoStatus={localStatus.video}
+        nickname={userInfo.nickname}
+      />
     </Container>
   );
 }

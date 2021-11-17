@@ -13,6 +13,7 @@ type UserScreenProps = {
 };
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -66,7 +67,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
       ) : (
         <DefaultScreen />
       )}
-      <StreamStatusIndicator micStatus={status.audio} videoStatus={status.video} />
+      <StreamStatusIndicator micStatus={status.audio} videoStatus={status.video} nickname={userId} />
     </Container>
   );
 }
