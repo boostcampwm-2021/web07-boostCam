@@ -179,7 +179,7 @@ function CreateChannelModal(): JSX.Element {
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    const response = await fetch('api/channel', {
+    await fetch('api/channel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -190,8 +190,6 @@ function CreateChannelModal(): JSX.Element {
         server: +selectedServer,
       }),
     });
-    const receivedData = await response.json();
-    console.log(receivedData);
   };
 
   useEffect(() => {

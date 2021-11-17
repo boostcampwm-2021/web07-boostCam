@@ -18,16 +18,8 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const { isCreateModalOpen, isJoinModalOpen, setIsCreateModalOpen, setIsJoinModalOpen } = useContext(MainStoreContext);
+  const { isCreateModalOpen, isJoinModalOpen } = useContext(MainStoreContext);
   useEffect(() => {}, []);
-
-  useEffect(() => {
-    console.log(`isCreateModalOpen ${isCreateModalOpen}`);
-  }, [isCreateModalOpen]);
-
-  useEffect(() => {
-    console.log(`isJoinModalOpen ${isJoinModalOpen}`);
-  }, [isJoinModalOpen]);
 
   return (
     <Container>

@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div<{ activated: boolean }>`
@@ -46,7 +46,6 @@ function Dropdown(props: DropdownProps): JSX.Element {
 
   const onClickDropdownBackground = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    console.log('background');
     setIsDropdownActivated(false);
   };
 

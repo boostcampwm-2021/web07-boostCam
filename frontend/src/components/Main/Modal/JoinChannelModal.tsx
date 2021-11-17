@@ -2,6 +2,9 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
+import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+
+const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
   position: fixed;
@@ -25,10 +28,11 @@ const ModalBackground = styled.div`
 `;
 
 const ModalBox = styled.div`
-  width: 20%;
-  height: 20%;
+  width: 35%;
+  min-width: 400px;
+  height: 50%;
 
-  background-color: #12cdd1;
+  background-color: #222322;
 
   display: flex;
   flex-direction: column;
@@ -40,63 +44,75 @@ const ModalBox = styled.div`
   z-index: 3;
 `;
 
-const Form = styled.form`
+const ModalInnerBox = styled.div`
   width: 100%;
-  height: 200%;
-  border-radius: 20px;
-  padding: 20px 0;
-  margin: 30px 0;
-
+  height: 100%;
+  padding: 30px 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const ModalHeader = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 `;
 
-const Input = styled.input`
-  border: none;
-  outline: none;
-  padding: 8px 10px;
-  margin-top: 10px;
-  border-radius: 10px;
+const ModalTitle = styled.span`
+  margin-left: 25px;
+  padding: 10px 5px;
+
+  color: #cbc4b9;
+  font-size: 32px;
+  font-weight: 600;
 `;
 
-const SubmitButton = styled.button`
-  width: 60%;
-  margin-top: 15px;
-  height: 35px;
-  background: none;
+const ModalDescription = styled.span`
+  margin-left: 25px;
+  padding: 10px 5px;
 
-  border: 0;
-  outline: 0;
+  color: #cbc4b9;
+  font-size: 15px;
+`;
 
-  border-radius: 10px;
-  background-color: #26a9ca;
+const ModalCloseButton = styled.div`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+
   cursor: pointer;
-  text-align: center;
-  transition: all 0.3s;
+  margin-right: 25px;
+`;
 
-  &:hover {
-    background-color: #2dc2e6;
-    transition: all 0.3s;
-  }
-
-  a {
-    text-decoration: none;
-  }
+const CloseIcon = styled(Close)`
+  width: 20px;
+  height: 20px;
+  fill: #a69c96;
 `;
 
 function JoinChannelModal(): JSX.Element {
   const { setIsJoinModalOpen } = useContext(MainStoreContext);
 
+  /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
       <ModalBackground onClick={() => setIsJoinModalOpen(false)} />
       <ModalBox>
-        <Form>
-          <Input name="nickname" placeholder="닉네임을 입력해주세요" required />
-          <SubmitButton type="submit">입력</SubmitButton>
-        </Form>
+        <ModalInnerBox>
+          <ModalHeader>
+            <ModalTitle>채널 참가</ModalTitle>
+            <ModalCloseButton onClick={() => setIsJoinModalOpen(false)}>
+              <CloseIcon />
+            </ModalCloseButton>
+          </ModalHeader>
+          <ModalDescription>참가할 채널을 선택해주세요</ModalDescription>
+        </ModalInnerBox>
       </ModalBox>
     </Container>
   );

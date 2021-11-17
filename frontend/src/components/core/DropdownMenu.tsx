@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.li`
@@ -27,10 +27,6 @@ function DropdownMenu(props: DropdownMenuProps): JSX.Element {
     stateSetter(!state);
     setIsDropdownActivated(false);
   };
-
-  useEffect(() => {
-    console.log(name, state);
-  }, [state]);
 
   return <Container onClick={onClickMenu}>{name}</Container>;
 }
