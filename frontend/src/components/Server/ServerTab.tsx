@@ -2,8 +2,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ServerInfo } from '../../types/server';
-import Dropdown from './Dropdown';
-import DropdownMenu from './DropdownMenu';
+import Dropdown from '../core/Dropdown';
+import DropdownMenu from '../core/DropdownMenu';
 import ServerIcon from './ServerIcon';
 import { ServerStoreContext } from './ServerStore';
 
@@ -49,10 +49,6 @@ function ServerTab(): JSX.Element {
         return <ServerIcon key={server.id} server={server.server} />;
       })}
       <ModalDisplayButton onClick={onClickToggleNewServerModal}>+</ModalDisplayButton>
-      <Dropdown isDropdownActivated={isDropdownActivated}>
-        <DropdownMenu name="추가" />
-        <DropdownMenu name="생성" />
-      </Dropdown>
     </Container>
   );
 }

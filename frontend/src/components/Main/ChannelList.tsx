@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { ChannelData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
+import Dropdown from '../core/Dropdown';
+import DropdownMenu from '../core/DropdownMenu';
 
-const { Hash } = BoostCamMainIcons;
+const { Hash, Plus, ListArrow } = BoostCamMainIcons;
 
 const Container = styled.div`
   width: 100%;
@@ -21,7 +23,7 @@ const Container = styled.div`
 `;
 
 const ChannelListHeader = styled.div`
-  width: 80%;
+  width: 90%;
   height: 30px;
 
   margin-left: 15px;
@@ -30,7 +32,7 @@ const ChannelListHeader = styled.div`
 
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 
   &:hover {
@@ -38,9 +40,12 @@ const ChannelListHeader = styled.div`
   }
 `;
 
-const ChannelListHeaderSpan = styled.span``;
+const ChannelListHeaderSpan = styled.span`
+  margin-left: 5px;
+`;
 
 const ChannelListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
+  margin-left: 70px;
   visibility: ${(props) => (props.isButtonVisible ? 'visible' : 'hidden')};
 `;
 
@@ -78,6 +83,20 @@ const ChannelNameSpan = styled.span`
   padding: 5px 0px 5px 5px;
 `;
 
+const ListArrowIcon = styled(ListArrow)<{ isListOpen: boolean }>`
+  width: 20px;
+  height: 20px;
+  fill: #a69c96;
+  transition: all ease-out 0.3s;
+  ${(props) => (props.isListOpen ? 'transform: rotate(90deg);' : 'transform: rotate(0deg);')}
+`;
+
+const PlusIcon = styled(Plus)`
+  width: 20px;
+  height: 20px;
+  fill: #a69c96;
+`;
+
 const HashIcon = styled(Hash)`
   width: 15px;
   height: 15px;
@@ -87,6 +106,10 @@ const HashIcon = styled(Hash)`
 function ChannelList(): JSX.Element {
   const [channelList, setChannelList] = useState<ChannelData[]>([]);
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
+  const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
+  const [isListOpen, setIsListOpen] = useState<boolean>(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState<boolean>(false);
   const { selectedServer, selectedChannel, setSelectedChannel } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
@@ -95,8 +118,9 @@ function ChannelList(): JSX.Element {
     if (channelId) setSelectedChannel(channelId);
   };
 
-  const onClickChannelAddButton = () => {
-    console.log('check');
+  const onClickChannelAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setIsDropdownActivated(!isDropdownActivated);
   };
 
   const getChannelList = async (): Promise<void> => {
@@ -131,13 +155,32 @@ function ChannelList(): JSX.Element {
 
   return (
     <Container>
-      <ChannelListHeader onMouseEnter={() => setIsButtonVisible(true)} onMouseLeave={() => setIsButtonVisible(false)}>
+      <ChannelListHeader
+        onMouseEnter={() => setIsButtonVisible(true)}
+        onMouseLeave={() => setIsButtonVisible(false)}
+        onClick={() => setIsListOpen(!isListOpen)}
+      >
+        <ListArrowIcon isListOpen={isListOpen} />
         <ChannelListHeaderSpan>채널</ChannelListHeaderSpan>
-        <ChannelListHeaderButton isButtonVisible={isButtonVisible} onClick={onClickChannelAddButton}>
-          Button
+        <ChannelListHeaderButton isButtonVisible={isButtonVisible}>
+          <PlusIcon onClick={onClickChannelAddButton} />
+          <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
+            <DropdownMenu
+              name="추가"
+              setIsDropdownActivated={setIsDropdownActivated}
+              state={isCreateModalOpen}
+              stateSetter={setIsCreateModalOpen}
+            />
+            <DropdownMenu
+              name="생성"
+              setIsDropdownActivated={setIsDropdownActivated}
+              state={isJoinModalOpen}
+              stateSetter={setIsJoinModalOpen}
+            />
+          </Dropdown>
         </ChannelListHeaderButton>
       </ChannelListHeader>
-      <ChannelListBody>{listElements}</ChannelListBody>
+      {isListOpen && <ChannelListBody>{listElements}</ChannelListBody>}
     </Container>
   );
 }
