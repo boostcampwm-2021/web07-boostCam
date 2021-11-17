@@ -2,6 +2,9 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
+import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+
+const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
   position: fixed;
@@ -25,10 +28,11 @@ const ModalBackground = styled.div`
 `;
 
 const ModalBox = styled.div`
-  width: 20%;
-  height: 20%;
+  width: 35%;
+  min-width: 400px;
+  height: 50%;
 
-  background-color: #12cdd1;
+  background-color: #222322;
 
   display: flex;
   flex-direction: column;
@@ -40,62 +44,145 @@ const ModalBox = styled.div`
   z-index: 3;
 `;
 
-const Form = styled.form`
+const ModalInnerBox = styled.div`
   width: 100%;
-  height: 200%;
-  border-radius: 20px;
-  padding: 20px 0;
-  margin: 30px 0;
-
+  height: 100%;
+  padding: 30px 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const ModalHeader = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 `;
 
+const ModalTitle = styled.span`
+  margin-left: 25px;
+  padding: 10px 5px;
+
+  color: #cbc4b9;
+  font-size: 32px;
+  font-weight: 600;
+`;
+
+const ModalDescription = styled.span`
+  margin-left: 25px;
+  padding: 10px 5px;
+
+  color: #cbc4b9;
+  font-size: 15px;
+`;
+
+const Form = styled.form`
+  width: 90%;
+  height: 70%;
+  border-radius: 20px;
+  margin: 30px 0px 0px 25px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const InputDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const InputName = styled.span`
+  color: #cbc4b9;
+  font-size: 20px;
+  font-weight: 500;
+`;
+
 const Input = styled.input`
+  width: 90%;
   border: none;
   outline: none;
-  padding: 8px 10px;
+  padding: 15px 10px;
   margin-top: 10px;
   border-radius: 10px;
 `;
 
 const SubmitButton = styled.button`
-  width: 60%;
-  margin-top: 15px;
-  height: 35px;
+  width: 100px;
+  height: 50px;
   background: none;
+
+  padding: 15px 10px;
 
   border: 0;
   outline: 0;
 
+  text-align: center;
+  vertical-align: middle;
+
   border-radius: 10px;
   background-color: #26a9ca;
   cursor: pointer;
-  text-align: center;
   transition: all 0.3s;
 
   &:hover {
     background-color: #2dc2e6;
     transition: all 0.3s;
   }
+`;
 
-  a {
-    text-decoration: none;
-  }
+const ModalCloseButton = styled.div`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+
+  cursor: pointer;
+  margin-right: 25px;
+`;
+
+const CloseIcon = styled(Close)`
+  width: 20px;
+  height: 20px;
+  fill: #a69c96;
 `;
 
 function CreateChannelModal(): JSX.Element {
   const { setIsCreateModalOpen } = useContext(MainStoreContext);
+
   return (
     <Container>
       <ModalBackground onClick={() => setIsCreateModalOpen(false)} />
       <ModalBox>
-        <Form>
-          <Input name="nickname" placeholder="닉네임을 입력해주세요" required />
-          <SubmitButton type="submit">입력</SubmitButton>
-        </Form>
+        <ModalInnerBox>
+          <ModalHeader>
+            <ModalTitle>채널 생성</ModalTitle>
+            <ModalCloseButton onClick={() => setIsCreateModalOpen(false)}>
+              <CloseIcon />
+            </ModalCloseButton>
+          </ModalHeader>
+          <ModalDescription>생성할 채널의 이름과 설명을 작성해주세요</ModalDescription>
+          <Form>
+            <InputDiv>
+              <InputName>이름</InputName>
+              <Input name="name" placeholder="채널명을 입력해주세요" required />
+            </InputDiv>
+            <InputDiv>
+              <InputName>설명</InputName>
+              <Input name="description" placeholder="채널 설명을 입력해주세요" required />
+            </InputDiv>
+            <SubmitButton type="submit">생성</SubmitButton>
+          </Form>
+        </ModalInnerBox>
       </ModalBox>
     </Container>
   );
