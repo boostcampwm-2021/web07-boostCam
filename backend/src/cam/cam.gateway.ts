@@ -45,7 +45,6 @@ export class CamGateway {
       client.to(roomId).emit('userDisconnected', { userId });
       this.camService.exitRoom(roomId, userId);
     });
-
   }
 
   @SubscribeMessage('exitRoom')
@@ -75,8 +74,12 @@ export class CamGateway {
     const { userId } = payload;
     const status = this.camService.getStatus(roomId, userId);
     const userNickname = this.camService.getNickname(roomId, userId);
-    client.emit('userStatus', { userId, status });
-    client.emit('userNickname', { userId, userNickname });
+    if (status) {
+      client.emit('userStatus', { userId, status });
+    }
+    if (userNickname) {
+      client.emit('userNickname', { userId, userNickname });
+    }
   }
 
   @SubscribeMessage('startScreenShare')

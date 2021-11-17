@@ -69,7 +69,7 @@ export class CamService {
 
   getStatus(roomId: string, userId: string) {
     if (!this.map.get(roomId)) return false;
-    return this.map.get(roomId).find((user) => user.userId === userId).status;
+    return this.map.get(roomId).find((user) => user.userId === userId)?.status;
   }
 
   getNickname(roomId: string, userId: string) {
