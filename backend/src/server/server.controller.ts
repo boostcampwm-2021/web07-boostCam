@@ -11,7 +11,7 @@ import {
 import { ServerService } from './server.service';
 import { Server } from './server.entity';
 
-@Controller('api/server')
+@Controller('/api/servers')
 export class ServerController {
   constructor(private serverService: ServerService) {
     this.serverService = serverService;
@@ -24,7 +24,7 @@ export class ServerController {
       statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
     });
   }
-  @Get(':id') async findOne(@Param('id') id: string): Promise<Server> {
+  @Get('/:id') async findOne(@Param('id') id: string): Promise<Server> {
     const foundServer = await this.serverService.findOne(+id);
     return Object.assign({
       data: foundServer,
@@ -40,7 +40,7 @@ export class ServerController {
       statusMsg: `saved successfully`,
     });
   }
-  @Patch(':id') async updateUser(
+  @Patch('/:id') async updateUser(
     @Param('id') id: number,
     @Body() server: Server,
   ): Promise<string> {
@@ -51,7 +51,7 @@ export class ServerController {
       statusMsg: `updated successfully`,
     });
   }
-  @Delete(':id') async deleteUser(@Param('id') id: string): Promise<string> {
+  @Delete('/:id') async deleteUser(@Param('id') id: string): Promise<string> {
     await this.serverService.deleteServer(+id);
     return Object.assign({
       data: { id },

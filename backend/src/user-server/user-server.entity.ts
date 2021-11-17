@@ -7,9 +7,9 @@ export class UserServer {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Server)
+  @ManyToOne(() => Server, { onDelete: 'CASCADE' })
   server: Server;
 }
