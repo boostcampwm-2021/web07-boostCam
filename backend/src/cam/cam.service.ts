@@ -13,13 +13,16 @@ type RoomInfo = {
 export class CamService {
   private map: Map<string, Array<CamMap>>;
   private sharedScreen: Map<RoomId, { userId: string | null }>;
+
   constructor() {
     this.map = new Map();
     this.sharedScreen = new Map();
   }
+
   getRoomList() {
     return this.map;
   }
+
   getRoomNicknameList(roomId: string): RoomInfo[] {
     const roomInfo: CamMap[] = this.map.get(roomId);
     return roomInfo.map((data) => {
@@ -27,15 +30,18 @@ export class CamService {
       return { socketId, userNickname };
     });
   }
+
   isRoomExist(roomId: string): boolean {
     return this.map.has(roomId);
   }
+
   createRoom(roomId: string): boolean {
     if (this.map.get(roomId)) return false;
     this.map.set(roomId, []);
     this.sharedScreen.set(roomId, { userId: null });
     return true;
   }
+
   joinRoom(
     roomId: string,
     userId: string,
@@ -47,21 +53,31 @@ export class CamService {
     this.map.get(roomId).push({ userId, socketId, userNickname, status });
     return true;
   }
+
   exitRoom(roomId: string, userId: string) {
     if (!this.map.get(roomId)) return false;
     const room = this.map.get(roomId).filter((user) => user.userId !== userId);
     if (!room.length) this.map.delete(roomId);
     else this.map.set(roomId, room);
   }
+
   updateStatus(roomId: string, userId: string, status: Status) {
     if (!this.map.get(roomId)) return false;
     const user = this.map.get(roomId).find((user) => user.userId === userId);
     user.status = status;
   }
+
   getStatus(roomId: string, userId: string) {
     if (!this.map.get(roomId)) return false;
     return this.map.get(roomId).find((user) => user.userId === userId).status;
   }
+
+  getNickname(roomId: string, userId: string) {
+    if (!this.map.get(roomId)) return false;
+    return this.map.get(roomId).find((user) => user.userId === userId)
+      ?.userNickname;
+  }
+
   changeNickname(roomId: string, socketId: string, userNickname: string) {
     if (!this.map.get(roomId)) return false;
     const user = this.map

@@ -32,7 +32,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   const { stream, userId } = props;
   const socket = useRecoilValue(socketState);
   const videoRef = useRef<HTMLVideoElement>(null);
-
+  const [nickname, setNickname] = useState<string>('김철수');
   const [status, setStatus] = useState<Status>({
     video: false,
     audio: false,
@@ -55,19 +55,24 @@ function UserScreen(props: UserScreenProps): JSX.Element {
         setStatus(payload.status);
       }
     });
+    socket.on('userNickname', (payload) => {
+      if (payload.userId === userId) {
+        setNickname(payload.userNickname);
+      }
+    });
     socket.emit('getUserStatus', { userId });
   }, []);
 
   return (
     <Container>
       {status.stream && status.video ? (
-        <Video ref={videoRef} playsInline autoPlay isSpeaking={status.speaking}>
+        <Video ref={videoRef} playsInline autoPlay isSpeaking={status.speaking && status.audio}>
           <track kind="captions" />
         </Video>
       ) : (
         <DefaultScreen />
       )}
-      <StreamStatusIndicator micStatus={status.audio} videoStatus={status.video} nickname={userId} />
+      <StreamStatusIndicator micStatus={status.audio} videoStatus={status.video} nickname={nickname} />
     </Container>
   );
 }
