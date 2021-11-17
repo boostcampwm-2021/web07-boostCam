@@ -6,6 +6,8 @@ import LoginMain from './components/LoginPage/LoginMain';
 import Cam from './components/Cam/Cam';
 import CamRooms from './components/Main/CamRooms';
 import BoostCamMain from './components/Main/BoostCamMain';
+import LoginMain from './components/LoginPage/LoginMain';
+import LoginCallback from './components/LoginPage/LoginCallback';
 
 function App(): JSX.Element {
   return (
@@ -14,6 +16,7 @@ function App(): JSX.Element {
         <Routes>
           <Route path="/" element={<LoginMain />} />
           <Route path="/main" element={<BoostCamMain />} />
+          <Route path="/login/github" element={<LoginCallback service="github" />} />
           <Route path="/cam" element={<Cam />} />
           <Route path="/camroom" element={<CamRooms />} />
         </Routes>
