@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { RequestUserServerDto } from './dto/RequestUserServerDto';
 import { UserServerService } from './user-server.service';
 import { UserServer } from './user-server.entity';

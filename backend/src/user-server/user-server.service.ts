@@ -19,7 +19,7 @@ export class UserServerService {
   }
 
   async create(userId: number, serverId: number): Promise<UserServer> {
-    const user = await this.userService.getByUserId(userId);
+    const user = await this.userService.findOne(userId);
     const server = await this.serverService.findOne(serverId);
     const userServer = new UserServer();
     userServer.server = server;
