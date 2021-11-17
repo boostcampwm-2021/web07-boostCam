@@ -26,7 +26,7 @@ function LocalUserScreen(): JSX.Element {
   useEffect(() => {
     const video = videoRef.current;
 
-    if (!video || !localStream?.active) {
+    if (!video || !localStream?.active || video?.srcObject) {
       return;
     }
     video.srcObject = localStream;

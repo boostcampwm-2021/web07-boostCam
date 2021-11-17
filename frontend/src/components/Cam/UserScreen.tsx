@@ -42,7 +42,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   useEffect(() => {
     const video = videoRef.current;
 
-    if (!video || !stream?.active) {
+    if (!video || !stream?.active || video?.srcObject) {
       return;
     }
     video.srcObject = stream;
