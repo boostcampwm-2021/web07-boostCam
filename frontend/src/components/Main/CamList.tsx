@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as Hash } from '../../assets/icons/hash.svg';
+import { BoostCamMainIcons } from '../../utils/svgIcons';
+
+const { Hash } = BoostCamMainIcons;
 
 const Container = styled.div`
   width: 100%;
