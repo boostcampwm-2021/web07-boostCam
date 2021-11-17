@@ -14,8 +14,8 @@ export class UserServerService {
     private userServerRepository: UserServerRepository,
   ) {}
 
-  getByUserIdWithServerInfo(userId: number): Promise<UserServer[]> {
-    return this.userServerRepository.getByUserIdWithServerInfo(userId);
+  getServerListByUserId(userId: number): Promise<UserServer[]> {
+    return this.userServerRepository.getServerListByUserId(userId);
   }
 
   async create(userId: number, serverId: number): Promise<UserServer> {

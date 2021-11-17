@@ -5,16 +5,16 @@ import { UserServer } from '../user-server.entity';
 
 @Controller('/api/user-servers')
 export class UserServerController {
-  constructor(private userService: UserServerService) {}
+  constructor(private userServerService: UserServerService) {}
 
   @Get('/users/:id')
   getUserById(@Param('id') userId: number): Promise<UserServer[]> {
-    return this.userService.getByUserIdWithServerInfo(userId);
+    return this.userServerService.getServerListByUserId(userId);
   }
 
   @Post()
   create(@Body() requestUserServerDto: RequestUserServerDto) {
-    return this.userService.create(
+    return this.userServerService.create(
       requestUserServerDto.userId,
       requestUserServerDto.serverId,
     );
