@@ -41,11 +41,15 @@ export class LoginService {
         },
       );
 
-      const { id: githubId, avator_url } = githubUserResponse.data;
-      const user = await this.userRepository.findOne({ where: { githubId } });
+      const { id: githubId, avatar_url, login } = githubUserResponse.data;
+      let user = await this.userRepository.findOne({ where: { githubId } });
 
       if (!user) {
-        throw new NotFoundException();
+        const newUser = this.userRepository.create();
+        newUser.githubId = githubId;
+        newUser.profile = avatar_url;
+        newUser.nickname = login;
+        user = await this.userRepository.save(newUser);
       }
 
       return user;
