@@ -10,7 +10,11 @@ export class UserServerService {
     private userServerRepository: UserServerRepository,
   ) {}
 
-  async create(userServer: UserServer): Promise<UserServer> {
+  create(userServer: UserServer): Promise<UserServer> {
     return this.userServerRepository.save(userServer);
+  }
+
+  delete(id: number) {
+    this.userServerRepository.delete(id);
   }
 }
