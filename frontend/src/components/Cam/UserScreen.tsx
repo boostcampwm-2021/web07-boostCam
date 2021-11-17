@@ -73,6 +73,12 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   }, []);
 
   useEffect(() => {
+    if (stream?.active) {
+      setControl({ audio: stream.getAudioTracks()[0].enabled, video: stream.getVideoTracks()[0].enabled });
+    }
+  }, [stream]);
+
+  useEffect(() => {
     const handleClick = () => {
       if (isActiveControl) {
         setActiveControl((prev) => !prev);
