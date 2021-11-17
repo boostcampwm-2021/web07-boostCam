@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
-import { Server } from '../server/server.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -20,8 +13,4 @@ export class User {
 
   @Column()
   profile: string;
-
-  @ManyToMany(() => Server)
-  @JoinTable()
-  servers: Server[];
 }
