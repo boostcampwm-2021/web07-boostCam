@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Cam from './components/Cam/Cam';
 import CamRooms from './components/Main/CamRooms';
+import LoginMain from './components/LoginPage/LoginMain';
+import LoginCallback from './components/LoginPage/LoginCallback';
 
 function App(): JSX.Element {
   return (
@@ -11,6 +13,8 @@ function App(): JSX.Element {
       <RecoilRoot>
         <Routes>
           <Route path="/" element={<CamRooms />} />
+          <Route path="/login" element={<LoginMain />} />
+          <Route path="/login/github" element={<LoginCallback service="github" />} />
           <Route path="/cam" element={<Cam />} />
         </Routes>
       </RecoilRoot>
