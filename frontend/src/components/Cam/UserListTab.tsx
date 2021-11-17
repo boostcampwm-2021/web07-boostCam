@@ -12,7 +12,7 @@ const Container = styled.div<{ isActive: boolean }>`
   position: absolute;
   width: 18vw;
   max-height: 70vh;
-  padding: 0 10px;
+  padding: 10px;
   background-color: black;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   overflow-y: auto;
