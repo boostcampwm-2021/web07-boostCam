@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../utils/SvgIcons';
+import { BoostCamMainIcons } from '../../utils/svgIcons';
 import { ServerData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
 
