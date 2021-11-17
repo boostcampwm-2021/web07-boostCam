@@ -70,13 +70,13 @@ function UserScreen(props: UserScreenProps): JSX.Element {
       }
     });
     socket.emit('getUserStatus', { userId });
+    return () => {
+      if (stream) {
+        stream.getAudioTracks()[0].enabled = true;
+        stream.getVideoTracks()[0].enabled = true;
+      }
+    };
   }, []);
-
-  useEffect(() => {
-    if (stream?.active) {
-      setControl({ audio: stream.getAudioTracks()[0].enabled, video: stream.getVideoTracks()[0].enabled });
-    }
-  }, [stream]);
 
   useEffect(() => {
     const handleClick = () => {
