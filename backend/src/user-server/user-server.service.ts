@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
+import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserServerService {
@@ -14,11 +15,17 @@ export class UserServerService {
     return this.userServerRepository.save(userServer);
   }
 
-  deleteById(id: number) {
-    this.userServerRepository.delete(id);
+  deleteById(id: number): Promise<DeleteResult> {
+    return this.userServerRepository.delete(id);
   }
 
-  deleteByUserIdAndServerId(userId: number, serverId: number) {
-    this.userServerRepository.deleteByUserIdAndServerId(userId, serverId);
+  deleteByUserIdAndServerId(
+    userId: number,
+    serverId: number,
+  ): DeleteQueryBuilder<UserServer> {
+    return this.userServerRepository.deleteByUserIdAndServerId(
+      userId,
+      serverId,
+    );
   }
 }
