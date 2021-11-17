@@ -57,7 +57,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   }, [code]);
 
   if (loggedInUser || isSuccess) {
-    return <Navigate to="/" />;
+    return <Navigate to="/main" />;
   }
 
   if (loading) {

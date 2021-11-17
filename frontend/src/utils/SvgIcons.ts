@@ -29,6 +29,6 @@ export const ButtonBarIcons = {
 
 export const BoostCamMainIcons = {
   Hash,
-  Plus,
   UsersIcon,
+  Plus,
 };
