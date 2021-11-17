@@ -16,6 +16,7 @@ function ServerStore(props: ServerStoreProps): JSX.Element {
     const setServerListByUserId = async (userId: number) => {
       const response = await window.fetch(`/api/user-servers/users/${userId}`);
       const data = await response.json();
+      console.log(data);
       setServerList(data);
     };
 

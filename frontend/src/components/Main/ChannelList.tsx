@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { ChannelData } from '../../types/main';
@@ -21,12 +21,17 @@ const Container = styled.div`
 `;
 
 const ChannelListHeader = styled.div`
-  width: 100%;
+  width: 80%;
   height: 30px;
 
   margin-left: 15px;
   color: #a69c96;
   font-size: 17px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
@@ -34,6 +39,10 @@ const ChannelListHeader = styled.div`
 `;
 
 const ChannelListHeaderSpan = styled.span``;
+
+const ChannelListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
+  visibility: ${(props) => (props.isButtonVisible ? 'visible' : 'hidden')};
+`;
 
 const ChannelListBody = styled.div`
   width: 100%;
@@ -77,12 +86,17 @@ const HashIcon = styled(Hash)`
 
 function ChannelList(): JSX.Element {
   const [channelList, setChannelList] = useState<ChannelData[]>([]);
+  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const { selectedServer, selectedChannel, setSelectedChannel } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
   const onClickChannelBlock = (e: React.MouseEvent<HTMLDivElement>) => {
     const channelId = e.currentTarget.dataset.id;
     if (channelId) setSelectedChannel(channelId);
+  };
+
+  const onClickChannelAddButton = () => {
+    console.log('check');
   };
 
   const getChannelList = async (): Promise<void> => {
@@ -117,8 +131,11 @@ function ChannelList(): JSX.Element {
 
   return (
     <Container>
-      <ChannelListHeader>
+      <ChannelListHeader onMouseEnter={() => setIsButtonVisible(true)} onMouseLeave={() => setIsButtonVisible(false)}>
         <ChannelListHeaderSpan>채널</ChannelListHeaderSpan>
+        <ChannelListHeaderButton isButtonVisible={isButtonVisible} onClick={onClickChannelAddButton}>
+          Button
+        </ChannelListHeaderButton>
       </ChannelListHeader>
       <ChannelListBody>{listElements}</ChannelListBody>
     </Container>
