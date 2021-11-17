@@ -71,7 +71,8 @@ function LoginMain(): JSX.Element {
           <LocalLogin />
           <SplitLine />
           <OAuthLogin />
-          <Link to="/cam">Go To Cam </Link>
+          <Link to="/main">Go To BoostCamMain </Link>
+          <Link to="/camroom">Go To CamRoom </Link>
         </LeftDiv>
         <RightDiv>
           <TmpIcon />
