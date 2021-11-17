@@ -4,8 +4,9 @@ import styled from 'styled-components';
 
 import socketState from '../../atoms/socket';
 import DefaultScreen from './DefaultScreen';
-import type { Status } from '../../types/cam';
+import type { Control, Status } from '../../types/cam';
 import StreamStatusIndicator from './StreamStatusIndicator';
+import ControlMenu from './ControlMenu';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
@@ -39,10 +40,18 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     stream: false,
     speaking: false,
   });
+  const [control, setControl] = useState<Control>({ video: true, audio: true });
+  const [isActiveControl, setActiveControl] = useState<boolean>(false);
+  const [controlPosition, setControlPosition] = useState({ x: 0, y: 0 });
+
+  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setActiveControl(true);
+    setControlPosition({ x: e.pageX, y: e.pageY });
+  };
 
   useEffect(() => {
     const video = videoRef.current;
-
     if (!video || !stream?.active || video?.srcObject) {
       return;
     }
@@ -63,9 +72,31 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     socket.emit('getUserStatus', { userId });
   }, []);
 
+  useEffect(() => {
+    const handleClick = () => {
+      if (isActiveControl) {
+        setActiveControl((prev) => !prev);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [isActiveControl]);
+
+  useEffect(() => {
+    if (!stream?.active) {
+      return;
+    }
+    stream.getAudioTracks()[0].enabled = control.audio;
+    stream.getVideoTracks()[0].enabled = control.video;
+  }, [control]);
+
   return (
-    <Container>
-      {status.stream && status.video ? (
+    <Container onContextMenu={handleContextMenu}>
+      {status.stream && status.video && control.video ? (
         <Video ref={videoRef} playsInline autoPlay isSpeaking={status.speaking && status.audio}>
           <track kind="captions" />
         </Video>
@@ -73,6 +104,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
         <DefaultScreen />
       )}
       <StreamStatusIndicator micStatus={status.audio} videoStatus={status.video} nickname={nickname} />
+      {isActiveControl && <ControlMenu control={control} setControl={setControl} controlPosition={controlPosition} />}
     </Container>
   );
 }

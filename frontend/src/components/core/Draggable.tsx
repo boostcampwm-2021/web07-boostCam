@@ -16,6 +16,7 @@ const Container = styled.div<{ x: string; y: string; isActive: boolean }>`
   top: ${(props) => props.y};
   position: absolute;
   flex-direction: row;
+  z-index: 1;
   &:hover {
     cursor: pointer;
   }

@@ -15,6 +15,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  z-index: 2;
 `;
 
 const ModalBackground = styled.div`
@@ -37,7 +38,6 @@ const ModalBox = styled.div`
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0px 5px 22px -2px #000000;
-
   z-index: 3;
 `;
 
