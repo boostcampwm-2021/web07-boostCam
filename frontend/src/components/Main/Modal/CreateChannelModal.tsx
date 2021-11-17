@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -115,7 +116,12 @@ const Input = styled.input`
   border-radius: 10px;
 `;
 
-const SubmitButton = styled.button`
+const InputErrorMessage = styled.span`
+  padding: 5px 0px;
+  color: red;
+`;
+
+const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   width: 100px;
   height: 50px;
   background: none;
@@ -129,12 +135,12 @@ const SubmitButton = styled.button`
   vertical-align: middle;
 
   border-radius: 10px;
-  background-color: #26a9ca;
+  background-color: ${(props) => (props.isButtonActive ? '#26a9ca' : 'gray')};
   cursor: pointer;
   transition: all 0.3s;
 
   &:hover {
-    background-color: #2dc2e6;
+    background-color: ${(props) => (props.isButtonActive ? '#2dc2e6' : 'gray')};
     transition: all 0.3s;
   }
 `;
@@ -156,9 +162,45 @@ const CloseIcon = styled(Close)`
   fill: #a69c96;
 `;
 
-function CreateChannelModal(): JSX.Element {
-  const { setIsCreateModalOpen } = useContext(MainStoreContext);
+type CreateModalForm = {
+  name: string;
+  description: string;
+};
 
+function CreateChannelModal(): JSX.Element {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<CreateModalForm>();
+  const { selectedServer, setIsCreateModalOpen } = useContext(MainStoreContext);
+  const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
+
+  const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
+    const { name, description } = data;
+    const response = await fetch('api/channel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        description: description.trim(),
+        server: +selectedServer,
+      }),
+    });
+    const receivedData = await response.json();
+    console.log(receivedData);
+  };
+
+  useEffect(() => {
+    const { name, description } = watch();
+    const isActive = name.trim().length > 2 && description.trim().length > 0;
+    setIsButtonActive(isActive);
+  }, [watch()]);
+
+  /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
       <ModalBackground onClick={() => setIsCreateModalOpen(false)} />
@@ -171,16 +213,30 @@ function CreateChannelModal(): JSX.Element {
             </ModalCloseButton>
           </ModalHeader>
           <ModalDescription>생성할 채널의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form>
+          <Form onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
             <InputDiv>
               <InputName>이름</InputName>
-              <Input name="name" placeholder="채널명을 입력해주세요" required />
+              <Input
+                {...register('name', {
+                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+                })}
+                placeholder="채널명을 입력해주세요"
+              />
+              {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
             </InputDiv>
             <InputDiv>
               <InputName>설명</InputName>
-              <Input name="description" placeholder="채널 설명을 입력해주세요" required />
+              <Input
+                {...register('description', {
+                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+                })}
+                placeholder="채널 설명을 입력해주세요"
+              />
+              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
             </InputDiv>
-            <SubmitButton type="submit">생성</SubmitButton>
+            <SubmitButton type="submit" isButtonActive={isButtonActive}>
+              생성
+            </SubmitButton>
           </Form>
         </ModalInnerBox>
       </ModalBox>
