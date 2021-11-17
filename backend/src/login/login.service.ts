@@ -1,8 +1,7 @@
 import {
-  HttpException,
   Inject,
   Injectable,
-  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,6 +12,12 @@ import { User } from '../user/user.entity';
 
 import githubConfig from '../config/github.config';
 
+type GitHubUser = {
+  githubId: number;
+  nickname: string;
+  profile: string;
+};
+
 @Injectable()
 export class LoginService {
   constructor(
@@ -21,44 +26,58 @@ export class LoginService {
   ) {}
   async githubLogin(code: string): Promise<User> {
     try {
-      const accessTokenResponse = await axios.post(
-        'https://github.com/login/oauth/access_token',
-        {
-          client_id: this.config.clientID,
-          client_secret: this.config.clientSecret,
-          redirect_uri: this.config.callbackURL,
-          code,
-        },
-        {
-          headers: { Accept: 'application/json' },
-        },
-      );
-      const { access_token: accessToken } = accessTokenResponse.data;
-      const githubUserResponse = await axios.get(
-        'https://api.github.com/user',
-        {
-          headers: { Authorization: `token ${accessToken}` },
-        },
-      );
+      const accessToken = await this.getAccessToken(code);
+      const githubUser = await this.getGitHubUser(accessToken);
 
-      const { id: githubId, avatar_url, login } = githubUserResponse.data;
-      let user = await this.userRepository.findOne({ where: { githubId } });
+      let user = await this.userRepository.findOne({
+        where: { githubId: githubUser.githubId },
+      });
 
       if (!user) {
-        const newUser = this.userRepository.create();
-        newUser.githubId = githubId;
-        newUser.profile = avatar_url;
-        newUser.nickname = login;
-        user = await this.userRepository.save(newUser);
+        user = await this.registerByGitHubUser(githubUser);
       }
-
       return user;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-
-      throw new HttpException('bad request', 400);
+      throw new InternalServerErrorException();
     }
+  }
+
+  private async getAccessToken(code: string): Promise<string> {
+    const accessTokenResponse = await axios.post(
+      'https://github.com/login/oauth/access_token',
+      {
+        client_id: this.config.clientID,
+        client_secret: this.config.clientSecret,
+        redirect_uri: this.config.callbackURL,
+        code,
+      },
+      {
+        headers: { Accept: 'application/json' },
+      },
+    );
+    const { access_token: accessToken } = accessTokenResponse.data;
+    return accessToken;
+  }
+
+  private async getGitHubUser(accessToken: string): Promise<GitHubUser> {
+    const githubUserResponse = await axios.get('https://api.github.com/user', {
+      headers: { Authorization: `token ${accessToken}` },
+    });
+
+    const { id, avatar_url, login } = githubUserResponse.data;
+    return {
+      githubId: id,
+      nickname: login,
+      profile: avatar_url,
+    };
+  }
+
+  private async registerByGitHubUser(githubUser: GitHubUser) {
+    const { githubId, nickname, profile } = githubUser;
+    const newUser = this.userRepository.create();
+    newUser.githubId = githubId;
+    newUser.nickname = nickname;
+    newUser.profile = profile;
+    return await this.userRepository.save(newUser);
   }
 }
