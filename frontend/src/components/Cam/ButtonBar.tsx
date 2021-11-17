@@ -1,7 +1,7 @@
 import React, { RefObject, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { ButtonBarIcons } from '../../utils/svgIcons';
+import { ButtonBarIcons } from '../../utils/SvgIcons';
 import { CamStoreContext } from './CamStore';
 import type { Status } from '../../types/cam';
 import { ToggleStoreContext } from './ToggleStore';

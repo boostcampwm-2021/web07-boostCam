@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../utils/svgIcons';
+import { BoostCamMainIcons } from '../../utils/SvgIcons';
 
 const { Hash } = BoostCamMainIcons;
 
