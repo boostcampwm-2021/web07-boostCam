@@ -14,7 +14,11 @@ export class UserServerService {
     return this.userServerRepository.save(userServer);
   }
 
-  delete(id: number) {
+  deleteById(id: number) {
     this.userServerRepository.delete(id);
+  }
+
+  deleteByUserIdAndServerId(userId: number, serverId: number) {
+    this.userServerRepository.deleteByUserIdAndServerId(userId, serverId);
   }
 }

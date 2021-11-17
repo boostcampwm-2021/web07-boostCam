@@ -13,6 +13,6 @@ export class UserServerController {
 
   @Delete('/:id')
   delete(@Param('id') id: number) {
-    return this.userServerService.delete(id);
+    return this.userServerService.deleteById(id);
   }
 }
