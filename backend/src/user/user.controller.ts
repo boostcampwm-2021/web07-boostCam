@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards, Session } from '@nestjs/common';
-import { UserServer } from 'src/user-server/user-server.entity';
-import { UserServerService } from 'src/user-server/user-server.service';
+import { UserServer } from '../user-server/user-server.entity';
+import { UserServerService } from '../user-server/user-server.service';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 
