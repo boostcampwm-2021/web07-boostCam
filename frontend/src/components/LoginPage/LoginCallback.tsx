@@ -25,14 +25,13 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   const { service } = props;
   const [loading, setLoading] = useState<boolean>(true);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isNewUser, setIsNewUser] = useState<boolean>(false);
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
 
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
 
   if (!code) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   useEffect(() => {
@@ -40,16 +39,11 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
       try {
         const user = await requestLogin(code, service);
         setLoggedInUser(user);
-        setLoading(false);
         setIsSuccess(true);
       } catch (e) {
-        // Go to register page
-        if (e instanceof Error && e.message === '404') {
-          setIsNewUser(true);
-        }
-        // Login Fail
-        setLoading(false);
         setIsSuccess(false);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -68,13 +62,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
     );
   }
 
-  if (isNewUser) {
-    // TO DO: 회원가입 페이지
-    return <Navigate to="/" />;
-  }
-
-  // Login Fail
-  return <Navigate to="/login" />;
+  return <Navigate to="/" />;
 }
 
 export default LoginCallback;
