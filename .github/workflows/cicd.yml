@@ -77,7 +77,7 @@ jobs:
         run: npm run build
         working-directory: ${{env.working-directory}}
   frontend-cd:
-    if: github.event_name != 'push'
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
       working-directory: ./frontend
@@ -111,7 +111,7 @@ jobs:
         working-directory: ${{env.working-directory}}
         run: aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp frontend.zip s3://"${BUCKET_NAME}"
   backend-cd:
-    if: github.event_name != 'push'
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment: deploy
     env:
