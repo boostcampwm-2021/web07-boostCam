@@ -7,7 +7,9 @@ import {
   Post,
   Patch,
   Session,
+  UseGuards,
 } from '@nestjs/common';
+import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 
 import { ChannelService } from './channel.service';
@@ -16,13 +18,14 @@ import { CreateChannelDto } from './channe.dto';
 import ResponseEntity from 'src/lib/ResponseEntity';
 
 @Controller('api/channel')
+@UseGuards(LoginGuard)
 export class ChannelController {
   constructor(private channelService: ChannelService) {
     this.channelService = channelService;
   }
-  @Get('list') async findAll(): Promise<ResponseEntity<Channel[]>> {
-    const serverList = await this.channelService.findAll();
-    return ResponseEntity.ok<Channel[]>(serverList);
+  @Get() async findAll(): Promise<ResponseEntity<Channel[]>> {
+    const channelList = await this.channelService.findAll();
+    return ResponseEntity.ok<Channel[]>(channelList);
   }
   @Get(':id') async findOne(
     @Param('id') id: number,

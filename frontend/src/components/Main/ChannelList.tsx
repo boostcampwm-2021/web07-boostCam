@@ -130,7 +130,7 @@ function ChannelList(): JSX.Element {
   };
 
   const getChannelList = async (): Promise<void> => {
-    const response = await fetch('/api/channel/list');
+    const response = await fetch('/api/channel');
     const list = await response.json();
 
     setChannelList(list.data);
