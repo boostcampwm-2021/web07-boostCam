@@ -34,6 +34,7 @@ jobs:
   backend-ci:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
+    environment: deploy
     env:
       working-directory: ./backend
     strategy:
@@ -48,6 +49,27 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ${{env.working-directory}}
+      - name: Create .env
+        uses: weyheyhey/create-dotenv-action@v1
+        working-directory: ${{env.working-directory}}
+        with:
+          wildecard: '^'
+          filename: '.env'
+        env:
+          ^DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          ^DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          ^DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          ^DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+      - name: Create .env.github
+        uses: weyheyhey/create-dotenv-action@v1
+        working-directory: ${{env.working-directory}}
+        with:
+          wildecard: '^'
+          filename: '.env.github'
+        env:
+          ^CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
+          ^CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
+          ^CALLBACK_URL_GITHUB: ${{ secrets.CALLBACK_URL_GITHUB }}
       - name: Test
         run: npm run test
         working-directory: ${{env.working-directory}}
@@ -91,6 +113,7 @@ jobs:
   backend-cd:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    environment: deploy
     env:
       working-directory: ./backend
     strategy:
@@ -105,6 +128,27 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ${{env.working-directory}}
+      - name: Create .env
+        uses: weyheyhey/create-dotenv-action@v1
+        working-directory: ${{env.working-directory}}
+        with:
+          wildecard: '^'
+          filename: '.env'
+        env:
+          ^DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          ^DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          ^DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          ^DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+      - name: Create .env.github
+        uses: weyheyhey/create-dotenv-action@v1
+        working-directory: ${{env.working-directory}}
+        with:
+          wildecard: '^'
+          filename: '.env.github'
+        env:
+          ^CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
+          ^CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
+          ^CALLBACK_URL_GITHUB: ${{ secrets.CALLBACK_URL_GITHUB }}
       - name: Build
         run: npm run build
         working-directory: ${{env.working-directory}}
