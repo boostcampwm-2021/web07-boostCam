@@ -12,6 +12,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [selectedChannel, setSelectedChannel] = useState<string>('1');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState<boolean>(false);
+  const [isCreateServerModalOpen, setIsCreateServerModalOpen] = useState<boolean>(false);
+  const [isJoinServerModalOpen, setIsJoinServerModalOpen] = useState<boolean>(false);
 
   return (
     <MainStoreContext.Provider
@@ -20,10 +22,14 @@ function MainStore(props: MainStoreProps): JSX.Element {
         selectedChannel,
         isCreateModalOpen,
         isJoinModalOpen,
+        isCreateServerModalOpen,
+        isJoinServerModalOpen,
         setSelectedServer,
         setSelectedChannel,
         setIsCreateModalOpen,
         setIsJoinModalOpen,
+        setIsCreateServerModalOpen,
+        setIsJoinServerModalOpen,
       }}
     >
       {children}
