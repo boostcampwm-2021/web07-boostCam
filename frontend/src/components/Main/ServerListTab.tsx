@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { ServerData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
+import Dropdown from '../core/Dropdown';
+import DropdownMenu from '../core/DropdownMenu';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -79,7 +81,16 @@ const tmpUrl: string[] = [
 
 function ServerListTab(): JSX.Element {
   const [serverList, setServerList] = useState<ServerData[]>([]);
-  const { selectedServer, setSelectedServer } = useContext(MainStoreContext);
+  const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
+  const {
+    selectedServer,
+    setSelectedServer,
+    isCreateServerModalOpen,
+    isJoinServerModalOpen,
+    setIsCreateServerModalOpen,
+    setIsJoinServerModalOpen,
+  } = useContext(MainStoreContext);
+
   const initChannel = '1';
   const navigate = useNavigate();
 
@@ -92,6 +103,11 @@ function ServerListTab(): JSX.Element {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
     setServerList(list.data);
+  };
+
+  const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setIsDropdownActivated(!isDropdownActivated);
   };
 
   const listElements = serverList.map((val: ServerData, idx: number): JSX.Element => {
@@ -120,7 +136,21 @@ function ServerListTab(): JSX.Element {
     <Container>
       {listElements}
       <AddServerButton>
-        <PlusIcon />
+        <PlusIcon onClick={onClickServerAddButton} />
+        <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
+          <DropdownMenu
+            name="서버 생성"
+            setIsDropdownActivated={setIsDropdownActivated}
+            state={isCreateServerModalOpen}
+            stateSetter={setIsCreateServerModalOpen}
+          />
+          <DropdownMenu
+            name="서버 참가"
+            setIsDropdownActivated={setIsDropdownActivated}
+            state={isJoinServerModalOpen}
+            stateSetter={setIsJoinServerModalOpen}
+          />
+        </Dropdown>
       </AddServerButton>
     </Container>
   );
