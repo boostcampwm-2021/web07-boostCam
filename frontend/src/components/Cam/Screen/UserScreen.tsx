@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-import socketState from '../../atoms/socket';
+import socketState from '../../../atoms/socket';
 import DefaultScreen from './DefaultScreen';
-import type { Control, Status } from '../../types/cam';
+import type { Control, Status } from '../../../types/cam';
 import StreamStatusIndicator from './StreamStatusIndicator';
 import ControlMenu from './ControlMenu';
 

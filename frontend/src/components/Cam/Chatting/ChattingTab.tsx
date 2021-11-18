@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-import socketState from '../../atoms/socket';
-import STTScreen from './STT/STTScreen';
-import { ToggleStoreContext } from './ToggleStore';
-import { CamStoreContext } from './CamStore';
+import socketState from '../../../atoms/socket';
+import STTScreen from '../STT/STTScreen';
+import { ToggleStoreContext } from '../ToggleStore';
+import { CamStoreContext } from '../CamStore';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   height: 90vh;

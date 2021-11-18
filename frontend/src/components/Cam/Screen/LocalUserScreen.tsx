@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import DefaultScreen from './DefaultScreen';
-import { CamStoreContext } from './CamStore';
+import { CamStoreContext } from '../CamStore';
 import StreamStatusIndicator from './StreamStatusIndicator';
 
 const Container = styled.div`

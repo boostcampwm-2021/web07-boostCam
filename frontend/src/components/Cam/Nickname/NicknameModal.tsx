@@ -2,8 +2,8 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-import socketState from '../../atoms/socket';
-import { UserInfo } from '../../types/cam';
+import socketState from '../../../atoms/socket';
+import { UserInfo } from '../../../types/cam';
 
 const Container = styled.div`
   position: fixed;

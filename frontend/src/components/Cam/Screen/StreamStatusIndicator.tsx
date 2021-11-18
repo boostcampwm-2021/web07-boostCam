@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as MicIcon } from '../../assets/icons/mic.svg';
-import { ReactComponent as VideoIcon } from '../../assets/icons/video.svg';
+import { ReactComponent as MicIcon } from '../../../assets/icons/mic.svg';
+import { ReactComponent as VideoIcon } from '../../../assets/icons/video.svg';
 
 const Container = styled.div`
   position: relative;

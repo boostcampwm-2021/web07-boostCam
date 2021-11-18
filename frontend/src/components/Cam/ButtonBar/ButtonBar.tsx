@@ -1,13 +1,13 @@
 import React, { RefObject, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { ButtonBarIcons } from '../../utils/SvgIcons';
-import { CamStoreContext } from './CamStore';
-import type { Status } from '../../types/cam';
-import { ToggleStoreContext } from './ToggleStore';
-import { STTStoreContext } from './STT/STTStore';
-import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
-import NicknameModal from './NicknameModal';
+import { ButtonBarIcons } from '../../../utils/SvgIcons';
+import { CamStoreContext } from '../CamStore';
+import type { Status } from '../../../types/cam';
+import { ToggleStoreContext } from '../ToggleStore';
+import { STTStoreContext } from '../STT/STTStore';
+import { SharedScreenStoreContext } from '../SharedScreen/SharedScreenStore';
+import NicknameModal from '../Nickname/NicknameModal';
 
 const {
   MicIcon,

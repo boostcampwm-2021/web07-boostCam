@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Control } from '../../types/cam';
+import { Control } from '../../../types/cam';
 
 type ControlMenuProps = {
   control: Control;
