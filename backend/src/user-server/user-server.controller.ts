@@ -1,14 +1,30 @@
-import { Controller, Post, Body, Delete, Param } from '@nestjs/common';
-import { UserServer } from './user-server.entity';
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  Param,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
+import { Server } from '../server/server.entity';
+import { LoginGuard } from '../login/login.guard';
+import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
 
 @Controller('/api/users/servers')
+@UseGuards(LoginGuard)
 export class UserServerController {
   constructor(private userServerService: UserServerService) {}
 
   @Post()
-  create(@Body() userServer: UserServer) {
-    return this.userServerService.create(userServer);
+  create(
+    @Session()
+    session: ExpressSession,
+    @Body() server: Server,
+  ) {
+    const user = session.user;
+    return this.userServerService.create(user, server);
   }
 
   @Delete('/:id')

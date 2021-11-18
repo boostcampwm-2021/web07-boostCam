@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
 import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
+import { User } from '../user/user.entity';
+import { Server } from '../server/server.entity';
 
 @Injectable()
 export class UserServerService {
@@ -11,8 +13,11 @@ export class UserServerService {
     private userServerRepository: UserServerRepository,
   ) {}
 
-  create(userServer: UserServer): Promise<UserServer> {
-    return this.userServerRepository.save(userServer);
+  async create(user: User, server: Server): Promise<UserServer> {
+    const newUserServer = new UserServer();
+    newUserServer.user = user;
+    newUserServer.server = server;
+    return this.userServerRepository.save(newUserServer);
   }
 
   deleteById(id: number): Promise<DeleteResult> {
