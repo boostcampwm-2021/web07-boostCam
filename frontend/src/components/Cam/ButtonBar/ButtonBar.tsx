@@ -1,13 +1,13 @@
 import React, { RefObject, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { ButtonBarIcons } from '../../utils/SvgIcons';
-import { CamStoreContext } from './CamStore';
-import type { Status } from '../../types/cam';
-import { ToggleStoreContext } from './ToggleStore';
-import { STTStoreContext } from './STT/STTStore';
-import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
-import NicknameModal from './NicknameModal';
+import { ButtonBarIcons } from '../../../utils/SvgIcons';
+import { CamStoreContext } from '../CamStore';
+import type { Status } from '../../../types/cam';
+import { ToggleStoreContext } from '../ToggleStore';
+import { STTStoreContext } from '../STT/STTStore';
+import { SharedScreenStoreContext } from '../SharedScreen/SharedScreenStore';
+import NicknameModal from '../Nickname/NicknameModal';
 
 const {
   MicIcon,
@@ -17,7 +17,6 @@ const {
   IdentificationIcon,
   ChatIcon,
   PresenstationIcon,
-  UsersIcon,
   ExitIcon,
   STTIcon,
   STTDisabledIcon,
@@ -78,7 +77,7 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
   const [isMouseOnCamPage, setMouseOnCamPage] = useState<boolean>(true);
   const [isActiveNicknameModal, setIsActiveNicknameModal] = useState<boolean>(false);
   const { localStream, setLocalStatus, localStatus, setUserInfo } = useContext(CamStoreContext);
-  const { handleUserListTabActive, handleChattingTabActive } = useContext(ToggleStoreContext);
+  const { handleChattingTabActive } = useContext(ToggleStoreContext);
   const { toggleSTTActive, isSTTActive } = useContext(STTStoreContext);
 
   const { handleScreenShareActive } = useContext(SharedScreenStoreContext);
@@ -148,10 +147,6 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
           <Button onClick={onClickNicknameChangeButton}>
             <IdentificationIcon />
             <span>닉네임</span>
-          </Button>
-          <Button onClick={handleUserListTabActive}>
-            <UsersIcon />
-            <span>사용자 목록</span>
           </Button>
           <Button color="#00ff2e" onClick={handleScreenShareActive}>
             <PresenstationIcon />

@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import DefaultScreen from './DefaultScreen';
-import { CamStoreContext } from './CamStore';
+import { CamStoreContext } from '../CamStore';
 import StreamStatusIndicator from './StreamStatusIndicator';
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -21,12 +22,12 @@ const Video = styled.video`
 
 function LocalUserScreen(): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { localStream, localStatus } = useContext(CamStoreContext);
+  const { localStream, localStatus, userInfo } = useContext(CamStoreContext);
 
   useEffect(() => {
     const video = videoRef.current;
 
-    if (!video || !localStream?.active) {
+    if (!video || !localStream?.active || video?.srcObject) {
       return;
     }
     video.srcObject = localStream;
@@ -41,7 +42,11 @@ function LocalUserScreen(): JSX.Element {
       ) : (
         <DefaultScreen />
       )}
-      <StreamStatusIndicator micStatus={localStatus.audio} videoStatus={localStatus.video} />
+      <StreamStatusIndicator
+        micStatus={localStatus.audio}
+        videoStatus={localStatus.video}
+        nickname={userInfo.nickname}
+      />
     </Container>
   );
 }

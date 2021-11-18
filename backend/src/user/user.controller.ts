@@ -1,13 +1,21 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Session } from '@nestjs/common';
 import { UserServer } from 'src/user-server/user-server.entity';
 import { UserServerService } from 'src/user-server/user-server.service';
+import { LoginGuard } from '../login/login.guard';
+import { ExpressSession } from '../types/session';
 
-@Controller('/api/users')
+@Controller('/api/user')
+@UseGuards(LoginGuard)
 export class UserController {
   constructor(private userServerService: UserServerService) {}
 
   @Get('/:id/servers')
-  getUserById(@Param('id') userId: number): Promise<UserServer[]> {
+  getServersByUserId(@Param('id') userId: number): Promise<UserServer[]> {
     return this.userServerService.getServerListByUserId(userId);
+  }
+
+  @Get()
+  getUser(@Session() session: ExpressSession) {
+    return session.user;
   }
 }
