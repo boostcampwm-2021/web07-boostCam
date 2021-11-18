@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Patch,
+  Session,
 } from '@nestjs/common';
+import { ExpressSession } from '../types/session';
 
 import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
+import { CreateChannelDto } from './channe.dto';
 
 @Controller('api/channel')
 export class ChannelController {
@@ -32,10 +35,16 @@ export class ChannelController {
       statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
     });
   }
-  @Post() async saveChannel(@Body() channel: Channel): Promise<string> {
-    await this.channelService.addChannel(channel);
+  @Post() async saveChannel(
+    @Body() channel: CreateChannelDto,
+    @Session() session: ExpressSession,
+  ): Promise<string> {
+    const savedChannel = await this.channelService.addChannel(
+      channel,
+      session.user.id,
+    );
     return Object.assign({
-      data: { ...channel },
+      data: { ...savedChannel },
       statusCode: 200,
       statusMsg: `saved successfully`,
     });
