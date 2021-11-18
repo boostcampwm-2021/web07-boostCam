@@ -13,8 +13,6 @@ export class LoginController {
     @Query('code') code: string,
   ) {
     const user = await this.loginService.githubLogin(code);
-    console.log(user);
-
     session.user = user;
     session.save();
     return user;
