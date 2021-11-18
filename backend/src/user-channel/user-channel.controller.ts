@@ -1,23 +1,20 @@
 import {
   Controller,
-  Post,
-  Body,
   Delete,
   Param,
   Session,
   Get,
+  UseGuards,
 } from '@nestjs/common';
+import { LoginGuard } from 'src/login/login.guard';
 import { ExpressSession } from '../types/session';
-import { UserChannel } from './user-channel.entity';
 import { UserChannelService } from './user-channel.service';
 
 @Controller('/api/user/channels')
+@UseGuards(LoginGuard)
 export class UserChannelController {
-  constructor(private userChannelService: UserChannelService) {}
-
-  @Post()
-  create(@Body() userChannel: UserChannel) {
-    return this.userChannelService.create(userChannel);
+  constructor(private userChannelService: UserChannelService) {
+    this.userChannelService = userChannelService;
   }
 
   @Get()

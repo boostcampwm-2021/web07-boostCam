@@ -15,13 +15,18 @@ import { ExpressSession } from '../types/session';
 import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
 import { CreateChannelDto } from './channe.dto';
+import { UserChannelService } from 'src/user-channel/user-channel.service';
 import ResponseEntity from 'src/lib/ResponseEntity';
 
 @Controller('api/channel')
 @UseGuards(LoginGuard)
 export class ChannelController {
-  constructor(private channelService: ChannelService) {
+  constructor(
+    private channelService: ChannelService,
+    private userChannelService: UserChannelService,
+  ) {
     this.channelService = channelService;
+    this.userChannelService = userChannelService;
   }
   @Get() async findAll(): Promise<ResponseEntity<Channel[]>> {
     const channelList = await this.channelService.findAll();
@@ -37,10 +42,8 @@ export class ChannelController {
     @Body() channel: CreateChannelDto,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<Channel>> {
-    const savedChannel = await this.channelService.addChannel(
-      channel,
-      session.user.id,
-    );
+    const savedChannel = await this.channelService.addChannel(channel);
+    await this.userChannelService.addNewChannel(savedChannel, session.user.id);
     return ResponseEntity.ok<Channel>(savedChannel);
   }
   @Patch(':id') async updateUser(

@@ -4,15 +4,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Channel } from './channel.entity';
 import { ChannelController } from './channel.controller';
 import { ChannelService } from './channel.service';
-import { UserChannelRepository } from 'src/user-channel/user-channel.repository';
 import { Server } from 'src/server/server.entity';
-import { User } from 'src/user/user.entity';
+import { UserChannelService } from 'src/user-channel/user-channel.service';
+import { UserChannelRepository } from 'src/user-channel/user-channel.repository';
+import { UserRepository } from 'src/user/user.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, Server, User, UserChannelRepository]),
+    TypeOrmModule.forFeature([
+      Channel,
+      Server,
+      UserChannelRepository,
+      UserRepository,
+    ]),
   ],
-  providers: [ChannelService],
+  providers: [ChannelService, UserChannelService],
   controllers: [ChannelController],
 })
 export class ChannelModule {}

@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getConnection } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { UserChannel } from './user-channel.entity';
 
 @EntityRepository(UserChannel)
