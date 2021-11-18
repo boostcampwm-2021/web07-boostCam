@@ -90,7 +90,7 @@ function ServerListTab(): JSX.Element {
 
   const getServerList = async (): Promise<void> => {
     const userIdExam = 1;
-    const response = await fetch(`/api/users/${userIdExam}/servers`);
+    const response = await fetch(`/api/user/${userIdExam}/servers`);
     const list = await response.json();
     setServerList(list);
   };
