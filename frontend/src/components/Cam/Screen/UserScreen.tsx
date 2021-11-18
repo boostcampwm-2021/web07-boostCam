@@ -96,8 +96,13 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     if (!stream?.active) {
       return;
     }
-    stream.getAudioTracks()[0].enabled = control.audio;
-    stream.getVideoTracks()[0].enabled = control.video;
+    if (stream.getAudioTracks()[0]) {
+      stream.getAudioTracks()[0].enabled = control.audio;
+    }
+
+    if (stream.getVideoTracks()[0]) {
+      stream.getVideoTracks()[0].enabled = control.video;
+    }
   }, [control]);
 
   return (

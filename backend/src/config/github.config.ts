@@ -9,8 +9,8 @@ interface GitHubConfig {
 export default registerAs(
   'github',
   (): GitHubConfig => ({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.GITHUB_CALLBACK_URL,
+    clientID: process.env.CLIENT_ID_GITHUB,
+    clientSecret: process.env.CLIENT_SECRET_GITHUB,
+    callbackURL: process.env.CALLBACK_URL_GITHUB,
   }),
 );
