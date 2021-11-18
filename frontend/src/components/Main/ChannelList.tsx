@@ -141,9 +141,10 @@ function ChannelList(): JSX.Element {
   }, []);
 
   useEffect(() => {
+    const serverId = selectedServer !== undefined ? selectedServer.server.id : 'none';
     navigate({
       search: `?${createSearchParams({
-        serverId: selectedServer,
+        serverId,
         channelId: selectedChannel,
       })}`,
     });

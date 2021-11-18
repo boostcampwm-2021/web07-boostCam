@@ -97,8 +97,9 @@ function ServerListTab(): JSX.Element {
   const getServerList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
-    setServerList(list.data);
-    if (list.data.length !== 0) {
+
+    if (response.status === 200 && list.data.length !== 0) {
+      setServerList(list.data);
       setSelectedServer(list.data[0]);
     }
   };
@@ -107,7 +108,6 @@ function ServerListTab(): JSX.Element {
     e.stopPropagation();
     setIsDropdownActivated(!isDropdownActivated);
   };
-
   const listElements = serverList.map((myServerData: MyServerData, idx: number): JSX.Element => {
     const selected = selectedServer !== undefined ? selectedServer.id === myServerData.id : false;
     const onClickChangeSelectedServer = () => {
@@ -131,9 +131,10 @@ function ServerListTab(): JSX.Element {
   }, []);
 
   useEffect(() => {
+    const serverId = selectedServer !== undefined ? selectedServer.server.id : 'none';
     navigate({
       search: `?${createSearchParams({
-        serverId: selectedServer,
+        serverId,
         channelId: initChannel,
       })}`,
     });
