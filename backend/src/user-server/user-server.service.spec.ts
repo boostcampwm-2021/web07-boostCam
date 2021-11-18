@@ -52,7 +52,10 @@ describe('UserServerService', () => {
   describe('create()', () => {
     it('정상적인 값을 저장할 경우', async () => {
       repository.save.mockResolvedValue(userServer);
-      const newUserServer = await service.create(userServer);
+      const newUserServer = await service.create(
+        existUserServer.user,
+        existUserServer.server,
+      );
 
       expect(newUserServer.user).toBe(userServer.user);
       expect(newUserServer.server).toBe(userServer.server);

@@ -3,7 +3,7 @@ import { UserServer } from '../user-server/user-server.entity';
 import { UserServerService } from '../user-server/user-server.service';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
-import ResponseEntity from 'src/common/response-entity';
+import ResponseEntity from '../common/response-entity';
 
 @Controller('/api/user')
 @UseGuards(LoginGuard)
