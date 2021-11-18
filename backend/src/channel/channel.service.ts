@@ -16,7 +16,7 @@ export class ChannelService {
     this.serverRepository = serverRepository;
   }
   findAll(): Promise<Channel[]> {
-    return this.channelRepository.find({ relations: ['server'] });
+    return this.channelRepository.find();
   }
   findOne(id: number): Promise<Channel> {
     return this.channelRepository.findOne({ id: id });

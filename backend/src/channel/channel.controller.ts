@@ -30,6 +30,7 @@ export class ChannelController {
   }
   @Get() async findAll(): Promise<ResponseEntity<Channel[]>> {
     const channelList = await this.channelService.findAll();
+    console.log(channelList);
     return ResponseEntity.ok<Channel[]>(channelList);
   }
   @Get(':id') async findOne(

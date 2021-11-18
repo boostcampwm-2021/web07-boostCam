@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -97,7 +97,17 @@ const CloseIcon = styled(Close)`
 `;
 
 function JoinChannelModal(): JSX.Element {
-  const { setIsJoinModalOpen } = useContext(MainStoreContext);
+  const { selectedServer, setIsJoinModalOpen } = useContext(MainStoreContext);
+
+  const getNotJoinedChannel = async () => {
+    const response = await fetch(`/api/user/channels/joined/${selectedServer}`);
+    const list = await response.json();
+    console.log(list.data);
+  };
+
+  useEffect(() => {
+    getNotJoinedChannel();
+  }, []);
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (

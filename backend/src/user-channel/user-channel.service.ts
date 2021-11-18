@@ -43,9 +43,10 @@ export class UserChannelService {
   }
 
   getJoinedChannelListByUserId(
-    userId: number,
     serverId: number,
+    userId: number,
   ): Promise<UserChannel[]> {
+    console.log(serverId, userId);
     return this.userChannelRepository.getJoinedChannelListByUserId(
       userId,
       serverId,
@@ -53,8 +54,8 @@ export class UserChannelService {
   }
 
   getNotJoinedChannelListByUserId(
-    userId: number,
     serverId: number,
+    userId: number,
   ): Promise<UserChannel[]> {
     return this.userChannelRepository.getNotJoinedChannelListByUserId(
       userId,
