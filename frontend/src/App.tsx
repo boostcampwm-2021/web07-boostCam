@@ -14,12 +14,12 @@ function App(): JSX.Element {
     <Router>
       <RecoilRoot>
         <Routes>
-          <Route path="/login" element={<LoginMain />} />
+          <Route path="/" element={<LoginMain />} />
           <Route path="/main" element={<BoostCamMain />} />
           <Route path="/login/github" element={<LoginCallback service="github" />} />
           <Route path="/cam" element={<Cam />} />
           <Route path="/serverTmp" element={<TmpFrame />} />
-          <Route path="/" element={<CamRooms />} />
+          <Route path="/camroom" element={<CamRooms />} />
         </Routes>
       </RecoilRoot>
     </Router>

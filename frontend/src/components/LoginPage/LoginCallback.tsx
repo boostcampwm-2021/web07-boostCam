@@ -62,7 +62,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
     );
   }
 
-  return <Navigate to="/" />;
+  return <Navigate to="/main" />;
 }
 
 export default LoginCallback;
