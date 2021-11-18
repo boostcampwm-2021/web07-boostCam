@@ -51,7 +51,6 @@ jobs:
         working-directory: ${{env.working-directory}}
       - name: Create .env
         uses: weyheyhey/create-dotenv-action@v1
-        working-directory: ${{env.working-directory}}
         with:
           wildecard: '^'
           filename: '.env'
@@ -62,7 +61,6 @@ jobs:
           ^DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
       - name: Create .env.github
         uses: weyheyhey/create-dotenv-action@v1
-        working-directory: ${{env.working-directory}}
         with:
           wildecard: '^'
           filename: '.env.github'
@@ -70,6 +68,8 @@ jobs:
           ^CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
           ^CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
           ^CALLBACK_URL_GITHUB: ${{ secrets.CALLBACK_URL_GITHUB }}
+      - name: Move .envs
+        run: mv .env .env.github ./backend
       - name: Test
         run: npm run test
         working-directory: ${{env.working-directory}}
@@ -130,7 +130,6 @@ jobs:
         working-directory: ${{env.working-directory}}
       - name: Create .env
         uses: weyheyhey/create-dotenv-action@v1
-        working-directory: ${{env.working-directory}}
         with:
           wildecard: '^'
           filename: '.env'
@@ -141,7 +140,6 @@ jobs:
           ^DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
       - name: Create .env.github
         uses: weyheyhey/create-dotenv-action@v1
-        working-directory: ${{env.working-directory}}
         with:
           wildecard: '^'
           filename: '.env.github'
@@ -149,6 +147,8 @@ jobs:
           ^CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
           ^CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
           ^CALLBACK_URL_GITHUB: ${{ secrets.CALLBACK_URL_GITHUB }}
+      - name: Move .envs
+        run: mv .env .env.github ./backend
       - name: Build
         run: npm run build
         working-directory: ${{env.working-directory}}
