@@ -3,7 +3,7 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
-import { ServerData } from '../../types/main';
+import { MyServerData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
@@ -80,7 +80,7 @@ const tmpUrl: string[] = [
 ];
 
 function ServerListTab(): JSX.Element {
-  const [serverList, setServerList] = useState<ServerData[]>([]);
+  const [serverList, setServerList] = useState<MyServerData[]>([]);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const {
     selectedServer,
@@ -94,15 +94,13 @@ function ServerListTab(): JSX.Element {
   const initChannel = '1';
   const navigate = useNavigate();
 
-  const onClickServerIcon = (e: React.MouseEvent<HTMLDivElement>) => {
-    const serverId = e.currentTarget.dataset.id;
-    if (serverId) setSelectedServer(serverId);
-  };
-
   const getServerList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
     setServerList(list.data);
+    if (list.data.length !== 0) {
+      setSelectedServer(list.data[0]);
+    }
   };
 
   const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
@@ -110,10 +108,19 @@ function ServerListTab(): JSX.Element {
     setIsDropdownActivated(!isDropdownActivated);
   };
 
-  const listElements = serverList.map((val: ServerData, idx: number): JSX.Element => {
-    const selected = selectedServer === val.id;
+  const listElements = serverList.map((myServerData: MyServerData, idx: number): JSX.Element => {
+    const selected = selectedServer !== undefined ? selectedServer.id === myServerData.id : false;
+    const onClickChangeSelectedServer = () => {
+      setSelectedServer(myServerData);
+    };
+
     return (
-      <ServerIconBox key={val.id} data-id={val.id} selected={selected} onClick={onClickServerIcon}>
+      <ServerIconBox
+        key={myServerData.id}
+        data-id={myServerData.id}
+        selected={selected}
+        onClick={onClickChangeSelectedServer}
+      >
         <ServerImg imgUrl={tmpUrl[idx]} />
       </ServerIconBox>
     );

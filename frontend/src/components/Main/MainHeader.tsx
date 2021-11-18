@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import { MainStoreContext } from './MainStore';
 
 const Container = styled.div`
   width: 100%;
@@ -21,12 +22,14 @@ const CurrentServerName = styled.span`
 `;
 
 function MainHeader(): JSX.Element {
+  const { selectedServer } = useContext(MainStoreContext);
   useEffect(() => {}, []);
-
   return (
     <Container>
       <HeaderBox>
-        <CurrentServerName>Server Name</CurrentServerName>
+        <CurrentServerName>
+          {selectedServer !== undefined ? selectedServer.server.name : '새로운 서버에 참여하세요.'}
+        </CurrentServerName>
       </HeaderBox>
     </Container>
   );

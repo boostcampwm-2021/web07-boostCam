@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react';
+import { MyServerData } from '../../types/main';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -8,7 +9,7 @@ type MainStoreProps = {
 
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
-  const [selectedServer, setSelectedServer] = useState<string>('1');
+  const [selectedServer, setSelectedServer] = useState<MyServerData>();
   const [selectedChannel, setSelectedChannel] = useState<string>('1');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState<boolean>(false);
