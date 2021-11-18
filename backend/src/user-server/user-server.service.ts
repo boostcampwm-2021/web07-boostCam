@@ -28,4 +28,8 @@ export class UserServerService {
       serverId,
     );
   }
+
+  getServerListByUserId(userId: number): Promise<UserServer[]> {
+    return this.userServerRepository.getServerListByUserId(userId);
+  }
 }
