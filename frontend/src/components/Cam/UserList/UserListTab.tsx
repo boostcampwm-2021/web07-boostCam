@@ -1,22 +1,21 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import UserScreen from './UserScreen';
-import { CamStoreContext } from './CamStore';
-import LocalUserScreen from './LocalUserScreen';
-import Draggable from '../core/Draggable';
-import type { Screen } from '../../types/cam';
-import { ToggleStoreContext } from './ToggleStore';
+import UserScreen from '../Screen/UserScreen';
+import { CamStoreContext } from '../CamStore';
+import LocalUserScreen from '../Screen/LocalUserScreen';
+import Draggable from '../../core/Draggable';
+import type { Screen } from '../../../types/cam';
+import { ToggleStoreContext } from '../ToggleStore';
 
 const Container = styled.div<{ isActive: boolean }>`
   position: absolute;
   width: 18vw;
   max-height: 70vh;
-  padding: 0 10px;
+  padding: 10px;
   background-color: black;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   overflow-y: auto;
-  z-index: 999;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -28,9 +27,6 @@ const Container = styled.div<{ isActive: boolean }>`
   &::-webkit-scrollbar-track {
     background-color: #cccccc;
     border-radius: 10px;
-  }
-  &:hover {
-    border: 2px solid #00ff2e;
   }
 `;
 

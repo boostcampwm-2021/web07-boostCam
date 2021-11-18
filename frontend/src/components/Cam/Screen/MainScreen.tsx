@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { ToggleStoreContext } from './ToggleStore';
-import SharedScreen from './SharedScreen/SharedScreen';
-import { CamStoreContext } from './CamStore';
-import type { Screen } from '../../types/cam';
+import { ToggleStoreContext } from '../ToggleStore';
+import SharedScreen from '../SharedScreen/SharedScreen';
+import { CamStoreContext } from '../CamStore';
+import type { Screen } from '../../../types/cam';
 import LocalUserScreen from './LocalUserScreen';
 import UserScreen from './UserScreen';
-import { SharedScreenStoreContext } from './SharedScreen/SharedScreenStore';
+import { SharedScreenStoreContext } from '../SharedScreen/SharedScreenStore';
 
 const Container = styled.div<{ activeTab: string[]; numOfScreen: number }>`
   width: ${(props) => props.activeTab[0]};

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-import { Status, MessageInfo, CamMap } from 'src/types/cam';
+import { Status, MessageInfo } from 'src/types/cam';
 import { CamService } from './cam.service';
 
 @WebSocketGateway()
@@ -45,12 +45,11 @@ export class CamGateway {
       client.to(roomId).emit('userDisconnected', { userId });
       this.camService.exitRoom(roomId, userId);
     });
-
-    console.log(this.camService.getRoomList());
   }
 
   @SubscribeMessage('exitRoom')
   handleExitRoom(client: Socket): void {
+    if (!client.data.roomId || !client.data.userId) return;
     const { roomId, userId } = client.data;
     client.to(roomId).emit('userDisconnected', { userId });
     client.leave(roomId);
@@ -74,11 +73,18 @@ export class CamGateway {
     const { roomId } = client.data;
     const { userId } = payload;
     const status = this.camService.getStatus(roomId, userId);
-    client.emit('userStatus', { userId, status });
+    const userNickname = this.camService.getNickname(roomId, userId);
+    if (status) {
+      client.emit('userStatus', { userId, status });
+    }
+    if (userNickname) {
+      client.emit('userNickname', { userId, userNickname });
+    }
   }
 
   @SubscribeMessage('startScreenShare')
   handleStartScreenShare(client: Socket, payload: { roomId: string }) {
+    if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = payload;
     this.camService.setScreenSharingUser(roomId, client.id);
 
@@ -92,12 +98,14 @@ export class CamGateway {
     client: Socket,
     payload: { peerId: string; screenSharingUserId: string },
   ) {
+    if (!client.data.roomId || !client.data.userId) return;
     const { peerId, screenSharingUserId } = payload;
     client.to(screenSharingUserId).emit('requestScreenShare', { peerId });
   }
 
   @SubscribeMessage('endSharingScreen')
   handleEndSharingScreen(client: Socket, payload: { roomId: string }) {
+    if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = payload;
     this.camService.endSharingScreen(roomId);
     client.to(roomId).emit('endSharingScreen');
@@ -105,6 +113,7 @@ export class CamGateway {
 
   @SubscribeMessage('getScreenSharingUser')
   handleGetScreenSharingUser(client: Socket, payload: { roomId: string }) {
+    if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = payload;
     const screenSharingUserInfo =
       this.camService.getScreenSharingUserInfo(roomId);
@@ -119,6 +128,7 @@ export class CamGateway {
 
   @SubscribeMessage('sendMessage')
   handleSendMessage(client: Socket, payload: MessageInfo): void {
+    if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = client.data;
     const nicknameInfo = this.camService.getRoomNicknameList(roomId);
     client.broadcast
@@ -138,10 +148,13 @@ export class CamGateway {
     client: Socket,
     payload: { userNickname: string },
   ): void {
-    const { roomId } = client.data;
+    if (!client.data.roomId || !client.data.userId) return;
+    const { roomId, userId } = client.data;
     const { userNickname } = payload;
+
     this.camService.changeNickname(roomId, client.id, userNickname);
     const nicknameInfo = this.camService.getRoomNicknameList(roomId);
     client.broadcast.to(roomId).emit('getNicknameList', nicknameInfo);
+    client.to(roomId).emit('userNickname', { userId, userNickname });
   }
 }

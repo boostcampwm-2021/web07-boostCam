@@ -71,6 +71,8 @@ function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
   useEffect(() => {
     if (sharedScreen) {
       setUserListTabActive(true);
+    } else {
+      setUserListTabActive(false);
     }
   }, [sharedScreen]);
 

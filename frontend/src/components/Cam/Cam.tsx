@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import ButtonBar from './ButtonBar';
-import ChattingTab from './ChattingTab';
-import MainScreen from './MainScreen';
+import ButtonBar from './ButtonBar/ButtonBar';
+import ChattingTab from './Chatting/ChattingTab';
+import MainScreen from './Screen/MainScreen';
 import CamStore from './CamStore';
-import UserListTab from './UserListTab';
+import UserListTab from './UserList/UserListTab';
 import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
 import STTStore from './STT/STTStore';
 import SharedScreenStore from './SharedScreen/SharedScreenStore';
-import NickNameForm from './NickNameForm';
+import NickNameForm from './Nickname/NickNameForm';
 
 const Container = styled.div`
   width: 100vw;

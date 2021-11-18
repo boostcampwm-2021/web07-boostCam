@@ -2,8 +2,8 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-import socketState from '../../atoms/socket';
-import { UserInfo } from '../../types/cam';
+import socketState from '../../../atoms/socket';
+import { UserInfo } from '../../../types/cam';
 
 const Container = styled.div`
   position: fixed;
@@ -15,6 +15,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  z-index: 2;
 `;
 
 const ModalBackground = styled.div`
@@ -29,25 +30,19 @@ const ModalBackground = styled.div`
 const ModalBox = styled.div`
   width: 20%;
   height: 20%;
-
-  background-color: #12cdd1;
-
+  background-color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-
+  padding: 20px;
   border-radius: 20px;
-
+  box-shadow: 0px 5px 22px -2px #000000;
   z-index: 3;
 `;
 
 const Form = styled.form`
-  width: 100%;
-  height: 200%;
   border-radius: 20px;
-  padding: 20px 0;
-  margin: 30px 0;
 
   display: flex;
   flex-direction: column;
@@ -56,7 +51,7 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  border: none;
+  border: 1px solid grey;
   outline: none;
   padding: 8px 10px;
   margin-top: 10px;
@@ -64,7 +59,7 @@ const Input = styled.input`
 `;
 
 const SubmitButton = styled.button`
-  width: 60%;
+  width: 30%;
   margin-top: 15px;
   height: 35px;
   background: none;
@@ -73,13 +68,13 @@ const SubmitButton = styled.button`
   outline: 0;
 
   border-radius: 10px;
-  background-color: #26a9ca;
+  background-color: #2dc2e6;
   cursor: pointer;
   text-align: center;
   transition: all 0.3s;
 
   &:hover {
-    background-color: #2dc2e6;
+    background-color: #26a9ca;
     transition: all 0.3s;
   }
 
@@ -87,6 +82,8 @@ const SubmitButton = styled.button`
     text-decoration: none;
   }
 `;
+
+const Title = styled.div``;
 
 type NicknameModalProps = {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
@@ -115,6 +112,7 @@ function NicknameModal(props: NicknameModalProps): JSX.Element {
     <Container>
       <ModalBackground onClick={onClickModalBackground} />
       <ModalBox>
+        <Title>닉네임 변경</Title>
         <Form onSubmit={onSubmitNicknameForm}>
           <Input name="nickname" placeholder="닉네임을 입력해주세요" required />
           <SubmitButton type="submit">입력</SubmitButton>
