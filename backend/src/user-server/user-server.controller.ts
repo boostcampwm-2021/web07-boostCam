@@ -6,6 +6,7 @@ import {
   Param,
   Session,
   UseGuards,
+  HttpException,
 } from '@nestjs/common';
 import { Server } from '../server/server.entity';
 import { LoginGuard } from '../login/login.guard';
@@ -24,9 +25,16 @@ export class UserServerController {
     session: ExpressSession,
     @Body() server: Server,
   ) {
-    const user = session.user;
-    const newUserServer = await this.userServerService.create(user, server.id);
-    return ResponseEntity.created(newUserServer.id);
+    try {
+      const user = session.user;
+      const newUserServer = await this.userServerService.create(
+        user,
+        server.id,
+      );
+      return ResponseEntity.created(newUserServer.id);
+    } catch (error) {
+      throw new HttpException(error.response, 403);
+    }
   }
 
   @Delete('/:id')

@@ -145,6 +145,12 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
+const MessageFailToPost = styled.span`
+  color: red;
+  font-size: 16px;
+  font-family: Malgun Gothic;
+`;
+
 const ModalCloseButton = styled.div`
   width: 32px;
   height: 32px;
@@ -175,6 +181,7 @@ function JoinServerModal(): JSX.Element {
   } = useForm<JoinServerModalForm>();
   const { setIsJoinServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
+  const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
   const getServerList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers`);
@@ -188,7 +195,7 @@ function JoinServerModal(): JSX.Element {
 
   const onSubmitJoinServerModal = async (data: { serverId: string }) => {
     const { serverId } = data;
-    await fetch('api/users/servers', {
+    const response = await fetch('api/users/servers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -197,8 +204,14 @@ function JoinServerModal(): JSX.Element {
         id: serverId.trim(),
       }),
     });
-    getServerList();
-    setIsJoinServerModalOpen(false);
+
+    if (response.status === 201) {
+      getServerList();
+      setIsJoinServerModalOpen(false);
+    } else {
+      const body = await response.json();
+      setMessageFailToPost(body.message);
+    }
   };
 
   useEffect(() => {
@@ -231,6 +244,7 @@ function JoinServerModal(): JSX.Element {
               />
               {errors.serverId && <InputErrorMessage>{errors.serverId.message}</InputErrorMessage>}
             </InputDiv>
+            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
             <SubmitButton type="submit" isButtonActive={isButtonActive}>
               생성
             </SubmitButton>

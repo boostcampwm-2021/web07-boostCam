@@ -4,7 +4,6 @@ import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
 import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Server } from '../server/server.entity';
 import { ServerService } from 'src/server/server.service';
 
 @Injectable()
@@ -20,12 +19,15 @@ export class UserServerService {
     newUserServer.user = user;
     newUserServer.server = await this.serverService.findOne(serverId);
 
+    if (newUserServer.server == undefined) {
+      throw new HttpException('해당 서버가 존재하지 않습니다.', 403);
+    }
     const userServer = await this.userServerRepository.findByUserIdAndServerId(
       user.id,
       serverId,
     );
     if (userServer !== undefined) {
-      throw new Error();
+      throw new HttpException('이미 등록된 서버입니다.', 403);
     }
 
     return this.userServerRepository.save(newUserServer);
