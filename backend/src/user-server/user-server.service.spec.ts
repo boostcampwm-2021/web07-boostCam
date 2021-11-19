@@ -6,18 +6,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { DeleteResult, Repository } from 'typeorm';
+import { ServerService } from '../server/server.service';
 
-const mockRepository = () => ({
+const mockUserServerRepository = () => ({
   save: jest.fn(),
   delete: jest.fn(),
+  findByUserIdAndServerId: jest.fn(),
   deleteByUserIdAndServerId: jest.fn(),
+  getServerListByUserId: jest.fn(),
 });
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+const mockServerRepository = () => ({
+  findOne: jest.fn(),
+});
+
+type MockUserServerRepository = Partial<
+  Record<keyof UserServerRepository, jest.Mock>
+>;
+type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('UserServerService', () => {
   let service: UserServerService;
-  let repository: MockRepository<UserServer>;
+  let userServerRepository: MockUserServerRepository;
+  let serverRepository: MockRepository<Server>;
   let userServer: UserServer;
   let existUserServer: UserServer;
 
@@ -27,14 +38,22 @@ describe('UserServerService', () => {
         UserServerService,
         {
           provide: getRepositoryToken(UserServerRepository),
-          useValue: mockRepository(),
+          useValue: mockUserServerRepository(),
+        },
+        ServerService,
+        {
+          provide: getRepositoryToken(Server),
+          useValue: mockServerRepository(),
         },
       ],
     }).compile();
 
     service = module.get<UserServerService>(UserServerService);
-    repository = module.get<MockRepository<UserServer>>(
+    userServerRepository = module.get<MockUserServerRepository>(
       getRepositoryToken(UserServerRepository),
+    );
+    serverRepository = module.get<MockRepository<Server>>(
+      getRepositoryToken(Server),
     );
 
     userServer = new UserServer();
@@ -51,14 +70,42 @@ describe('UserServerService', () => {
 
   describe('create()', () => {
     it('정상적인 값을 저장할 경우', async () => {
-      repository.save.mockResolvedValue(userServer);
+      userServerRepository.save.mockResolvedValue(userServer);
+      serverRepository.findOne.mockResolvedValue(existUserServer.server);
+      userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
+
       const newUserServer = await service.create(
         existUserServer.user,
-        existUserServer.server,
+        existUserServer.server.id,
       );
 
       expect(newUserServer.user).toBe(userServer.user);
       expect(newUserServer.server).toBe(userServer.server);
+    });
+
+    it('해당 서버가 존재하지 않는 경우', async () => {
+      userServerRepository.save.mockResolvedValue(userServer);
+      serverRepository.findOne.mockResolvedValue(undefined);
+
+      try {
+        await service.create(existUserServer.user, 2);
+      } catch (error) {
+        expect(error.response).toBe('해당 서버가 존재하지 않습니다.');
+      }
+    });
+
+    it('이미 추가된 서버인 경우', async () => {
+      userServerRepository.save.mockResolvedValue(userServer);
+      serverRepository.findOne.mockResolvedValue(existUserServer.server);
+      userServerRepository.findByUserIdAndServerId.mockResolvedValue(
+        existUserServer,
+      );
+
+      try {
+        await service.create(existUserServer.user, existUserServer.server.id);
+      } catch (error) {
+        expect(error.response).toBe('이미 등록된 서버입니다.');
+      }
     });
   });
 
@@ -67,7 +114,7 @@ describe('UserServerService', () => {
       const existsId = existUserServer.id;
       const returnedDeleteResult = new DeleteResult();
       returnedDeleteResult.affected = existsId == existUserServer.id ? 1 : 0;
-      repository.delete.mockResolvedValue(returnedDeleteResult);
+      userServerRepository.delete.mockResolvedValue(returnedDeleteResult);
 
       const deleteResult: DeleteResult = await service.deleteById(existsId);
 
@@ -78,11 +125,26 @@ describe('UserServerService', () => {
       const nonExistsId = 0;
       const returnedDeleteResult = new DeleteResult();
       returnedDeleteResult.affected = nonExistsId == existUserServer.id ? 1 : 0;
-      repository.delete.mockResolvedValue(returnedDeleteResult);
+      userServerRepository.delete.mockResolvedValue(returnedDeleteResult);
 
       const deleteResult: DeleteResult = await service.deleteById(nonExistsId);
 
       expect(deleteResult.affected).toBe(0);
+    });
+  });
+
+  describe('getServerListByUserId()', () => {
+    it('list를 가져올 경우', async () => {
+      userServerRepository.getServerListByUserId.mockResolvedValue([
+        existUserServer,
+        existUserServer,
+      ]);
+
+      const userServerList = await service.getServerListByUserId(
+        existUserServer.user.id,
+      );
+
+      expect(userServerList[0]).toBe(existUserServer);
     });
   });
 });

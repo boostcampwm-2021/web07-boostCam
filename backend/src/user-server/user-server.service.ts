@@ -4,7 +4,7 @@ import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
 import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
-import { ServerService } from 'src/server/server.service';
+import { ServerService } from '../server/server.service';
 
 @Injectable()
 export class UserServerService {
