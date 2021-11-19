@@ -5,18 +5,20 @@ import { UserServer } from './user-server.entity';
 import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Server } from '../server/server.entity';
+import { ServerService } from 'src/server/server.service';
 
 @Injectable()
 export class UserServerService {
   constructor(
+    private serverService: ServerService,
     @InjectRepository(UserServerRepository)
     private userServerRepository: UserServerRepository,
   ) {}
 
-  async create(user: User, server: Server): Promise<UserServer> {
+  async create(user: User, serverId: number): Promise<UserServer> {
     const newUserServer = new UserServer();
     newUserServer.user = user;
-    newUserServer.server = server;
+    newUserServer.server = await this.serverService.findOne(serverId);
     return this.userServerRepository.save(newUserServer);
   }
 
