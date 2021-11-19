@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -79,6 +80,71 @@ const ModalDescription = styled.span`
   font-size: 15px;
 `;
 
+const Form = styled.form`
+  width: 90%;
+  height: 70%;
+  border-radius: 20px;
+  margin: 30px 0px 0px 25px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const InputDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const InputName = styled.span`
+  color: #cbc4b9;
+  font-size: 20px;
+  font-weight: 500;
+`;
+
+const Input = styled.input`
+  width: 90%;
+  border: none;
+  outline: none;
+  padding: 15px 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+`;
+
+const InputErrorMessage = styled.span`
+  padding: 5px 0px;
+  color: red;
+`;
+
+const SubmitButton = styled.button<{ isButtonActive: boolean }>`
+  width: 100px;
+  height: 50px;
+  background: none;
+
+  padding: 15px 10px;
+
+  border: 0;
+  outline: 0;
+
+  text-align: center;
+  vertical-align: middle;
+
+  border-radius: 10px;
+  background-color: ${(props) => (props.isButtonActive ? '#26a9ca' : 'gray')};
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: ${(props) => (props.isButtonActive ? '#2dc2e6' : 'gray')};
+    transition: all 0.3s;
+  }
+`;
+
 const ModalCloseButton = styled.div`
   width: 32px;
   height: 32px;
@@ -96,8 +162,50 @@ const CloseIcon = styled(Close)`
   fill: #a69c96;
 `;
 
+type JoinServerModalForm = {
+  serverId: string;
+};
+
 function JoinServerModal(): JSX.Element {
-  const { setIsJoinServerModalOpen } = useContext(MainStoreContext);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<JoinServerModalForm>();
+  const { setIsJoinServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
+  const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
+
+  const getServerList = async (): Promise<void> => {
+    const response = await fetch(`/api/user/servers`);
+    const list = await response.json();
+
+    if (response.status === 200 && list.data.length !== 0) {
+      setServerList(list.data);
+      setSelectedServer(list.data[list.data.length - 1]);
+    }
+  };
+
+  const onSubmitJoinServerModal = async (data: { serverId: string }) => {
+    const { serverId } = data;
+    await fetch('api/users/servers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: serverId.trim(),
+      }),
+    });
+    getServerList();
+    setIsJoinServerModalOpen(false);
+  };
+
+  useEffect(() => {
+    const { serverId } = watch();
+    const isActive = serverId.trim().length > 0;
+    setIsButtonActive(isActive);
+  }, [watch()]);
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
@@ -112,6 +220,21 @@ function JoinServerModal(): JSX.Element {
             </ModalCloseButton>
           </ModalHeader>
           <ModalDescription>참가 코드를 입력하세요.</ModalDescription>
+          <Form onSubmit={handleSubmit(onSubmitJoinServerModal)}>
+            <InputDiv>
+              <InputName>참가 코드</InputName>
+              <Input
+                {...register('serverId', {
+                  validate: (value) => value.trim().length > 0 || '"참가코드" 칸을 입력해주세요!',
+                })}
+                placeholder="참가코드를 입력해주세요"
+              />
+              {errors.serverId && <InputErrorMessage>{errors.serverId.message}</InputErrorMessage>}
+            </InputDiv>
+            <SubmitButton type="submit" isButtonActive={isButtonActive}>
+              생성
+            </SubmitButton>
+          </Form>
         </ModalInnerBox>
       </ModalBox>
     </Container>

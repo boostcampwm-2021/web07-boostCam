@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
@@ -19,6 +19,15 @@ export class UserServerService {
     const newUserServer = new UserServer();
     newUserServer.user = user;
     newUserServer.server = await this.serverService.findOne(serverId);
+
+    const userServer = await this.userServerRepository.findByUserIdAndServerId(
+      user.id,
+      serverId,
+    );
+    if (userServer !== undefined) {
+      throw new Error();
+    }
+
     return this.userServerRepository.save(newUserServer);
   }
 

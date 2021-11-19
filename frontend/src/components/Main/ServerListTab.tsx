@@ -80,7 +80,6 @@ const tmpUrl: string[] = [
 ];
 
 function ServerListTab(): JSX.Element {
-  const [serverList, setServerList] = useState<MyServerData[]>([]);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const {
     selectedServer,
@@ -89,6 +88,8 @@ function ServerListTab(): JSX.Element {
     isJoinServerModalOpen,
     setIsCreateServerModalOpen,
     setIsJoinServerModalOpen,
+    serverList,
+    setServerList,
   } = useContext(MainStoreContext);
 
   const initChannel = '1';
