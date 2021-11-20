@@ -15,6 +15,7 @@ import { ServerModule } from './server/server.module';
 import { CamsModule } from './cams/cams.module';
 import { UserServerModule } from './user-server/user-server.module';
 import { LoginModule } from './login/login.module';
+import { ImageModule } from './image/image.module';
 import githubConfig from './config/github.config';
 
 @Module({
@@ -35,6 +36,7 @@ import githubConfig from './config/github.config';
     CamsModule,
     UserServerModule,
     LoginModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
