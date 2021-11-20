@@ -34,13 +34,20 @@ export class UserChannelController {
     return ResponseEntity.ok<Channel[]>(joinedChannelList);
   }
 
-  @Get('/notjoined')
-  getNotJoinedChannelList(
-    @Param('serverId') serverid: number,
+  @Get('/notjoined/:id')
+  async getNotJoinedChannelList(
+    @Param('id') serverId: number,
     @Session() session: ExpressSession,
   ) {
-    console.log(session.user);
-    //return this.userChannelService.deleteById(serverid);
+    const response =
+      await this.userChannelService.getNotJoinedChannelListByUserId(
+        serverId,
+        session.user.id,
+      );
+    const notJoinedChannelList = response.map(
+      (userChannel) => userChannel.channel,
+    );
+    return ResponseEntity.ok<Channel[]>(notJoinedChannelList);
   }
 
   @Delete('/:id')

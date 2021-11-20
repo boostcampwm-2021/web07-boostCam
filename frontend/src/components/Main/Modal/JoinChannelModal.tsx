@@ -1,8 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { ChannelData } from '../../../types/main';
 
 const { Close } = BoostCamMainIcons;
 
@@ -28,9 +29,10 @@ const ModalBackground = styled.div`
 `;
 
 const ModalBox = styled.div`
-  width: 35%;
+  width: 50%;
   min-width: 400px;
-  height: 50%;
+  height: 70%;
+  min-height: 500px;
 
   background-color: #222322;
 
@@ -60,6 +62,8 @@ const ModalHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  flex: 1;
 `;
 
 const ModalTitle = styled.span`
@@ -72,6 +76,7 @@ const ModalTitle = styled.span`
 `;
 
 const ModalDescription = styled.span`
+  flex: 0.3;
   margin-left: 25px;
   padding: 10px 5px;
 
@@ -90,6 +95,95 @@ const ModalCloseButton = styled.div`
   margin-right: 25px;
 `;
 
+const ModalChannelList = styled.div`
+  width: 90%;
+  height: 70%;
+  margin-left: 25px;
+  margin-bottom: 25px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  color: #e5e0d8;
+
+  flex: 4;
+
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
+  }
+`;
+
+const ModalChannelListItem = styled.div`
+  width: 90%;
+  padding: 15px 10px;
+  margin: 3px 0px 0px 0px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  font-size: 18px;
+
+  border-top: 1px solid #e5e0d8;
+
+  &:last-child {
+    border-bottom: 1px solid #e5e0d8;
+  }
+
+  &:hover {
+    button {
+      visibility: visible;
+    }
+    background-color: #282929;
+  }
+
+  button {
+    visibility: hidden;
+  }
+`;
+
+const ItemText = styled.div`
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+`;
+
+const ItemTitle = styled.span`
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const ItemDescription = styled.span`
+  text-align: center;
+  font-weight: 400;
+  color: #6e6d69;
+`;
+
+const ItemButton = styled.button`
+  border: none;
+  border-radius: 5px;
+  flex: 0.5;
+  padding: 4px 12px 4px;
+  text-align: center;
+  background-color: #236b56;
+  cursor: pointer;
+`;
+
 const CloseIcon = styled(Close)`
   width: 20px;
   height: 20px;
@@ -98,16 +192,33 @@ const CloseIcon = styled(Close)`
 
 function JoinChannelModal(): JSX.Element {
   const { selectedServer, setIsJoinModalOpen } = useContext(MainStoreContext);
+  const [channelList, setChannelList] = useState<ChannelData[]>([]);
 
-  const getNotJoinedChannel = async () => {
-    const response = await fetch(`/api/user/channels/joined/${selectedServer}`);
+  const getNotJoinedChannelList = async () => {
+    const response = await fetch(`/api/user/channels/notjoined/${selectedServer}`);
     const list = await response.json();
-    console.log(list.data);
+    setChannelList(list.data);
   };
 
+  const onClickChannelListButton = async () => {};
+
   useEffect(() => {
-    getNotJoinedChannel();
+    getNotJoinedChannelList();
   }, []);
+
+  useEffect(() => {
+    console.log(channelList);
+  }, [channelList]);
+
+  const tmpList = channelList.map((val) => (
+    <ModalChannelListItem key={val.id} data-id={val.id}>
+      <ItemText>
+        <ItemTitle>{val.name}</ItemTitle>
+        <ItemDescription>{val.description}</ItemDescription>
+      </ItemText>
+      <ItemButton>참여</ItemButton>
+    </ModalChannelListItem>
+  ));
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
@@ -122,6 +233,7 @@ function JoinChannelModal(): JSX.Element {
             </ModalCloseButton>
           </ModalHeader>
           <ModalDescription>참가할 채널을 선택해주세요</ModalDescription>
+          <ModalChannelList>{tmpList}</ModalChannelList>
         </ModalInnerBox>
       </ModalBox>
     </Container>
