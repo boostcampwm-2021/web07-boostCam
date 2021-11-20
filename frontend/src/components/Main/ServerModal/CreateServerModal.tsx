@@ -145,6 +145,12 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
+const MessageFailToPost = styled.span`
+  color: red;
+  font-size: 16px;
+  font-family: Malgun Gothic;
+`;
+
 const ModalCloseButton = styled.div`
   width: 32px;
   height: 32px;
@@ -174,12 +180,23 @@ function CreateServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateServerModalOpen } = useContext(MainStoreContext);
+  const { selectedServer, setIsCreateServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
+  const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
-  const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
+  const getServerList = async (): Promise<void> => {
+    const response = await fetch(`/api/user/servers`);
+    const list = await response.json();
+
+    if (response.status === 200 && list.data.length !== 0) {
+      setServerList(list.data);
+      setSelectedServer(list.data[list.data.length - 1]);
+    }
+  };
+
+  const onSubmitCreateServerModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch('api/channel', {
+    const response = await fetch('api/servers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -187,9 +204,16 @@ function CreateServerModal(): JSX.Element {
       body: JSON.stringify({
         name: name.trim(),
         description: description.trim(),
-        server: +selectedServer,
       }),
     });
+
+    if (response.status === 201) {
+      getServerList();
+      setIsCreateServerModalOpen(false);
+    } else {
+      const body = await response.json();
+      setMessageFailToPost(body.message);
+    }
   };
 
   useEffect(() => {
@@ -211,12 +235,12 @@ function CreateServerModal(): JSX.Element {
             </ModalCloseButton>
           </ModalHeader>
           <ModalDescription>생성할 서버의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
+          <Form onSubmit={handleSubmit(onSubmitCreateServerModal)}>
             <InputDiv>
               <InputName>이름</InputName>
               <Input
                 {...register('name', {
-                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+                  validate: (value) => value.trim().length > 1 || '"이름" 칸은 2글자 이상 입력되어야합니다!',
                 })}
                 placeholder="서버명을 입력해주세요"
               />
@@ -232,6 +256,7 @@ function CreateServerModal(): JSX.Element {
               />
               {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
             </InputDiv>
+            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
             <SubmitButton type="submit" isButtonActive={isButtonActive}>
               생성
             </SubmitButton>

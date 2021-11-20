@@ -26,7 +26,9 @@ export class ServerService {
     user: User,
     requestServerDto: RequestServerDto,
   ): Promise<Server> {
-    const newServer = requestServerDto.toServerEntity();
+    const newServer = new Server();
+    newServer.name = requestServerDto.name;
+    newServer.description = requestServerDto.description;
     newServer.owner = user;
 
     return this.serverRepository.save(newServer);
