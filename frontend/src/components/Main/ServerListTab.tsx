@@ -28,8 +28,6 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
   height: 60px;
 
   margin-top: 10px;
-
-  background-color: white;
   box-sizing: border-box;
   ${(props) => (props.selected ? 'border: 5px solid gray;' : '')}
 
@@ -38,18 +36,31 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-
   &:hover {
     cursor: pointer;
   }
+  z-index: 1;
 `;
 
 const ServerImg = styled.div<{ imgUrl: string }>`
-  width: 40px;
-  height: 40px;
+  width: 55px;
+  height: 55px;
   background-image: url(${(props) => props.imgUrl});
   background-size: cover;
   background-repeat: no-repeat;
+  border-radius: 20px;
+  z-index: 0;
+`;
+
+const ServerName = styled.div`
+  width: 55px;
+  height: 55px;
+  font-size: 40px;
+  font-weight: bold;
+  background-color: white;
+  border-radius: 20px;
+  text-align: center;
+  vertical-align: middle;
 `;
 
 const AddServerButton = styled.div`
@@ -72,12 +83,6 @@ const PlusIcon = styled(Plus)`
   height: 40px;
   fill: #a69c96;
 `;
-
-const tmpUrl: string[] = [
-  'https://miro.medium.com/max/2000/0*wwsAZUu1oClOuat-.png',
-  'https://miro.medium.com/max/2000/0*Jx_rwR_dmW4y1g-7.png',
-  'https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png',
-];
 
 function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
@@ -109,11 +114,13 @@ function ServerListTab(): JSX.Element {
     e.stopPropagation();
     setIsDropdownActivated(!isDropdownActivated);
   };
-  const listElements = serverList.map((myServerData: MyServerData, idx: number): JSX.Element => {
+  const listElements = serverList.map((myServerData: MyServerData): JSX.Element => {
     const selected = selectedServer !== undefined ? selectedServer.id === myServerData.id : false;
     const onClickChangeSelectedServer = () => {
       setSelectedServer(myServerData);
     };
+    const { server } = myServerData;
+    const { imgUrl, name } = server;
 
     return (
       <ServerIconBox
@@ -122,7 +129,7 @@ function ServerListTab(): JSX.Element {
         selected={selected}
         onClick={onClickChangeSelectedServer}
       >
-        <ServerImg imgUrl={tmpUrl[idx]} />
+        {imgUrl ? <ServerImg imgUrl={imgUrl} /> : <ServerName>{name[0]}</ServerName>}
       </ServerIconBox>
     );
   });

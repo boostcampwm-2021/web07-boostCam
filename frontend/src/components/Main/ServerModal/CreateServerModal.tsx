@@ -31,7 +31,6 @@ const ModalBackground = styled.div`
 const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
-  height: 50%;
 
   background-color: #222322;
 
@@ -82,7 +81,7 @@ const ModalDescription = styled.span`
 
 const Form = styled.form`
   width: 90%;
-  height: 70%;
+  height: 100%;
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
 
@@ -97,6 +96,14 @@ const InputDiv = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+const ImageInputDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
   justify-content: flex-start;
   align-items: flex-start;
 `;
@@ -145,6 +152,10 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
+const ImagePreview = styled.img`
+  width: 40px;
+  height: 40px;
+`;
 const MessageFailToPost = styled.span`
   color: red;
   font-size: 16px;
@@ -171,6 +182,7 @@ const CloseIcon = styled(Close)`
 type CreateModalForm = {
   name: string;
   description: string;
+  file: FileList;
 };
 
 function CreateServerModal(): JSX.Element {
@@ -183,6 +195,7 @@ function CreateServerModal(): JSX.Element {
   const { setIsCreateServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
+  const [imagePreview, setImagePreview] = useState<string>();
 
   const getServerList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers`);
@@ -194,17 +207,17 @@ function CreateServerModal(): JSX.Element {
     }
   };
 
-  const onSubmitCreateServerModal = async (data: { name: string; description: string }) => {
-    const { name, description } = data;
+  const onSubmitCreateServerModal = async (data: { name: string; description: string; file: FileList }) => {
+    const formData = new FormData();
+    const { name, description, file } = data;
+
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('icon', file[0]);
+
     const response = await fetch('api/servers', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name.trim(),
-        description: description.trim(),
-      }),
+      body: formData,
     });
 
     if (response.status === 201) {
@@ -213,6 +226,14 @@ function CreateServerModal(): JSX.Element {
     } else {
       const body = await response.json();
       setMessageFailToPost(body.message);
+    }
+  };
+
+  const onChangePreviewImage = (e: React.ChangeEvent & { target: HTMLInputElement }) => {
+    const file = e.target.files;
+
+    if (file) {
+      setImagePreview(URL.createObjectURL(file[0]));
     }
   };
 
@@ -255,6 +276,13 @@ function CreateServerModal(): JSX.Element {
                 placeholder="서버 설명을 입력해주세요"
               />
               {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
+            </InputDiv>
+            <InputDiv>
+              <InputName>서버 아이콘</InputName>
+              <ImageInputDiv>
+                <ImagePreview src={imagePreview} />
+                <Input type="file" {...register('file')} onChange={onChangePreviewImage} />
+              </ImageInputDiv>
             </InputDiv>
             <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
             <SubmitButton type="submit" isButtonActive={isButtonActive}>

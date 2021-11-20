@@ -9,6 +9,7 @@ type ServerData = {
   description: string;
   id: string;
   name: string;
+  imgUrl: string;
 };
 
 type MyServerData = {

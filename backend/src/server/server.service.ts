@@ -1,10 +1,10 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/user.entity';
 import { Repository } from 'typeorm/index';
-import RequestServerDto from './dto/RequestServerDto';
 
+import { User } from '../user/user.entity';
 import { Server } from './server.entity';
+import RequestServerDto from './dto/RequestServerDto';
 import { UserServerService } from '../user-server/user-server.service';
 
 @Injectable()
@@ -28,11 +28,13 @@ export class ServerService {
   async create(
     user: User,
     requestServerDto: RequestServerDto,
+    imgUrl: string | undefined,
   ): Promise<Server> {
     const newServer = new Server();
     newServer.name = requestServerDto.name;
     newServer.description = requestServerDto.description;
     newServer.owner = user;
+    newServer.imgUrl = imgUrl !== undefined ? imgUrl : '';
 
     const createdServer = await this.serverRepository.save(newServer);
     this.userServerService.create(user, createdServer.id);

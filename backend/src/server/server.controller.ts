@@ -9,6 +9,8 @@ import {
   UseGuards,
   Session,
   HttpException,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
@@ -17,12 +19,15 @@ import { LoginGuard } from '../login/login.guard';
 import RequestServerDto from './dto/RequestServerDto';
 import { ExpressSession } from '../types/session';
 import ResponseEntity from '../common/response-entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageService } from '../image/image.service';
 
 @Controller('/api/servers')
 export class ServerController {
-  constructor(private serverService: ServerService) {
-    this.serverService = serverService;
-  }
+  constructor(
+    private serverService: ServerService,
+    private imageService: ImageService,
+  ) {}
 
   @Get('list') async findAll(): Promise<Server[]> {
     const serverList = await this.serverService.findAll();
@@ -44,14 +49,26 @@ export class ServerController {
 
   @Post()
   @UseGuards(LoginGuard)
+  @UseInterceptors(FileInterceptor('icon'))
   async saveServer(
     @Session()
     session: ExpressSession,
     @Body() requestServerDto: RequestServerDto,
+    @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<number>> {
     try {
+      let imgUrl: string;
+
+      if (icon !== undefined && icon.mimetype.substring(0, 5) === 'image') {
+        const uploadedFile = await this.imageService.uploadFile(icon);
+        imgUrl = uploadedFile.Location;
+      }
       const user = session.user;
-      const newServer = await this.serverService.create(user, requestServerDto);
+      const newServer = await this.serverService.create(
+        user,
+        requestServerDto,
+        imgUrl,
+      );
       return ResponseEntity.created(newServer.id);
     } catch (error) {
       throw new HttpException(error.response, 403);

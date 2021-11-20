@@ -18,6 +18,9 @@ export class Server {
   @Column()
   name: string;
 
+  @Column()
+  imgUrl: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ referencedColumnName: 'id' })
   owner: User;
