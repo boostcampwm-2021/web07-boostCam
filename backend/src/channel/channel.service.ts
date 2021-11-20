@@ -5,11 +5,12 @@ import { Repository } from 'typeorm/index';
 import { CreateChannelDto } from './channe.dto';
 import { Channel } from './channel.entity';
 import { Server } from 'src/server/server.entity';
+import { ChannelRepository } from './user.repository';
 
 @Injectable()
 export class ChannelService {
   /** * 생성자 */ constructor(
-    @InjectRepository(Channel) private channelRepository: Repository<Channel>,
+    @InjectRepository(Channel) private channelRepository: ChannelRepository,
     @InjectRepository(Server) private serverRepository: Repository<Server>,
   ) {
     this.channelRepository = channelRepository;
@@ -19,7 +20,10 @@ export class ChannelService {
     return this.channelRepository.find();
   }
   findOne(id: number): Promise<Channel> {
-    return this.channelRepository.findOne({ id: id });
+    return this.channelRepository.findOne(
+      { id: id },
+      { relations: ['server'] },
+    );
   }
   async addChannel(channel: CreateChannelDto): Promise<Channel> {
     const channelEntity = this.channelRepository.create();

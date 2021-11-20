@@ -14,8 +14,9 @@ export class UserChannelRepository extends Repository<UserChannel> {
   getNotJoinedChannelListByUserId(userId: number, serverId: number) {
     return this.createQueryBuilder('user_channel')
       .leftJoinAndSelect('user_channel.channel', 'channel')
-      .where('user_channel.user != :userId', { userId: userId })
-      .andWhere('user_channel.server = :serverId', { serverId: serverId })
+      .where('user_channel.channel IN (:id)', {
+        id: this.getJoinedChannelListByUserId(userId, serverId),
+      })
       .getMany();
   }
 

@@ -8,6 +8,7 @@ import { Server } from 'src/server/server.entity';
 import { UserChannelService } from 'src/user-channel/user-channel.service';
 import { UserChannelRepository } from 'src/user-channel/user-channel.repository';
 import { UserRepository } from 'src/user/user.repository';
+import { ChannelRepository } from './user.repository';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserRepository } from 'src/user/user.repository';
       Server,
       UserChannelRepository,
       UserRepository,
+      ChannelRepository,
     ]),
   ],
   providers: [ChannelService, UserChannelService],
