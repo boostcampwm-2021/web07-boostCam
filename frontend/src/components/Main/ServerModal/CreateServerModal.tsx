@@ -180,7 +180,7 @@ function CreateServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
+  const { setIsCreateServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 

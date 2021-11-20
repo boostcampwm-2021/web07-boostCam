@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
@@ -9,7 +9,8 @@ import { ServerService } from '../server/server.service';
 @Injectable()
 export class UserServerService {
   constructor(
-    private serverService: ServerService,
+    @Inject(forwardRef(() => ServerService))
+    private readonly serverService: ServerService,
     @InjectRepository(UserServerRepository)
     private userServerRepository: UserServerRepository,
   ) {}
