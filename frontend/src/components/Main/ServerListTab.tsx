@@ -39,7 +39,6 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
   &:hover {
     cursor: pointer;
   }
-  z-index: 1;
 `;
 
 const ServerImg = styled.div<{ imgUrl: string }>`
@@ -49,7 +48,7 @@ const ServerImg = styled.div<{ imgUrl: string }>`
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 20px;
-  z-index: 0;
+  position: fixed;
 `;
 
 const ServerName = styled.div`
@@ -60,7 +59,7 @@ const ServerName = styled.div`
   background-color: white;
   border-radius: 20px;
   text-align: center;
-  vertical-align: middle;
+  position: fixed;
 `;
 
 const AddServerButton = styled.div`
