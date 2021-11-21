@@ -7,12 +7,13 @@ import { ServerService } from './server.service';
 import { ServerController } from './server.controller';
 import { UserServerModule } from '../user-server/user-server.module';
 import { ImageModule } from '../image/image.module';
+import { ServerRepository } from './server.repository';
 
 @Module({
   imports: [
     ImageModule,
     forwardRef(() => UserServerModule),
-    TypeOrmModule.forFeature([User, Server]),
+    TypeOrmModule.forFeature([User, Server, ServerRepository]),
   ],
   providers: [ServerService],
   controllers: [ServerController],

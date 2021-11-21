@@ -47,6 +47,13 @@ export class ServerController {
     });
   }
 
+  @Get('/:id/users') async findOneWithUsers(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<Server>> {
+    const serverWithUsers = await this.serverService.findOneWithUsers(id);
+    return ResponseEntity.ok(serverWithUsers);
+  }
+
   @Post()
   @UseGuards(LoginGuard)
   @UseInterceptors(FileInterceptor('icon'))
