@@ -131,8 +131,6 @@ function ChannelList(): JSX.Element {
 
   const onRightClickChannelItem = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const { currentTarget } = e;
-    console.log(`rightClick ${currentTarget.dataset.id}`);
   };
 
   useEffect(() => {
