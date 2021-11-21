@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -118,6 +118,19 @@ const ServerIcon = styled.img`
   width: 40px;
   height: 40px;
   margin-right: 10px;
+  border-radius: 5px;
+`;
+
+const ServerName = styled.div`
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  margin-right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: white;
+  border-radius: 5px;
+  text-align: center;
 `;
 
 const InfoParagraph = styled.pre`
@@ -125,7 +138,7 @@ const InfoParagraph = styled.pre`
   border-radius: 10px;
   color: black;
   padding: 0px 10px;
-  max-height: 80px;
+  height: 80px;
   overflow-y: auto;
   margin: 0px;
 
@@ -146,21 +159,53 @@ const InfoSpan = styled.span`
   background-color: #cbc4b9;
   border-radius: 10px;
   padding: 0px 10px;
-  max-height: 40px;
+  height: 40px;
   overflow-y: auto;
   color: black;
   font-size: 20px;
   font-weight: 600;
+  width: 330px;
 
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
+type User = {
+  id: number;
+  githubId: number;
+  nickname: string;
+  profile: string;
+};
+type UserServer = {
+  id: number;
+  user: User;
+};
 function ServerInfoModal(): JSX.Element {
-  const { setIsServerInfoModalOpen } = useContext(MainStoreContext);
+  const { setIsServerInfoModalOpen, selectedServer } = useContext(MainStoreContext);
+  const [joinedUserList, setJoinedUserList] = useState<UserServer[]>();
+  const [serverDescription, setServerDescription] = useState<string>();
+  const [serverName, setServerName] = useState<string>('');
+  const [serverIconUrl, setServerIconUrl] = useState<string>();
 
-  const a = `fafeaf\nfeafa\nfeafafeafa\nfeafa\nfeafafeaf\nfeafa\nfeafa\nfeafa\nfeaa\nfeafa`;
+  const getServerInfo = async () => {
+    const serverId = selectedServer.server.id;
+    const response = await fetch(`/api/servers/${serverId}/users`);
+    const serverInfo = await response.json();
+
+    if (response.status === 200) {
+      const { name, description, userServer, imgUrl } = serverInfo.data;
+
+      setJoinedUserList(userServer);
+      setServerDescription(description);
+      setServerName(name);
+      if (imgUrl) {
+        setServerIconUrl(imgUrl);
+      }
+    }
+  };
+  useEffect(() => {
+    getServerInfo();
+  }, []);
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
@@ -174,19 +219,27 @@ function ServerInfoModal(): JSX.Element {
             </ModalCloseButton>
           </ModalHeader>
           <ServerTitleBox>
-            <ServerIcon src="https://boostcam.kr.object.ncloudstorage.com/server-icons/1637413367738-test.gif" />
-            <InfoSpan>{a}</InfoSpan>
+            {serverIconUrl ? <ServerIcon src={serverIconUrl} /> : <ServerName>{serverName[0]}</ServerName>}
+            <InfoSpan>{serverName}</InfoSpan>
           </ServerTitleBox>
           <InformationBox>
-            <InfoParagraph>{a}</InfoParagraph>
+            <InfoParagraph>{serverDescription}</InfoParagraph>
           </InformationBox>
           <InformationBox>
             <SubTitle>서버 참가 URL</SubTitle>
-            <InfoSpan>{a}</InfoSpan>
+            <InfoSpan>서버 참가 url</InfoSpan>
           </InformationBox>
           <InformationBox>
             <SubTitle>서버 사용자 리스트</SubTitle>
-            <InfoParagraph>{a}</InfoParagraph>
+            <InfoParagraph>
+              {joinedUserList
+                ?.map((joinedUser) => {
+                  const { user } = joinedUser;
+                  const { nickname } = user;
+                  return nickname;
+                })
+                .join('\n')}
+            </InfoParagraph>
           </InformationBox>
         </ModalInnerBox>
       </ModalBox>
