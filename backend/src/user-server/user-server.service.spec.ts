@@ -5,8 +5,9 @@ import { Server } from '../server/server.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { ServerService } from '../server/server.service';
+import { ServerRepository } from '../server/server.repository';
 
 const mockUserServerRepository = () => ({
   save: jest.fn(),
@@ -23,12 +24,12 @@ const mockServerRepository = () => ({
 type MockUserServerRepository = Partial<
   Record<keyof UserServerRepository, jest.Mock>
 >;
-type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+type MockServerRepository = Partial<Record<keyof ServerRepository, jest.Mock>>;
 
 describe('UserServerService', () => {
   let service: UserServerService;
   let userServerRepository: MockUserServerRepository;
-  let serverRepository: MockRepository<Server>;
+  let serverRepository: MockServerRepository;
   let userServer: UserServer;
   let existUserServer: UserServer;
 
@@ -42,7 +43,7 @@ describe('UserServerService', () => {
         },
         ServerService,
         {
-          provide: getRepositoryToken(Server),
+          provide: getRepositoryToken(ServerRepository),
           useValue: mockServerRepository(),
         },
       ],
@@ -52,8 +53,8 @@ describe('UserServerService', () => {
     userServerRepository = module.get<MockUserServerRepository>(
       getRepositoryToken(UserServerRepository),
     );
-    serverRepository = module.get<MockRepository<Server>>(
-      getRepositoryToken(Server),
+    serverRepository = module.get<MockServerRepository>(
+      getRepositoryToken(ServerRepository),
     );
 
     userServer = new UserServer();
