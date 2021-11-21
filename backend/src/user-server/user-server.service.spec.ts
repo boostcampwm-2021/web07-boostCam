@@ -32,6 +32,12 @@ describe('UserServerService', () => {
   let serverRepository: MockServerRepository;
   let userServer: UserServer;
   let existUserServer: UserServer;
+  let user: User;
+  let server: Server;
+
+  const userId = 1;
+  const serverId = 1;
+  const existUserServerId = 1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,40 +62,28 @@ describe('UserServerService', () => {
     serverRepository = module.get<MockServerRepository>(
       getRepositoryToken(ServerRepository),
     );
-
-    userServer = new UserServer();
-    userServer.user = new User();
-    userServer.server = new Server();
-
-    existUserServer = new UserServer();
-    existUserServer.id = 1;
-    existUserServer.user = new User();
-    existUserServer.user.id = 1;
-    existUserServer.server = new Server();
-    existUserServer.server.id = 1;
+    refreshVariables();
   });
 
   describe('create()', () => {
     it('정상적인 값을 저장할 경우', async () => {
       userServerRepository.save.mockResolvedValue(userServer);
-      serverRepository.findOne.mockResolvedValue(existUserServer.server);
+      serverRepository.findOne.mockResolvedValue(server);
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
 
-      const newUserServer = await service.create(
-        existUserServer.user,
-        existUserServer.server.id,
-      );
+      const newUserServer = await service.create(user, serverId);
 
-      expect(newUserServer.user).toBe(userServer.user);
-      expect(newUserServer.server).toBe(userServer.server);
+      expect(newUserServer.user).toBe(user);
+      expect(newUserServer.server).toBe(server);
     });
 
     it('해당 서버가 존재하지 않는 경우', async () => {
+      const nonExistsId = 0;
       userServerRepository.save.mockResolvedValue(userServer);
       serverRepository.findOne.mockResolvedValue(undefined);
 
       try {
-        await service.create(existUserServer.user, 2);
+        await service.create(user, nonExistsId);
       } catch (error) {
         expect(error.response).toBe('해당 서버가 존재하지 않습니다.');
       }
@@ -97,13 +91,13 @@ describe('UserServerService', () => {
 
     it('이미 추가된 서버인 경우', async () => {
       userServerRepository.save.mockResolvedValue(userServer);
-      serverRepository.findOne.mockResolvedValue(existUserServer.server);
+      serverRepository.findOne.mockResolvedValue(server);
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(
         existUserServer,
       );
 
       try {
-        await service.create(existUserServer.user, existUserServer.server.id);
+        await service.create(user, serverId);
       } catch (error) {
         expect(error.response).toBe('이미 등록된 서버입니다.');
       }
@@ -112,7 +106,7 @@ describe('UserServerService', () => {
 
   describe('deleteById()', () => {
     it('존재하는 id로 삭제할 경우', async () => {
-      const existsId = existUserServer.id;
+      const existsId = existUserServerId;
       const returnedDeleteResult = new DeleteResult();
       returnedDeleteResult.affected = existsId == existUserServer.id ? 1 : 0;
       userServerRepository.delete.mockResolvedValue(returnedDeleteResult);
@@ -141,11 +135,26 @@ describe('UserServerService', () => {
         existUserServer,
       ]);
 
-      const userServerList = await service.getServerListByUserId(
-        existUserServer.user.id,
-      );
+      const userServerList = await service.getServerListByUserId(userId);
 
       expect(userServerList[0]).toBe(existUserServer);
     });
   });
+
+  const refreshVariables = () => {
+    user = new User();
+    user.id = userId;
+
+    server = new Server();
+    server.id = serverId;
+
+    userServer = new UserServer();
+    userServer.user = user;
+    userServer.server = server;
+
+    existUserServer = new UserServer();
+    existUserServer.id = existUserServerId;
+    existUserServer.user = user;
+    existUserServer.server = server;
+  };
 });
