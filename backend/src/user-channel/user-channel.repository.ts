@@ -3,6 +3,13 @@ import { UserChannel } from './user-channel.entity';
 
 @EntityRepository(UserChannel)
 export class UserChannelRepository extends Repository<UserChannel> {
+  getAllList(serverId: number) {
+    return this.createQueryBuilder('user_channel')
+      .leftJoinAndSelect('user_channel.channel', 'channel')
+      .where('user_channel.server = :serverId', { serverId: serverId })
+      .getMany();
+  }
+
   getJoinedChannelListByUserId(userId: number, serverId: number) {
     return this.createQueryBuilder('user_channel')
       .leftJoinAndSelect('user_channel.channel', 'channel')

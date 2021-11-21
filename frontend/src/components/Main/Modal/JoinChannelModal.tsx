@@ -201,7 +201,6 @@ function JoinChannelModal(): JSX.Element {
   };
 
   const onClickChannelListButton = async ({ currentTarget }: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    // const targetChannelId = currentTarget.dataset.id;
     const response = await fetch('/api/user/channels', {
       method: 'POST',
       headers: {
