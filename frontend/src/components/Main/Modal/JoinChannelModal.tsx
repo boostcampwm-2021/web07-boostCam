@@ -200,8 +200,8 @@ function JoinChannelModal(): JSX.Element {
     setChannelList(list.data);
   };
 
-  const onClickChannelListButton = async ({ currentTarget }: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    const response = await fetch('/api/user/channels', {
+  const onClickChannelListButton = async (id: string) => {
+    await fetch('/api/user/channels', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -211,15 +211,12 @@ function JoinChannelModal(): JSX.Element {
         serverId: selectedServer,
       }),
     });
+    setIsJoinModalOpen(false);
   };
 
   useEffect(() => {
     getNotJoinedChannelList();
   }, []);
-
-  useEffect(() => {
-    console.log(channelList);
-  }, [channelList]);
 
   const tmpList = channelList.map((val) => (
     <ModalChannelListItem key={val.id}>
@@ -227,7 +224,7 @@ function JoinChannelModal(): JSX.Element {
         <ItemTitle>{val.name}</ItemTitle>
         <ItemDescription>{val.description}</ItemDescription>
       </ItemText>
-      <ItemButton onClick={(e) => onClickChannelListButton(e, val.id)}>참여</ItemButton>
+      <ItemButton onClick={() => onClickChannelListButton(val.id)}>참여</ItemButton>
     </ModalChannelListItem>
   ));
 

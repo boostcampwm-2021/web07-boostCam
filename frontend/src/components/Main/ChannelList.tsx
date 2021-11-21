@@ -119,8 +119,8 @@ function ChannelList(): JSX.Element {
   } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
-  const onClickChannelBlock = (e: React.MouseEvent<HTMLDivElement>) => {
-    const channelId = e.currentTarget.dataset.id;
+  const onClickChannelBlock = ({ currentTarget }: React.MouseEvent<HTMLDivElement>) => {
+    const channelId = currentTarget.dataset.id;
     if (channelId) setSelectedChannel(channelId);
   };
 

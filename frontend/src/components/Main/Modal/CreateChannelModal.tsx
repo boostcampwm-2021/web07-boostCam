@@ -191,6 +191,7 @@ function CreateChannelModal(): JSX.Element {
         serverId: +selectedServer,
       }),
     });
+    setIsCreateModalOpen(false);
   };
 
   useEffect(() => {
