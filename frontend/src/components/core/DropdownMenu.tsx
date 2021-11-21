@@ -9,6 +9,7 @@ const Container = styled.li`
   }
   &:hover {
     cursor: pointer;
+    font-weight: bold;
   }
 `;
 

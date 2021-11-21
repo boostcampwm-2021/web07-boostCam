@@ -15,6 +15,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [isJoinModalOpen, setIsJoinModalOpen] = useState<boolean>(false);
   const [isCreateServerModalOpen, setIsCreateServerModalOpen] = useState<boolean>(false);
   const [isJoinServerModalOpen, setIsJoinServerModalOpen] = useState<boolean>(false);
+  const [isServerInfoModalOpen, setIsServerInfoModalOpen] = useState<boolean>(false);
+  const [isServerSettingModalOpen, setIsServerSettingModalOpen] = useState<boolean>(false);
+  const [isQuitServerModalOpen, setIsQuitServerModalOpen] = useState<boolean>(false);
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
   return (
@@ -26,6 +29,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
         isJoinModalOpen,
         isCreateServerModalOpen,
         isJoinServerModalOpen,
+        isServerInfoModalOpen,
+        isServerSettingModalOpen,
+        isQuitServerModalOpen,
         serverList,
         setSelectedServer,
         setSelectedChannel,
@@ -33,6 +39,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsJoinModalOpen,
         setIsCreateServerModalOpen,
         setIsJoinServerModalOpen,
+        setIsServerInfoModalOpen,
+        setIsServerSettingModalOpen,
+        setIsQuitServerModalOpen,
         setServerList,
       }}
     >
