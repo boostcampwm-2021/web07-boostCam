@@ -147,22 +147,25 @@ function QuitServerModal(): JSX.Element {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
 
-    if (response.status === 200 && list.data.length !== 0) {
+    if (response.status === 200) {
       setServerList(list.data);
-      setSelectedServer(list.data[list.data.length - 1]);
+      if (list.data.length !== 0) {
+        setSelectedServer(list.data[0]);
+      } else {
+        setSelectedServer(undefined);
+      }
     }
   };
 
   const onClickQuitServer = async () => {
-    const serverId = selectedServer.id;
-    const response = await fetch(`api/users/servers/${serverId}`, {
+    const userServerId = selectedServer.id;
+    const response = await fetch(`api/users/servers/${userServerId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-
-    if (response.status === 201) {
+    if (response.status === 204) {
       getServerList();
       setIsQuitServerModalOpen(false);
     } else {

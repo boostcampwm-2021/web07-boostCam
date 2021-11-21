@@ -7,6 +7,7 @@ import {
   Session,
   UseGuards,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import { Server } from '../server/server.entity';
 import { LoginGuard } from '../login/login.guard';
@@ -38,7 +39,13 @@ export class UserServerController {
   }
 
   @Delete('/:id')
+  @HttpCode(204)
   delete(@Param('id') id: number) {
-    return this.userServerService.deleteById(id);
+    try {
+      this.userServerService.deleteById(id);
+      return ResponseEntity.noContent();
+    } catch (error) {
+      throw new HttpException(error.response, 403);
+    }
   }
 }

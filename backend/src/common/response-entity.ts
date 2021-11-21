@@ -15,6 +15,9 @@ class ResponseEntity<T> {
   static created(id: number): ResponseEntity<number> {
     return new ResponseEntity(201, null, id);
   }
+  static noContent(): ResponseEntity<null> {
+    return new ResponseEntity(204, null, null);
+  }
 }
 
 export default ResponseEntity;
