@@ -60,7 +60,7 @@ const ChannelListBody = styled.div`
   font-size: 15px;
 `;
 
-const ChannelNameBlock = styled.div<{ selected: boolean }>`
+const ChannelListItem = styled.div<{ selected: boolean }>`
   width: 100%;
   height: 25px;
 
@@ -104,13 +104,13 @@ const HashIcon = styled(Hash)`
 `;
 
 function ChannelList(): JSX.Element {
-  const [channelList, setChannelList] = useState<ChannelData[]>([]);
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const [isListOpen, setIsListOpen] = useState<boolean>(false);
   const {
     selectedServer,
     selectedChannel,
+    serverChannelList,
     isCreateModalOpen,
     isJoinModalOpen,
     setSelectedChannel,
@@ -119,8 +119,8 @@ function ChannelList(): JSX.Element {
   } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
-  const onClickChannelBlock = (e: React.MouseEvent<HTMLDivElement>) => {
-    const channelId = e.currentTarget.dataset.id;
+  const onClickChannelBlock = ({ currentTarget }: React.MouseEvent<HTMLDivElement>) => {
+    const channelId = currentTarget.dataset.id;
     if (channelId) setSelectedChannel(channelId);
   };
 
@@ -129,19 +129,13 @@ function ChannelList(): JSX.Element {
     setIsDropdownActivated(!isDropdownActivated);
   };
 
-  const getChannelList = async (): Promise<void> => {
-    const response = await fetch('/api/channel/list');
-    const list = await response.json();
-
-    setChannelList(list.data);
+  const onRightClickChannelItem = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   useEffect(() => {
-    getChannelList();
-  }, []);
-
-  useEffect(() => {
     const serverId = selectedServer?.server?.id || 'none';
+
     navigate({
       search: `?${createSearchParams({
         serverId,
@@ -150,13 +144,19 @@ function ChannelList(): JSX.Element {
     });
   }, [selectedChannel]);
 
-  const listElements = channelList.map((val: ChannelData): JSX.Element => {
+  const listElements = serverChannelList.map((val: ChannelData): JSX.Element => {
     const selected = val.id === selectedChannel;
     return (
-      <ChannelNameBlock key={val.id} data-id={val.id} selected={selected} onClick={onClickChannelBlock}>
+      <ChannelListItem
+        key={val.id}
+        data-id={val.id}
+        selected={selected}
+        onClick={onClickChannelBlock}
+        onContextMenu={onRightClickChannelItem}
+      >
         <HashIcon />
         <ChannelNameSpan>{val.name}</ChannelNameSpan>
-      </ChannelNameBlock>
+      </ChannelListItem>
     );
   });
 

@@ -21,7 +21,6 @@ type ChannelData = {
   description: string;
   id: string;
   name: string;
-  server: ServerData;
 };
 
 export type { UserData, ServerData, MyServerData, ChannelData };

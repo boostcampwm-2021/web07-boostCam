@@ -32,6 +32,7 @@ const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
+  min-height: 450px;
 
   background-color: #222322;
 
@@ -174,7 +175,7 @@ function CreateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateModalOpen } = useContext(MainStoreContext);
+  const { selectedServer, setIsCreateModalOpen, getServerChannelList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
@@ -187,9 +188,11 @@ function CreateChannelModal(): JSX.Element {
       body: JSON.stringify({
         name: name.trim(),
         description: description.trim(),
-        server: +selectedServer,
+        serverId: +selectedServer,
       }),
     });
+    getServerChannelList();
+    setIsCreateModalOpen(false);
   };
 
   useEffect(() => {
