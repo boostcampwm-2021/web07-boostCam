@@ -172,17 +172,18 @@ function UpdateChannelModal(): JSX.Element {
   const {
     register,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<UpdateModalForm>();
-  const { selectedServer, selectedChannel, rightClickedChannel, setIsUpdateChannelModalOpen, getServerChannelList } =
+  const { selectedServer, rightClickedChannel, setIsUpdateChannelModalOpen, getServerChannelList } =
     useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch('api/channel', {
-      method: 'POST',
+    await fetch(`api/channel/${rightClickedChannel}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -197,10 +198,12 @@ function UpdateChannelModal(): JSX.Element {
   };
 
   const getSelectedChannelData = async () => {
-    console.log(selectedServer, selectedChannel, rightClickedChannel);
     const response = await fetch(`/api/channel/${rightClickedChannel}`);
-    const data = await response.json();
-    console.log(data);
+    const responseObj = await response.json();
+    const channelData = responseObj.data;
+    console.log(channelData);
+    setValue('name', channelData.name);
+    setValue('description', channelData.description);
   };
 
   useEffect(() => {

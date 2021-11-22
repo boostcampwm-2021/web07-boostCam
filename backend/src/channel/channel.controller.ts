@@ -14,7 +14,7 @@ import { ExpressSession } from '../types/session';
 
 import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
-import { CreateChannelDto } from './channe.dto';
+import { ChannelFormDto } from './channe.dto';
 import { UserChannelService } from '../user-channel/user-channel.service';
 import ResponseEntity from '../common/response-entity';
 
@@ -39,19 +39,19 @@ export class ChannelController {
     return ResponseEntity.ok<Channel>(foundServer);
   }
   @Post() async saveChannel(
-    @Body() channel: CreateChannelDto,
+    @Body() channel: ChannelFormDto,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<Channel>> {
-    const savedChannel = await this.channelService.addChannel(channel);
+    const savedChannel = await this.channelService.createChannel(channel);
     await this.userChannelService.addNewChannel(savedChannel, session.user.id);
     return ResponseEntity.ok<Channel>(savedChannel);
   }
   @Patch(':id') async updateUser(
     @Param('id') id: number,
-    @Body() channel: Channel,
+    @Body() channel: ChannelFormDto,
   ): Promise<ResponseEntity<Channel>> {
-    await this.channelService.updateChannel(id, channel);
-    return ResponseEntity.ok<Channel>(channel);
+    const changedChannel = await this.channelService.updateChannel(id, channel);
+    return ResponseEntity.ok<Channel>(changedChannel);
   }
 
   @Delete(':id') async deleteChannel(
