@@ -5,7 +5,7 @@ import { Repository } from 'typeorm/index';
 import { CreateChannelDto } from './channe.dto';
 import { Channel } from './channel.entity';
 import { Server } from '../server/server.entity';
-import { ChannelRepository } from './user.repository';
+import { ChannelRepository } from './channel.repository';
 
 @Injectable()
 export class ChannelService {
