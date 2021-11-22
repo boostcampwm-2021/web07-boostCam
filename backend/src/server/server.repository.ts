@@ -10,4 +10,11 @@ export class ServerRepository extends Repository<Server> {
       .where('server.id = :serverId', { serverId: serverId })
       .getOne();
   }
+
+  findOneWithOwner(serverId: number) {
+    return this.createQueryBuilder('server')
+      .leftJoinAndSelect('server.owner', 'user')
+      .where('server.id = :serverId', { serverId: serverId })
+      .getOne();
+  }
 }

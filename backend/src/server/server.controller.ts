@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
@@ -58,7 +59,7 @@ export class ServerController {
   @Post()
   @UseGuards(LoginGuard)
   @UseInterceptors(FileInterceptor('icon'))
-  async saveServer(
+  async createServer(
     @Session()
     session: ExpressSession,
     @Body() requestServerDto: RequestServerDto,
@@ -79,7 +80,10 @@ export class ServerController {
       );
       return ResponseEntity.created(newServer.id);
     } catch (error) {
-      throw new HttpException(error.response, 403);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -96,9 +100,21 @@ export class ServerController {
   }
 
   @Delete('/:id')
-  @HttpCode(204)
-  async deleteServer(@Param('id') id: number): Promise<ResponseEntity<string>> {
-    await this.serverService.deleteServer(id);
-    return ResponseEntity.noContent();
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteServer(
+    @Session()
+    session: ExpressSession,
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<string>> {
+    try {
+      const user = session.user;
+      await this.serverService.deleteServer(id, user);
+      return ResponseEntity.noContent();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
