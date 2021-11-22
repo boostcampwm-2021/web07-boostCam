@@ -12,7 +12,6 @@ import { Server } from './server.entity';
 import RequestServerDto from './dto/RequestServerDto';
 import { UserServerService } from '../user-server/user-server.service';
 import { ServerRepository } from './server.repository';
-import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class ServerService {
@@ -21,9 +20,7 @@ export class ServerService {
     private readonly userServerService: UserServerService,
     @InjectRepository(ServerRepository)
     private serverRepository: ServerRepository,
-  ) {
-    this.serverRepository = serverRepository;
-  }
+  ) {}
 
   findAll(): Promise<Server[]> {
     return this.serverRepository.find({ relations: ['owner'] });
@@ -57,11 +54,11 @@ export class ServerService {
   async deleteServer(id: number, user: User) {
     const server = await this.serverRepository.findOneWithOwner(id);
 
+    if (!server) {
+      throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
     if (server.owner.id !== user.id) {
       throw new ForbiddenException('삭제 권한이 없습니다.');
-    }
-    if (!server) {
-      throw new BadRequestException('해당 서버가 존재하지 않습니다.');
     }
 
     return this.serverRepository.delete({ id: id });

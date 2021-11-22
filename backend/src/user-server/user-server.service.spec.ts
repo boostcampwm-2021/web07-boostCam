@@ -8,6 +8,7 @@ import { UserServerRepository } from './user-server.repository';
 import { DeleteResult } from 'typeorm';
 import { ServerService } from '../server/server.service';
 import { ServerRepository } from '../server/server.repository';
+import { HttpStatus } from '@nestjs/common';
 
 const mockUserServerRepository = () => ({
   save: jest.fn(),
@@ -77,7 +78,7 @@ describe('UserServerService', () => {
       expect(newUserServer.server).toBe(server);
     });
 
-    it('해당 서버가 존재하지 않는 경우', async () => {
+    it('서버가 존재하지 않는 경우', async () => {
       const nonExistsId = 0;
       userServerRepository.save.mockResolvedValue(userServer);
       serverRepository.findOne.mockResolvedValue(undefined);
@@ -85,7 +86,9 @@ describe('UserServerService', () => {
       try {
         await service.create(user, nonExistsId);
       } catch (error) {
-        expect(error.response).toBe('해당 서버가 존재하지 않습니다.');
+        expect(error.response.message).toBe('존재하지 않는 서버입니다.');
+        expect(error.response.error).toBe('Bad Request');
+        expect(error.response.statusCode).toBe(HttpStatus.BAD_REQUEST);
       }
     });
 
@@ -99,7 +102,9 @@ describe('UserServerService', () => {
       try {
         await service.create(user, serverId);
       } catch (error) {
-        expect(error.response).toBe('이미 등록된 서버입니다.');
+        expect(error.response.message).toBe('이미 등록된 서버입니다.');
+        expect(error.response.error).toBe('Bad Request');
+        expect(error.response.statusCode).toBe(HttpStatus.BAD_REQUEST);
       }
     });
   });
