@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-import { Status, MessageInfo } from 'src/types/cam';
+import { Status, MessageInfo } from '../types/cam';
 import { CamService } from './cam.service';
 
 @WebSocketGateway()

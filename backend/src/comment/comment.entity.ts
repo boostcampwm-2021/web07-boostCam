@@ -1,4 +1,3 @@
-import { Message } from 'src/message/message.entity';
 import {
   Entity,
   Column,
@@ -6,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from 'typeorm';
+import { Message } from '../message/message.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
