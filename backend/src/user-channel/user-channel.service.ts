@@ -35,7 +35,6 @@ export class UserChannelService {
     serverId: number,
     userId: number,
   ): Promise<UserChannel[]> {
-    console.log(serverId, userId);
     return this.userChannelRepository.getJoinedChannelListByUserId(
       userId,
       serverId,
