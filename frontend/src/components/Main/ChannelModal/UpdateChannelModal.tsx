@@ -197,17 +197,16 @@ function UpdateChannelModal(): JSX.Element {
     setIsUpdateChannelModalOpen(false);
   };
 
-  const getSelectedChannelData = async () => {
+  const setSelectedChannelData = async () => {
     const response = await fetch(`/api/channel/${rightClickedChannel}`);
     const responseObj = await response.json();
     const channelData = responseObj.data;
-    console.log(channelData);
     setValue('name', channelData.name);
     setValue('description', channelData.description);
   };
 
   useEffect(() => {
-    getSelectedChannelData();
+    setSelectedChannelData();
   }, []);
 
   useEffect(() => {
