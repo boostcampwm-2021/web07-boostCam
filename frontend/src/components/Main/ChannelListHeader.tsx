@@ -62,10 +62,10 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
   const {
     selectedServer,
     selectedChannel,
-    isCreateModalOpen,
-    isJoinModalOpen,
-    setIsCreateModalOpen,
-    setIsJoinModalOpen,
+    isCreateChannelModalOpen,
+    isJoinChannelModalOpen,
+    setIsCreateChannelModalOpen,
+    setIsJoinChannelModalOpen,
   } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
@@ -99,14 +99,14 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
           <DropdownMenu
             name="추가"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isCreateModalOpen}
-            stateSetter={setIsCreateModalOpen}
+            state={isCreateChannelModalOpen}
+            stateSetter={setIsCreateChannelModalOpen}
           />
           <DropdownMenu
             name="생성"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isJoinModalOpen}
-            stateSetter={setIsJoinModalOpen}
+            state={isJoinChannelModalOpen}
+            stateSetter={setIsJoinChannelModalOpen}
           />
         </Dropdown>
       </ChannelListHeaderButton>

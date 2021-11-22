@@ -44,7 +44,13 @@ type ChannelListItemProps = {
 };
 
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
-  const { setSelectedChannel } = useContext(MainStoreContext);
+  const {
+    setSelectedChannel,
+    isUpdateChannelModalOpen,
+    isQuitChannelModalOpen,
+    setIsUpdateChannelModalOpen,
+    setIsQuitChannelModalOpen,
+  } = useContext(MainStoreContext);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { dataId, selected, name } = props;
 
@@ -69,18 +75,18 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
       <HashIcon />
       <ChannelNameSpan>{name}</ChannelNameSpan>
       <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-        {/* <DropdownMenu
+        <DropdownMenu
           name="추가"
           setIsDropdownActivated={setIsDropdownActivated}
-          state={isCreateModalOpen}
-          stateSetter={setIsCreateModalOpen}
+          state={isUpdateChannelModalOpen}
+          stateSetter={setIsUpdateChannelModalOpen}
         />
         <DropdownMenu
           name="생성"
           setIsDropdownActivated={setIsDropdownActivated}
-          state={isJoinModalOpen}
-          stateSetter={setIsJoinModalOpen}
-        /> */}
+          state={isQuitChannelModalOpen}
+          stateSetter={setIsQuitChannelModalOpen}
+        />
       </Dropdown>
     </Container>
   );

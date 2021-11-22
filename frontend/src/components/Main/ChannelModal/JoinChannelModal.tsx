@@ -191,7 +191,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function JoinChannelModal(): JSX.Element {
-  const { selectedServer, setIsJoinModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsJoinChannelModalOpen, getServerChannelList } = useContext(MainStoreContext);
   const [channelList, setChannelList] = useState<ChannelData[]>([]);
 
   const getNotJoinedChannelList = async () => {
@@ -212,7 +212,7 @@ function JoinChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    setIsJoinModalOpen(false);
+    setIsJoinChannelModalOpen(false);
   };
 
   useEffect(() => {
@@ -232,12 +232,12 @@ function JoinChannelModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsJoinModalOpen(false)} />
+      <ModalBackground onClick={() => setIsJoinChannelModalOpen(false)} />
       <ModalBox>
         <ModalInnerBox>
           <ModalHeader>
             <ModalTitle>채널 참가</ModalTitle>
-            <ModalCloseButton onClick={() => setIsJoinModalOpen(false)}>
+            <ModalCloseButton onClick={() => setIsJoinChannelModalOpen(false)}>
               <CloseIcon />
             </ModalCloseButton>
           </ModalHeader>

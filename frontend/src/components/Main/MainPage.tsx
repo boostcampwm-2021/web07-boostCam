@@ -24,8 +24,8 @@ const Container = styled.div`
 
 function MainPage(): JSX.Element {
   const {
-    isCreateModalOpen,
-    isJoinModalOpen,
+    isCreateChannelModalOpen,
+    isJoinChannelModalOpen,
     isCreateServerModalOpen,
     isJoinServerModalOpen,
     isServerInfoModalOpen,
@@ -36,8 +36,8 @@ function MainPage(): JSX.Element {
 
   return (
     <Container>
-      {isCreateModalOpen && <CreateChannelModal />}
-      {isJoinModalOpen && <JoinChannelModal />}
+      {isCreateChannelModalOpen && <CreateChannelModal />}
+      {isJoinChannelModalOpen && <JoinChannelModal />}
       {isCreateServerModalOpen && <CreateServerModal />}
       {isJoinServerModalOpen && <JoinServerModal />}
       {isServerSettingModalOpen && <ServerSettingModal />}

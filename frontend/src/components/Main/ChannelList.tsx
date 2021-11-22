@@ -32,7 +32,6 @@ const ChannelListBody = styled.div`
 `;
 function ChannelList(): JSX.Element {
   const [isListOpen, setIsListOpen] = useState<boolean>(false);
-  const [clickedChannel, setClickedChannel] = useState<number>(-1);
   const { selectedServer, selectedChannel, serverChannelList } = useContext(MainStoreContext);
   const navigate = useNavigate();
   useEffect(() => {
