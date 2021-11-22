@@ -11,6 +11,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
   const [selectedChannel, setSelectedChannel] = useState<string>('1');
+  const [rightClickedChannel, setRightClickedChannel] = useState<string>('1');
   const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
 
   const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] = useState<boolean>(false);
@@ -29,7 +30,11 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const getServerChannelList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
     const list = await response.json();
-    setServerChannelList(list.data);
+    const channelList = list.data;
+    if (channelList.length) {
+      setSelectedChannel(channelList[0].id);
+      setServerChannelList(channelList);
+    }
   };
 
   useEffect(() => {
@@ -41,6 +46,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
       value={{
         selectedServer,
         selectedChannel,
+        rightClickedChannel,
         isCreateChannelModalOpen,
         isJoinChannelModalOpen,
         isUpdateChannelModalOpen,
@@ -54,6 +60,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         serverList,
         setSelectedServer,
         setSelectedChannel,
+        setRightClickedChannel,
         setIsCreateChannelModalOpen,
         setIsJoinChannelModalOpen,
         setIsUpdateChannelModalOpen,
