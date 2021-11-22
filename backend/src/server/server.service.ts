@@ -35,7 +35,7 @@ export class ServerService {
     newServer.name = requestServerDto.name;
     newServer.description = requestServerDto.description;
     newServer.owner = user;
-    newServer.imgUrl = imgUrl !== undefined ? imgUrl : '';
+    newServer.imgUrl = imgUrl || '';
 
     const createdServer = await this.serverRepository.save(newServer);
     this.userServerService.create(user, createdServer.id);

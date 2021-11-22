@@ -82,7 +82,7 @@ export class ServerController {
     }
   }
 
-  @Patch('/:id') async updateUser(
+  @Patch('/:id') async updateServer(
     @Param('id') id: number,
     @Body() server: Server,
   ): Promise<string> {
@@ -94,7 +94,7 @@ export class ServerController {
     });
   }
 
-  @Delete('/:id') async deleteUser(@Param('id') id: number): Promise<string> {
+  @Delete('/:id') async deleteServer(@Param('id') id: number): Promise<string> {
     await this.serverService.deleteServer(id);
     return Object.assign({
       data: { id },

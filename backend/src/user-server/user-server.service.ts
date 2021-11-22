@@ -21,14 +21,14 @@ export class UserServerService {
     newUserServer.server = await this.serverService.findOne(serverId);
 
     if (newUserServer.server == undefined) {
-      throw new HttpException('해당 서버가 존재하지 않습니다.', 403);
+      throw new HttpException('해당 서버가 존재하지 않습니다.', 400);
     }
     const userServer = await this.userServerRepository.findByUserIdAndServerId(
       user.id,
       serverId,
     );
     if (userServer !== undefined) {
-      throw new HttpException('이미 등록된 서버입니다.', 403);
+      throw new HttpException('이미 등록된 서버입니다.', 400);
     }
 
     return this.userServerRepository.save(newUserServer);
