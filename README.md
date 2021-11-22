@@ -1,6 +1,6 @@
 ## boostCam - 화상채팅을 지원하는 웹 메신저 서비스
 <div style="text-align:center">
-  <img src="https://user-images.githubusercontent.com/49611158/142761395-c4b835e9-ba0c-4549-b4ad-6b0f13cc3e35.png" width=256/>
+  <img src="https://user-images.githubusercontent.com/49611158/142761147-9615c30e-6a02-482c-b800-e476e80f18e0.png" width=256/>
 </div>
 
 ## 소개
