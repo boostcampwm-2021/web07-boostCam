@@ -179,19 +179,9 @@ function JoinServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<JoinServerModalForm>();
-  const { setIsJoinServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
+  const { setIsJoinServerModalOpen, getUserServerList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
-
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200 && list.data.length !== 0) {
-      setServerList(list.data);
-      setSelectedServer(list.data[list.data.length - 1]);
-    }
-  };
 
   const onSubmitJoinServerModal = async (data: { serverId: string }) => {
     const { serverId } = data;
@@ -206,7 +196,8 @@ function JoinServerModal(): JSX.Element {
     });
 
     if (response.status === 201) {
-      getServerList();
+      const isServerOrUserServerCreated = true;
+      getUserServerList(isServerOrUserServerCreated);
       setIsJoinServerModalOpen(false);
     } else {
       const body = await response.json();

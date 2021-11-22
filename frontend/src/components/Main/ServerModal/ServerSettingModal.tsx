@@ -164,8 +164,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsServerSettingModalOpen, selectedServer, setServerList, setSelectedServer } =
-    useContext(MainStoreContext);
+  const { setIsServerSettingModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
@@ -178,16 +177,6 @@ function ServerSettingModal(): JSX.Element {
     }
   };
 
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200 && list.data.length !== 0) {
-      setServerList(list.data);
-      setSelectedServer(list.data[list.data.length - 1]);
-    }
-  };
-
   const onClickDeleteServer = async () => {
     const serverId = selectedServer?.server.id;
 
@@ -197,7 +186,8 @@ function ServerSettingModal(): JSX.Element {
       });
 
       if (response.status === 204) {
-        getServerList();
+        const isServerOrUserServerCreated = false;
+        getUserServerList(isServerOrUserServerCreated);
         setIsServerSettingModalOpen(false);
       } else {
         const body = await response.json();

@@ -27,6 +27,17 @@ function MainStore(props: MainStoreProps): JSX.Element {
     setServerChannelList(list.data);
   };
 
+  const getUserServerList = async (isServerOrUserServerCreated: boolean): Promise<void> => {
+    const response = await fetch(`/api/user/servers`);
+    const list = await response.json();
+
+    if (response.status === 200 && list.data.length !== 0) {
+      const selectedServerIndex = isServerOrUserServerCreated ? list.data.length - 1 : 0;
+      setServerList(list.data);
+      setSelectedServer(list.data[selectedServerIndex]);
+    }
+  };
+
   useEffect(() => {
     if (selectedServer) getServerChannelList();
   }, [selectedServer]);
@@ -57,6 +68,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsServerSettingModalOpen,
         setIsQuitServerModalOpen,
         setServerList,
+        getUserServerList,
       }}
     >
       {children}
