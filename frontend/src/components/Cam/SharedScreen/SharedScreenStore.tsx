@@ -1,9 +1,10 @@
-import React, { createContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import SharedScreenReceiver from './SharedScreenReceiver';
 import SocketState from '../../../atoms/socket';
 import SharedScreenSender from './SharedScreenSender';
+import { ToggleStoreContext } from '../ToggleStore';
 
 type SharedScreenStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
@@ -20,6 +21,8 @@ function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
 
   const sharedScreenReceiverRef = useRef<SharedScreenReceiver>();
   const sharedScreenSenderRef = useRef<SharedScreenSender>();
+
+  const { setUserListTabActive } = useContext(ToggleStoreContext);
 
   const currentURL = new URL(window.location.href);
   const roomId = currentURL.searchParams.get('roomid');
@@ -64,6 +67,14 @@ function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
       sharedScreenSenderRef.current = undefined;
     }
   };
+
+  useEffect(() => {
+    if (sharedScreen) {
+      setUserListTabActive(true);
+    } else {
+      setUserListTabActive(false);
+    }
+  }, [sharedScreen]);
 
   return (
     <SharedScreenStoreContext.Provider value={{ sharedScreen, setSharedScreen, handleScreenShareActive }}>

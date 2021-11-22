@@ -42,8 +42,8 @@ const OAuthLoginButton = styled.div`
 `;
 
 function OAuthLogin(): JSX.Element {
-  const CLIENT_ID = 'b0e26b0f6a8f638ba3af';
-  const REDIRECT_URL = 'http://localhost:3000/login';
+  const CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
+  const REDIRECT_URL = process.env.REACT_APP_GITHUB_REDIRECT_URL;
 
   const onClick = () => {
     const url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}`;

@@ -9,10 +9,12 @@ type STTStoreProps = {
 
 function STTStore(props: STTStoreProps): JSX.Element {
   const { children } = props;
-  const { lastResult, isSTTActive, toggleSTTActive } = useSTT();
+  const { lastResult, isSTTActive, isSpeaking, toggleSTTActive } = useSTT();
 
   return (
-    <STTStoreContext.Provider value={{ lastResult, isSTTActive, toggleSTTActive }}>{children}</STTStoreContext.Provider>
+    <STTStoreContext.Provider value={{ lastResult, isSTTActive, isSpeaking, toggleSTTActive }}>
+      {children}
+    </STTStoreContext.Provider>
   );
 }
 

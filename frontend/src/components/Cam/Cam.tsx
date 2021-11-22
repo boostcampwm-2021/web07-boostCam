@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import ButtonBar from './ButtonBar';
-import ChattingTab from './ChattingTab';
-import MainScreen from './MainScreen';
+import ButtonBar from './ButtonBar/ButtonBar';
+import ChattingTab from './Chatting/ChattingTab';
+import MainScreen from './Screen/MainScreen';
 import CamStore from './CamStore';
-import UserListTab from './UserListTab';
+import UserListTab from './UserList/UserListTab';
 import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import socketState from '../../atoms/socket';
 import STTStore from './STT/STTStore';
 import SharedScreenStore from './SharedScreen/SharedScreenStore';
-import NickNameForm from './NickNameForm';
+import NickNameForm from './Nickname/NickNameForm';
 
 const Container = styled.div`
   width: 100vw;
@@ -46,7 +46,8 @@ function Cam(): JSX.Element {
     const roomId = new URLSearchParams(new URL(window.location.href).search).get('roomid');
     setUserInfo((prev) => ({ ...prev, roomId }));
     return () => {
-      if (userInfo?.nickname) socket.emit('exitRoom');
+      socket.emit('exitRoom');
+      socket.emit('changeRoomList');
     };
   }, []);
 
@@ -55,8 +56,8 @@ function Cam(): JSX.Element {
       {!userInfo?.nickname ? (
         <NickNameForm setUserInfo={setUserInfo} />
       ) : (
-        <CamStore userInfo={userInfo}>
-          <ToggleStore camRef={camRef}>
+        <CamStore userInfo={userInfo} setUserInfo={setUserInfo}>
+          <ToggleStore>
             <STTStore>
               <SharedScreenStore>
                 <UpperTab>
@@ -64,7 +65,7 @@ function Cam(): JSX.Element {
                   <UserListTab />
                   <ChattingTab />
                 </UpperTab>
-                <ButtonBar />
+                <ButtonBar camRef={camRef} />
               </SharedScreenStore>
             </STTStore>
           </ToggleStore>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
+import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+
 import { Status } from '../../types/cam';
+import socketState from '../../atoms/socket';
 
 const Container = styled.div`
   width: 100vw;
@@ -113,7 +115,8 @@ type MapInfo = {
 };
 
 function CamRooms(): JSX.Element {
-  const [roomList, setRoomList] = useState<JSX.Element>();
+  const socket = useRecoilValue(socketState);
+  const [roomList, setRoomList] = useState<JSX.Element[]>();
   const navigate = useNavigate();
 
   const onSumbitCreateForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -132,6 +135,9 @@ function CamRooms(): JSX.Element {
         roomid: roomId,
       }),
     });
+
+    socket.emit('changeRoomList');
+
     const { statusCode } = await response.json();
     if (statusCode === 201) navigate(`/cam?roomid=${roomId}`);
     // eslint-disable-next-line no-alert
@@ -144,13 +150,7 @@ function CamRooms(): JSX.Element {
     navigate(`/cam?roomid=${roomId}`);
   };
 
-  const buildRoomList = async (): Promise<void> => {
-    const response = await fetch('/api/cam/roomlist/');
-    const { data } = await response.json();
-    const { roomListJson } = data;
-
-    const receivedRoomList = JSON.parse(roomListJson);
-
+  const buildRoomList = (receivedRoomList: []) => {
     const roomListJSX = receivedRoomList.map((val: [string, MapInfo[]]): JSX.Element => {
       const roomId = val[0];
       const roomParticipant = val[1].length;
@@ -166,8 +166,20 @@ function CamRooms(): JSX.Element {
     setRoomList(roomListJSX);
   };
 
+  const receiveRoomList = async (): Promise<void> => {
+    const response = await fetch('/api/cam/roomlist/');
+    const { data } = await response.json();
+    const { roomListJson } = data;
+
+    const receivedRoomList = JSON.parse(roomListJson);
+    buildRoomList(receivedRoomList);
+  };
+
   useEffect(() => {
-    buildRoomList();
+    socket.on('getRoomList', (receivedRoomList) => {
+      buildRoomList(JSON.parse(receivedRoomList));
+    });
+    receiveRoomList();
   }, []);
 
   return (

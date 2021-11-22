@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
+import { Status } from '../../../types/cam';
 import { STTStoreContext } from './STTStore';
 
 const Container = styled.div`
@@ -26,11 +27,12 @@ const Content = styled.div`
 
 type STTScreenProps = {
   sendMessage: (msg: string) => void;
+  setLocalStatus: React.Dispatch<React.SetStateAction<Status>>;
 };
 
 function STTScreen(props: STTScreenProps): JSX.Element {
-  const { sendMessage } = props;
-  const { lastResult, isSTTActive } = useContext(STTStoreContext);
+  const { sendMessage, setLocalStatus } = props;
+  const { lastResult, isSTTActive, isSpeaking } = useContext(STTStoreContext);
 
   useEffect(() => {
     if (lastResult.isFinal) {
@@ -41,6 +43,10 @@ function STTScreen(props: STTScreenProps): JSX.Element {
   useEffect(() => {
     lastResult.text = '';
   }, [isSTTActive]);
+
+  useEffect(() => {
+    setLocalStatus((prev) => ({ ...prev, speaking: isSpeaking }));
+  }, [isSpeaking]);
 
   return isSTTActive ? (
     <Container>
