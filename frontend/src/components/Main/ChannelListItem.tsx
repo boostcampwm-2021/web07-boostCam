@@ -37,6 +37,14 @@ const HashIcon = styled(Hash)`
   fill: #a69c96;
 `;
 
+const DropdownContainer = styled.div`
+  margin-left: 25px;
+`;
+
+const QuitDropdownMenu = styled.div`
+  color: red;
+`;
+
 type ChannelListItemProps = {
   dataId: string;
   selected: boolean;
@@ -63,6 +71,7 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     e.preventDefault();
     const channelId = e.currentTarget.dataset.id;
     console.log(`channelId = ${channelId}`);
+    setIsDropdownActivated(!isDropdownActivated);
   };
 
   return (
@@ -74,20 +83,24 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     >
       <HashIcon />
       <ChannelNameSpan>{name}</ChannelNameSpan>
-      <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-        <DropdownMenu
-          name="추가"
-          setIsDropdownActivated={setIsDropdownActivated}
-          state={isUpdateChannelModalOpen}
-          stateSetter={setIsUpdateChannelModalOpen}
-        />
-        <DropdownMenu
-          name="생성"
-          setIsDropdownActivated={setIsDropdownActivated}
-          state={isQuitChannelModalOpen}
-          stateSetter={setIsQuitChannelModalOpen}
-        />
-      </Dropdown>
+      <DropdownContainer>
+        <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
+          <DropdownMenu
+            name="수정"
+            setIsDropdownActivated={setIsDropdownActivated}
+            state={isUpdateChannelModalOpen}
+            stateSetter={setIsUpdateChannelModalOpen}
+          />
+          <QuitDropdownMenu>
+            <DropdownMenu
+              name="나가기"
+              setIsDropdownActivated={setIsDropdownActivated}
+              state={isQuitChannelModalOpen}
+              stateSetter={setIsQuitChannelModalOpen}
+            />
+          </QuitDropdownMenu>
+        </Dropdown>
+      </DropdownContainer>
     </Container>
   );
 }
