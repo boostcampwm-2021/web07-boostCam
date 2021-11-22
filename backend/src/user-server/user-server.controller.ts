@@ -13,7 +13,7 @@ import { Server } from '../server/server.entity';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
-import ResponseEntity from 'src/common/response-entity';
+import ResponseEntity from '../common/response-entity';
 
 @Controller('/api/users/servers')
 @UseGuards(LoginGuard)

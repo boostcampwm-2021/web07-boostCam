@@ -1,5 +1,5 @@
-import { Channel } from 'src/channel/channel.entity';
-import { User } from 'src/user/user.entity';
+import { Channel } from '../channel/channel.entity';
+import { User } from '../user/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Status, CamMap } from 'src/types/cam';
+import { Status, CamMap } from '../types/cam';
 
 type RoomId = string;
 type SocketId = string;
