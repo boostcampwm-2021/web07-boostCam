@@ -176,13 +176,13 @@ function UpdateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<UpdateModalForm>();
-  const { selectedServer, rightClickedChannel, setIsUpdateChannelModalOpen, getServerChannelList } =
+  const { selectedServer, rightClickedChannelId, setIsUpdateChannelModalOpen, getServerChannelList } =
     useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch(`api/channel/${rightClickedChannel}`, {
+    await fetch(`api/channel/${rightClickedChannelId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ function UpdateChannelModal(): JSX.Element {
   };
 
   const setSelectedChannelData = async () => {
-    const response = await fetch(`/api/channel/${rightClickedChannel}`);
+    const response = await fetch(`/api/channel/${rightClickedChannelId}`);
     const responseObj = await response.json();
     const channelData = responseObj.data;
     setValue('name', channelData.name);

@@ -11,7 +11,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
   const [selectedChannel, setSelectedChannel] = useState<string>('1');
-  const [rightClickedChannel, setRightClickedChannel] = useState<string>('1');
+  const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
+  const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
   const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
 
   const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] = useState<boolean>(false);
@@ -46,7 +47,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
       value={{
         selectedServer,
         selectedChannel,
-        rightClickedChannel,
+        rightClickedChannelId,
+        rightClickedChannelName,
         isCreateChannelModalOpen,
         isJoinChannelModalOpen,
         isUpdateChannelModalOpen,
@@ -60,7 +62,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
         serverList,
         setSelectedServer,
         setSelectedChannel,
-        setRightClickedChannel,
+        setRightClickedChannelId,
+        setRightClickedChannelName,
         setIsCreateChannelModalOpen,
         setIsJoinChannelModalOpen,
         setIsUpdateChannelModalOpen,

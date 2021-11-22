@@ -58,7 +58,8 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     isQuitChannelModalOpen,
     setIsUpdateChannelModalOpen,
     setIsQuitChannelModalOpen,
-    setRightClickedChannel,
+    setRightClickedChannelId,
+    setRightClickedChannelName,
   } = useContext(MainStoreContext);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { dataId, selected, name } = props;
@@ -71,7 +72,8 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
   const onRightClickChannelItem = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     const channelId = e.currentTarget.dataset.id;
-    setRightClickedChannel(channelId);
+    setRightClickedChannelId(channelId);
+    setRightClickedChannelName(name);
     setIsDropdownActivated(!isDropdownActivated);
   };
 
