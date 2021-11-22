@@ -164,15 +164,47 @@ const CloseIcon = styled(Close)`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsServerSettingModalOpen } = useContext(MainStoreContext);
+  const { setIsServerSettingModalOpen, selectedServer, setServerList, setSelectedServer } =
+    useContext(MainStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
+  const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
   const onChangePreviewImage = (e: React.ChangeEvent & { target: HTMLInputElement }) => {
     const file = e.target.files;
 
     if (file) {
       setImagePreview(URL.createObjectURL(file[0]));
+    }
+  };
+
+  const getServerList = async (): Promise<void> => {
+    const response = await fetch(`/api/user/servers`);
+    const list = await response.json();
+
+    if (response.status === 200 && list.data.length !== 0) {
+      setServerList(list.data);
+      setSelectedServer(list.data[list.data.length - 1]);
+    }
+  };
+
+  const onClickDeleteServer = async () => {
+    const serverId = selectedServer?.server.id;
+
+    if (serverId) {
+      const response = await fetch(`api/servers/${serverId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.status === 204) {
+        getServerList();
+        setIsServerSettingModalOpen(false);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
     }
   };
 
@@ -222,11 +254,11 @@ function ServerSettingModal(): JSX.Element {
             </InputDiv>
             <InputDiv>
               <InputName>서버 삭제</InputName>
-              <SubmitButton type="submit" isButtonActive={isButtonActive}>
+              <SubmitButton type="submit" isButtonActive={isButtonActive} onClick={onClickDeleteServer}>
                 서버 삭제
               </SubmitButton>
             </InputDiv>
-            <MessageFailToPost>에러메시지</MessageFailToPost>
+            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
           </Form>
         </ModalInnerBox>
       </ModalBox>

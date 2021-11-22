@@ -11,6 +11,7 @@ import {
   HttpException,
   UseInterceptors,
   UploadedFile,
+  HttpCode,
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
@@ -94,12 +95,10 @@ export class ServerController {
     });
   }
 
-  @Delete('/:id') async deleteServer(@Param('id') id: number): Promise<string> {
+  @Delete('/:id')
+  @HttpCode(204)
+  async deleteServer(@Param('id') id: number): Promise<ResponseEntity<string>> {
     await this.serverService.deleteServer(id);
-    return Object.assign({
-      data: { id },
-      statusCode: 200,
-      statusMsg: `deleted successfully`,
-    });
+    return ResponseEntity.noContent();
   }
 }
