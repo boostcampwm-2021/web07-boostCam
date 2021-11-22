@@ -12,6 +12,7 @@ import ServerSettingModal from './ServerModal/ServerSettingModal';
 import ServerInfoModal from './ServerModal/ServerInfoModal';
 import QuitServerModal from './ServerModal/QuitServerModal';
 import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
+import QuitChannelModal from './ChannelModal/QuitChannelModal ';
 
 const Container = styled.div`
   width: 100vw;
@@ -28,6 +29,7 @@ function MainPage(): JSX.Element {
     isCreateChannelModalOpen,
     isJoinChannelModalOpen,
     isUpdateChannelModalOpen,
+    isQuitChannelModalOpen,
     isCreateServerModalOpen,
     isJoinServerModalOpen,
     isServerInfoModalOpen,
@@ -41,6 +43,7 @@ function MainPage(): JSX.Element {
       {isCreateChannelModalOpen && <CreateChannelModal />}
       {isJoinChannelModalOpen && <JoinChannelModal />}
       {isUpdateChannelModalOpen && <UpdateChannelModal />}
+      {isQuitChannelModalOpen && <QuitChannelModal />}
       {isCreateServerModalOpen && <CreateServerModal />}
       {isJoinServerModalOpen && <JoinServerModal />}
       {isServerSettingModalOpen && <ServerSettingModal />}
