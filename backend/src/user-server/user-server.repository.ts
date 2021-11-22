@@ -16,4 +16,11 @@ export class UserServerRepository extends Repository<UserServer> {
       .andWhere('user_server.server = :serverId', { serverId: serverId })
       .delete();
   }
+
+  findByUserIdAndServerId(userId: number, serverId: number) {
+    return this.createQueryBuilder('user_server')
+      .where('user_server.user = :userId', { userId: userId })
+      .andWhere('user_server.server = :serverId', { serverId: serverId })
+      .getOne();
+  }
 }
