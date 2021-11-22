@@ -16,7 +16,7 @@ import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
 import { CreateChannelDto } from './channe.dto';
 import { UserChannelService } from '../user-channel/user-channel.service';
-import ResponseEntity from '../lib/ResponseEntity';
+import ResponseEntity from '../common/response-entity';
 
 @Controller('api/channel')
 @UseGuards(LoginGuard)

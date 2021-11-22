@@ -180,7 +180,7 @@ function CreateChannelModal(): JSX.Element {
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch('api/channel', {
+    await fetch('/api/channel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ function CreateChannelModal(): JSX.Element {
       body: JSON.stringify({
         name: name.trim(),
         description: description.trim(),
-        serverId: +selectedServer,
+        serverId: selectedServer.server.id,
       }),
     });
     getServerChannelList();

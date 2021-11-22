@@ -22,7 +22,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
   const getServerChannelList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/channels/joined/${selectedServer}`);
+    const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
     const list = await response.json();
     setServerChannelList(list.data);
   };
