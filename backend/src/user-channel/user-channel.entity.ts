@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Server } from '../server/server.entity';
-import { Channel } from 'src/channel/channel.entity';
+import { Channel } from '../channel/channel.entity';
 
 @Entity()
 export class UserChannel {

@@ -15,8 +15,8 @@ import { ExpressSession } from '../types/session';
 import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
 import { CreateChannelDto } from './channe.dto';
-import { UserChannelService } from 'src/user-channel/user-channel.service';
-import ResponseEntity from 'src/lib/ResponseEntity';
+import { UserChannelService } from '../user-channel/user-channel.service';
+import ResponseEntity from '../lib/ResponseEntity';
 
 @Controller('api/channel')
 @UseGuards(LoginGuard)

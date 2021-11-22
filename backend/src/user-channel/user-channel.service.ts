@@ -4,8 +4,8 @@ import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 
 import { UserChannelRepository } from './user-channel.repository';
 import { UserChannel } from './user-channel.entity';
-import { Channel } from 'src/channel/channel.entity';
-import { UserRepository } from 'src/user/user.repository';
+import { Channel } from '../channel/channel.entity';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class UserChannelService {
