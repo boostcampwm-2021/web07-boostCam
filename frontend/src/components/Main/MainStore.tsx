@@ -1,7 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
 
-import { ChannelData } from '../../types/main';
-
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
 type MainStoreProps = {
