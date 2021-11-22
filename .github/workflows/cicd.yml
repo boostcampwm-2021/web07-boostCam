@@ -59,6 +59,10 @@ jobs:
           ^DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           ^DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           ^DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          ^NCP_STORAGE_ACCESS_KEY: ${{ secrets.NCP_STORAGE_ACCESS_KEY }}
+          ^NCP_STORAGE_SECRET_KEY: ${{ secrets.NCP_STORAGE_SECRET_KEY }}
+          ^NCP_STORAGE_BUCKET_NAME: ${{ secrets.NCP_STORAGE_BUCKET_NAME }}
+          ^NCP_STORAGE_REGION: ${{ secrets.NCP_STORAGE_REGION }}
       - name: Create .env.github
         uses: weyheyhey/create-dotenv-action@v1
         with:
@@ -138,6 +142,11 @@ jobs:
           ^DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           ^DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           ^DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          ^NCP_STORAGE_ACCESS_KEY: ${{ secrets.NCP_STORAGE_ACCESS_KEY }}
+          ^NCP_STORAGE_SECRET_KEY: ${{ secrets.NCP_STORAGE_SECRET_KEY }}
+          ^NCP_STORAGE_BUCKET_NAME: ${{ secrets.NCP_STORAGE_BUCKET_NAME }}
+          ^NCP_STORAGE_REGION: ${{ secrets.NCP_STORAGE_REGION }}
+
       - name: Create .env.github
         uses: weyheyhey/create-dotenv-action@v1
         with:
