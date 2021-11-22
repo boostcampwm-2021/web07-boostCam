@@ -3,8 +3,10 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
-import { ServerData } from '../../types/main';
+import { MyServerData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
+import Dropdown from '../core/Dropdown';
+import DropdownMenu from '../core/DropdownMenu';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -26,8 +28,6 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
   height: 60px;
 
   margin-top: 10px;
-
-  background-color: white;
   box-sizing: border-box;
   ${(props) => (props.selected ? 'border: 5px solid gray;' : '')}
 
@@ -36,18 +36,30 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-
   &:hover {
     cursor: pointer;
   }
 `;
 
 const ServerImg = styled.div<{ imgUrl: string }>`
-  width: 40px;
-  height: 40px;
+  width: 55px;
+  height: 55px;
   background-image: url(${(props) => props.imgUrl});
   background-size: cover;
   background-repeat: no-repeat;
+  border-radius: 20px;
+  position: fixed;
+`;
+
+const ServerName = styled.div`
+  width: 55px;
+  height: 55px;
+  font-size: 40px;
+  font-weight: bold;
+  background-color: white;
+  border-radius: 20px;
+  text-align: center;
+  position: fixed;
 `;
 
 const AddServerButton = styled.div`
@@ -71,35 +83,52 @@ const PlusIcon = styled(Plus)`
   fill: #a69c96;
 `;
 
-const tmpUrl: string[] = [
-  'https://miro.medium.com/max/2000/0*wwsAZUu1oClOuat-.png',
-  'https://miro.medium.com/max/2000/0*Jx_rwR_dmW4y1g-7.png',
-  'https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png',
-];
-
 function ServerListTab(): JSX.Element {
-  const [serverList, setServerList] = useState<ServerData[]>([]);
-  const { selectedServer, setSelectedServer } = useContext(MainStoreContext);
+  const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
+  const {
+    selectedServer,
+    setSelectedServer,
+    isCreateServerModalOpen,
+    isJoinServerModalOpen,
+    setIsCreateServerModalOpen,
+    setIsJoinServerModalOpen,
+    serverList,
+    setServerList,
+  } = useContext(MainStoreContext);
+
   const initChannel = '1';
   const navigate = useNavigate();
 
-  const onClickServerIcon = (e: React.MouseEvent<HTMLDivElement>) => {
-    const serverId = e.currentTarget.dataset.id;
-    if (serverId) setSelectedServer(serverId);
-  };
-
   const getServerList = async (): Promise<void> => {
-    const userIdExam = 1;
-    const response = await fetch(`/api/user/${userIdExam}/servers`);
+    const response = await fetch(`/api/user/servers`);
     const list = await response.json();
-    setServerList(list);
+
+    if (response.status === 200 && list.data.length !== 0) {
+      setServerList(list.data);
+      setSelectedServer(list.data[0]);
+    }
   };
 
-  const listElements = serverList.map((val: ServerData, idx: number): JSX.Element => {
-    const selected = selectedServer === val.id;
+  const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setIsDropdownActivated(!isDropdownActivated);
+  };
+  const listElements = serverList.map((myServerData: MyServerData): JSX.Element => {
+    const selected = selectedServer !== undefined ? selectedServer.id === myServerData.id : false;
+    const onClickChangeSelectedServer = () => {
+      setSelectedServer(myServerData);
+    };
+    const { server } = myServerData;
+    const { imgUrl, name } = server;
+
     return (
-      <ServerIconBox key={val.id} data-id={val.id} selected={selected} onClick={onClickServerIcon}>
-        <ServerImg imgUrl={tmpUrl[idx]} />
+      <ServerIconBox
+        key={myServerData.id}
+        data-id={myServerData.id}
+        selected={selected}
+        onClick={onClickChangeSelectedServer}
+      >
+        {imgUrl ? <ServerImg imgUrl={imgUrl} /> : <ServerName>{name[0]}</ServerName>}
       </ServerIconBox>
     );
   });
@@ -109,9 +138,10 @@ function ServerListTab(): JSX.Element {
   }, []);
 
   useEffect(() => {
+    const serverId = selectedServer !== undefined ? selectedServer.server.id : 'none';
     navigate({
       search: `?${createSearchParams({
-        serverId: selectedServer,
+        serverId,
         channelId: initChannel,
       })}`,
     });
@@ -121,7 +151,21 @@ function ServerListTab(): JSX.Element {
     <Container>
       {listElements}
       <AddServerButton>
-        <PlusIcon />
+        <PlusIcon onClick={onClickServerAddButton} />
+        <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
+          <DropdownMenu
+            name="서버 생성"
+            setIsDropdownActivated={setIsDropdownActivated}
+            state={isCreateServerModalOpen}
+            stateSetter={setIsCreateServerModalOpen}
+          />
+          <DropdownMenu
+            name="서버 참가"
+            setIsDropdownActivated={setIsDropdownActivated}
+            state={isJoinServerModalOpen}
+            stateSetter={setIsJoinServerModalOpen}
+          />
+        </Dropdown>
       </AddServerButton>
     </Container>
   );

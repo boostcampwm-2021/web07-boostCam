@@ -9,7 +9,12 @@ type ServerData = {
   description: string;
   id: string;
   name: string;
-  owner: UserData;
+  imgUrl: string;
+};
+
+type MyServerData = {
+  id: string;
+  server: ServerData;
 };
 
 type ChannelData = {
@@ -18,4 +23,4 @@ type ChannelData = {
   name: string;
 };
 
-export type { UserData, ServerData, ChannelData };
+export type { UserData, ServerData, MyServerData, ChannelData };
