@@ -8,13 +8,13 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { Channel } from 'src/channel/channel.entity';
-import ResponseEntity from 'src/lib/ResponseEntity';
-import { LoginGuard } from 'src/login/login.guard';
+import ResponseEntity from '../lib/ResponseEntity';
+import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserChannelService } from './user-channel.service';
-import { ChannelService } from 'src/channel/channel.service';
+import { ChannelService } from '../channel/channel.service';
 import { UserChannel } from './user-channel.entity';
+import { Channel } from '../channel/channel.entity';
 
 @Controller('/api/user/channels')
 @UseGuards(LoginGuard)
