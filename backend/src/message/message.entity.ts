@@ -24,4 +24,12 @@ export class Message {
 
   @ManyToOne(() => User)
   sender: User;
+
+  static newInstace(contents: string, channel: Channel, sender: User): Message {
+    const newMessage = new Message();
+    newMessage.contents = contents;
+    newMessage.channel = channel;
+    newMessage.sender = sender;
+    return newMessage;
+  }
 }
