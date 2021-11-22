@@ -188,7 +188,7 @@ function CreateChannelModal(): JSX.Element {
       body: JSON.stringify({
         name: name.trim(),
         description: description.trim(),
-        serverId: +selectedServer,
+        serverId: selectedServer.server.id,
       }),
     });
     getServerChannelList();
