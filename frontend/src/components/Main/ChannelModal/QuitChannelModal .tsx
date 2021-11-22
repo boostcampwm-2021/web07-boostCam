@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-import { ChannelData } from '../../../types/main';
 
 const { Close } = BoostCamMainIcons;
 
