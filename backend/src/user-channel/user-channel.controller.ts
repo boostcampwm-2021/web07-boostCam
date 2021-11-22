@@ -8,7 +8,7 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import ResponseEntity from '../common/response-entity';
+import ResponseEntity from '../lib/ResponseEntity';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserChannelService } from './user-channel.service';
@@ -16,7 +16,7 @@ import { ChannelService } from '../channel/channel.service';
 import { UserChannel } from './user-channel.entity';
 import { Channel } from '../channel/channel.entity';
 
-@Controller('/api/user/servers')
+@Controller('/api/user/channels')
 @UseGuards(LoginGuard)
 export class UserChannelController {
   constructor(
@@ -27,7 +27,7 @@ export class UserChannelController {
     this.channelService = channelService;
   }
 
-  @Get('/:id/channels/joined/')
+  @Get('/joined/:id')
   async getJoinedChannelList(
     @Param('id') serverId: number,
     @Session() session: ExpressSession,
@@ -42,7 +42,7 @@ export class UserChannelController {
     return ResponseEntity.ok<Channel[]>(joinedChannelList);
   }
 
-  @Get('/:id/channels/notjoined/')
+  @Get('/notjoined/:id')
   async getNotJoinedChannelList(
     @Param('id') serverId: number,
     @Session() session: ExpressSession,
