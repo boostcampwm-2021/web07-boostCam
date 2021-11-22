@@ -6,9 +6,10 @@ import { MessageController } from './message.controller';
 import { MessageService } from './message.service';
 import { User } from '../user/user.entity';
 import { Channel } from '../channel/channel.entity';
+import { UserServer } from '../user-server/user-server.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Message, User, Channel])],
+  imports: [TypeOrmModule.forFeature([Message, User, Channel, UserServer])],
   controllers: [MessageController],
   providers: [MessageService],
 })
