@@ -175,7 +175,7 @@ function UpdateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<UpdateModalForm>();
-  const { selectedServer, selectedChannel, setIsUpdateChannelModalOpen, getServerChannelList } =
+  const { selectedServer, selectedChannel, rightClickedChannel, setIsUpdateChannelModalOpen, getServerChannelList } =
     useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
@@ -197,8 +197,8 @@ function UpdateChannelModal(): JSX.Element {
   };
 
   const getSelectedChannelData = async () => {
-    console.log(selectedServer, selectedChannel);
-    const response = await fetch(`/api/channel/${selectedChannel}`);
+    console.log(selectedServer, selectedChannel, rightClickedChannel);
+    const response = await fetch(`/api/channel/${rightClickedChannel}`);
     const data = await response.json();
     console.log(data);
   };
