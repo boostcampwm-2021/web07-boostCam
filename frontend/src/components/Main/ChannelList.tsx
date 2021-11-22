@@ -134,10 +134,6 @@ function ChannelList(): JSX.Element {
   };
 
   useEffect(() => {
-    getChannelList();
-  }, []);
-
-  useEffect(() => {
     const serverId = selectedServer?.server?.id || 'none';
 
     navigate({
