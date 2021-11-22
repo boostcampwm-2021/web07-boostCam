@@ -29,11 +29,16 @@ const Container = styled.div<{ selected: boolean }>`
 
 const ChannelNameSpan = styled.span`
   padding: 5px 0px 5px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const HashIcon = styled(Hash)`
   width: 15px;
+  min-width: 15px;
   height: 15px;
+  min-height: 15px;
   fill: #a69c96;
 `;
 
