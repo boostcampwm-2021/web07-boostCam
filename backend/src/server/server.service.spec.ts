@@ -6,7 +6,7 @@ import { UserServer } from '../user-server/user-server.entity';
 import { UserServerRepository } from '../user-server/user-server.repository';
 import { UserServerService } from '../user-server/user-server.service';
 import { User } from '../user/user.entity';
-import RequestServerDto from './dto/RequestServerDto';
+import RequestServerDto from './dto/request-server.dto';
 import { Server } from './server.entity';
 import { ServerRepository } from './server.repository';
 import { ServerService } from './server.service';

@@ -15,10 +15,9 @@ import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
 import ResponseEntity from '../common/response-entity';
-import { User } from '../user/user.entity';
 
 @Controller('/api/users/servers')
-// @UseGuards(LoginGuard)
+@UseGuards(LoginGuard)
 export class UserServerController {
   constructor(private userServerService: UserServerService) {}
 

@@ -170,7 +170,8 @@ describe('UserServerService', () => {
 
       const userServerList = await service.getServerListByUserId(userId);
 
-      expect(userServerList[0]).toBe(existUserServer);
+      expect(userServerList[0].id).toBe(existUserServer.id);
+      expect(userServerList[0].server).toBe(existUserServer.server);
     });
   });
 

@@ -18,7 +18,7 @@ import {
 import { ServerService } from './server.service';
 import { Server } from './server.entity';
 import { LoginGuard } from '../login/login.guard';
-import RequestServerDto from './dto/RequestServerDto';
+import RequestServerDto from './dto/request-server.dto';
 import { ExpressSession } from '../types/session';
 import ResponseEntity from '../common/response-entity';
 import { FileInterceptor } from '@nestjs/platform-express';

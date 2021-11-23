@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../user/user.entity';
 import { Server } from './server.entity';
-import RequestServerDto from './dto/RequestServerDto';
+import RequestServerDto from './dto/request-server.dto';
 import { UserServerService } from '../user-server/user-server.service';
 import { ServerRepository } from './server.repository';
 

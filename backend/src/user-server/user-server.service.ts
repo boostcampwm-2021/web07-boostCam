@@ -10,6 +10,7 @@ import { UserServer } from './user-server.entity';
 import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
 import { ServerService } from '../server/server.service';
+import UserServerListDto from './dto/user-server-list.dto';
 
 @Injectable()
 export class UserServerService {
@@ -62,7 +63,17 @@ export class UserServerService {
     );
   }
 
-  getServerListByUserId(userId: number): Promise<UserServer[]> {
-    return this.userServerRepository.getServerListByUserId(userId);
+  async getServerListByUserId(userId: number): Promise<UserServerListDto[]> {
+    const userServerListDto = [];
+
+    const userServerList =
+      await this.userServerRepository.getServerListByUserId(userId);
+    userServerList.map((userServer) => {
+      userServerListDto.push(
+        new UserServerListDto(userServer.id, userServer.server),
+      );
+    });
+
+    return userServerListDto;
   }
 }
