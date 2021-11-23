@@ -12,6 +12,7 @@ import { Server } from './server.entity';
 import RequestServerDto from './dto/request-server.dto';
 import { UserServerService } from '../user-server/user-server.service';
 import { ServerRepository } from './server.repository';
+import { request } from 'http';
 
 @Injectable()
 export class ServerService {
@@ -35,13 +36,11 @@ export class ServerService {
     requestServerDto: RequestServerDto,
     imgUrl: string | undefined,
   ): Promise<Server> {
-    const newServer = new Server();
-    newServer.name = requestServerDto.name;
-    newServer.description = requestServerDto.description;
-    newServer.owner = user;
-    newServer.imgUrl = imgUrl || '';
+    const server = requestServerDto.toServerEntity();
+    server.owner = user;
+    server.imgUrl = imgUrl || '';
 
-    const createdServer = await this.serverRepository.save(newServer);
+    const createdServer = await this.serverRepository.save(server);
     this.userServerService.create(user, createdServer.id);
 
     return createdServer;

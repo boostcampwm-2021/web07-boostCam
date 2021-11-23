@@ -66,6 +66,10 @@ export class ServerController {
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<number>> {
     try {
+      requestServerDto = new RequestServerDto(
+        requestServerDto.name,
+        requestServerDto.description,
+      );
       let imgUrl: string;
 
       if (icon !== undefined && icon.mimetype.substring(0, 5) === 'image') {
