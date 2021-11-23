@@ -168,72 +168,60 @@ type CreateModalForm = {
   description: string;
 };
 
-function CreateChannelModal(): JSX.Element {
+function CreateCamModal(): JSX.Element {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateChannelModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsCreateCamModalOpen } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
-  const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
-    const { name, description } = data;
-    await fetch('api/channel', {
+  const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
+    const { name } = data;
+    await fetch('api/cams', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: name.trim(),
-        description: description.trim(),
         serverId: selectedServer.server.id,
       }),
     });
-    getServerChannelList();
-    setIsCreateChannelModalOpen(false);
+    setIsCreateCamModalOpen(false);
   };
 
   useEffect(() => {
-    const { name, description } = watch();
-    const isActive = name.trim().length > 2 && description.trim().length > 0;
+    const { name } = watch();
+    const isActive = name.trim().length > 2;
     setIsButtonActive(isActive);
   }, [watch()]);
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateChannelModalOpen(false)} />
+      <ModalBackground onClick={() => setIsCreateCamModalOpen(false)} />
       <ModalBox>
         <ModalInnerBox>
           <ModalHeader>
-            <ModalTitle>채널 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateChannelModalOpen(false)}>
+            <ModalTitle>Cam 생성</ModalTitle>
+            <ModalCloseButton onClick={() => setIsCreateCamModalOpen(false)}>
               <CloseIcon />
             </ModalCloseButton>
           </ModalHeader>
-          <ModalDescription>생성할 채널의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
+          <ModalDescription>생성할 Cam의 이름을 작성해주세요</ModalDescription>
+          <Form onSubmit={handleSubmit(onSubmitCreateCamModal)}>
             <InputDiv>
               <InputName>이름</InputName>
               <Input
                 {...register('name', {
                   validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
                 })}
-                placeholder="채널명을 입력해주세요"
+                placeholder="Cam명을 입력해주세요"
               />
               {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>설명</InputName>
-              <Input
-                {...register('description', {
-                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-                })}
-                placeholder="채널 설명을 입력해주세요"
-              />
-              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
             </InputDiv>
             <SubmitButton type="submit" isButtonActive={isButtonActive}>
               생성
@@ -245,4 +233,4 @@ function CreateChannelModal(): JSX.Element {
   );
 }
 
-export default CreateChannelModal;
+export default CreateCamModal;

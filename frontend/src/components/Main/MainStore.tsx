@@ -28,6 +28,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
 
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
+  const [isCreateCamModalOpen, setIsCreateCamModalOpen] = useState<boolean>(false);
+
   const getServerChannelList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
     const list = await response.json();
@@ -48,6 +50,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
       setSelectedServer(list.data[selectedServerIndex]);
     }
   };
+
+  // const getServerCamList = async (): Promise<void> => {
+  //   const response = await fetch(``); API를 만든 다음에 연결하기
+  // };
 
   useEffect(() => {
     if (selectedServer) getServerChannelList();
@@ -70,6 +76,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         isServerInfoModalOpen,
         isServerSettingModalOpen,
         isQuitServerModalOpen,
+        isCreateCamModalOpen,
         serverList,
         setSelectedServer,
         setSelectedChannel,
@@ -86,6 +93,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsServerInfoModalOpen,
         setIsServerSettingModalOpen,
         setIsQuitServerModalOpen,
+        setIsCreateCamModalOpen,
         setServerList,
         getUserServerList,
       }}
