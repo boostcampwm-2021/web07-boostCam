@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import RoomListSection from './RoomListSection';
-import ContentsSection from './ContentsSection';
+import ContentsSection from './ContentsSection/ContentsSection';
 import MainHeader from './MainHeader';
 
 const Container = styled.div`
