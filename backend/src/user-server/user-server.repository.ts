@@ -23,4 +23,12 @@ export class UserServerRepository extends Repository<UserServer> {
       .andWhere('user_server.server = :serverId', { serverId: serverId })
       .getOne();
   }
+
+  findWithServerOwner(id: number) {
+    return this.createQueryBuilder('user_server')
+      .leftJoinAndSelect('user_server.server', 'server')
+      .leftJoinAndSelect('server.owner', 'user')
+      .where('user_server.id = :id', { id: id })
+      .getOne();
+  }
 }

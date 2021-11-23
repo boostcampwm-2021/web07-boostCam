@@ -15,9 +15,10 @@ import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
 import ResponseEntity from '../common/response-entity';
+import { User } from '../user/user.entity';
 
 @Controller('/api/users/servers')
-@UseGuards(LoginGuard)
+// @UseGuards(LoginGuard)
 export class UserServerController {
   constructor(private userServerService: UserServerService) {}
 
@@ -44,9 +45,14 @@ export class UserServerController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: number) {
+  async delete(
+    @Session()
+    session: ExpressSession,
+    @Param('id') id: number,
+  ) {
     try {
-      this.userServerService.deleteById(id);
+      const userId = session.user.id;
+      await this.userServerService.deleteById(id, userId);
       return ResponseEntity.noContent();
     } catch (error) {
       if (error instanceof HttpException) {
