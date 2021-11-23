@@ -4,13 +4,15 @@ import styled from 'styled-components';
 import ServerListTab from './ServerListTab';
 import MainSection from './MainSection';
 import { MainStoreContext } from './MainStore';
-import CreateChannelModal from './Modal/CreateChannelModal';
-import JoinChannelModal from './Modal/JoinChannelModal';
+import CreateChannelModal from './ChannelModal/CreateChannelModal';
+import JoinChannelModal from './ChannelModal/JoinChannelModal';
 import CreateServerModal from './ServerModal/CreateServerModal';
 import JoinServerModal from './ServerModal/JoinServerModal';
 import ServerSettingModal from './ServerModal/ServerSettingModal';
 import ServerInfoModal from './ServerModal/ServerInfoModal';
 import QuitServerModal from './ServerModal/QuitServerModal';
+import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
+import QuitChannelModal from './ChannelModal/QuitChannelModal ';
 
 const Container = styled.div`
   width: 100vw;
@@ -24,8 +26,10 @@ const Container = styled.div`
 
 function MainPage(): JSX.Element {
   const {
-    isCreateModalOpen,
-    isJoinModalOpen,
+    isCreateChannelModalOpen,
+    isJoinChannelModalOpen,
+    isUpdateChannelModalOpen,
+    isQuitChannelModalOpen,
     isCreateServerModalOpen,
     isJoinServerModalOpen,
     isServerInfoModalOpen,
@@ -36,8 +40,10 @@ function MainPage(): JSX.Element {
 
   return (
     <Container>
-      {isCreateModalOpen && <CreateChannelModal />}
-      {isJoinModalOpen && <JoinChannelModal />}
+      {isCreateChannelModalOpen && <CreateChannelModal />}
+      {isJoinChannelModalOpen && <JoinChannelModal />}
+      {isUpdateChannelModalOpen && <UpdateChannelModal />}
+      {isQuitChannelModalOpen && <QuitChannelModal />}
       {isCreateServerModalOpen && <CreateServerModal />}
       {isJoinServerModalOpen && <JoinServerModal />}
       {isServerSettingModalOpen && <ServerSettingModal />}

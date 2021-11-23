@@ -11,7 +11,7 @@ import { UserChannelRepository } from './user-channel.repository';
 import { UserChannelService } from './user-channel.service';
 import { ServerRepository } from '../server/server.repository';
 import { Server } from '../server/server.entity';
-import { ChannelRepository } from '../channel/user.repository';
+import { ChannelRepository } from '../channel/channel.repository';
 
 @Module({
   imports: [

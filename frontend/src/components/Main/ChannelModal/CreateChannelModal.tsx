@@ -175,7 +175,7 @@ function CreateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsCreateChannelModalOpen, getServerChannelList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
@@ -192,7 +192,7 @@ function CreateChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    setIsCreateModalOpen(false);
+    setIsCreateChannelModalOpen(false);
   };
 
   useEffect(() => {
@@ -204,12 +204,12 @@ function CreateChannelModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateModalOpen(false)} />
+      <ModalBackground onClick={() => setIsCreateChannelModalOpen(false)} />
       <ModalBox>
         <ModalInnerBox>
           <ModalHeader>
             <ModalTitle>채널 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateModalOpen(false)}>
+            <ModalCloseButton onClick={() => setIsCreateChannelModalOpen(false)}>
               <CloseIcon />
             </ModalCloseButton>
           </ModalHeader>

@@ -4,6 +4,8 @@ import styled from 'styled-components';
 const Container = styled.li`
   border-bottom: 1px solid #dddddd;
 
+  padding: 2px 5px;
+
   &:last-child {
     border: none;
   }
