@@ -14,11 +14,7 @@ export class CamsService {
     @InjectRepository(Cams) private camsRepository: CamsRepository,
     @InjectRepository(Server) private serverRepository: ServerRepository,
     @Inject(CamService) private readonly camService: CamService,
-  ) {
-    this.camsRepository = camsRepository;
-    this.serverRepository = serverRepository;
-    this.camService = camService;
-  }
+  ) {}
 
   findOne(id: number): Promise<Cams> {
     return this.camsRepository.findOne({ id: id }, { relations: ['server'] });

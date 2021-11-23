@@ -195,6 +195,19 @@ function CreateChannelModal(): JSX.Element {
     setIsCreateChannelModalOpen(false);
   };
 
+  const createCams = async () => {
+    await fetch('api/cams', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'test',
+        serverId: selectedServer.server.id,
+      }),
+    });
+  };
+
   useEffect(() => {
     const { name, description } = watch();
     const isActive = name.trim().length > 2 && description.trim().length > 0;
@@ -239,6 +252,9 @@ function CreateChannelModal(): JSX.Element {
               생성
             </SubmitButton>
           </Form>
+          <button type="button" onClick={createCams}>
+            테스트!
+          </button>
         </ModalInnerBox>
       </ModalBox>
     </Container>
