@@ -10,7 +10,7 @@ type MainStoreProps = {
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
-  const [selectedChannel, setSelectedChannel] = useState<string>('1');
+  const [selectedChannel, setSelectedChannel] = useState<string>('-1');
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
   const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
@@ -29,13 +29,17 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
   const getServerChannelList = async (): Promise<void> => {
+    console.log(selectedServer?.server.id);
     const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
     const list = await response.json();
     const channelList = list.data;
+    console.log(channelList);
     if (channelList.length) {
       setSelectedChannel(channelList[0].id);
-      setServerChannelList(channelList);
+    } else {
+      setSelectedChannel('-1');
     }
+    setServerChannelList(channelList);
   };
 
   const getUserServerList = async (isServerOrUserServerCreated: boolean): Promise<void> => {
@@ -50,6 +54,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   };
 
   useEffect(() => {
+    console.log(selectedServer);
     if (selectedServer) getServerChannelList();
   }, [selectedServer]);
 
