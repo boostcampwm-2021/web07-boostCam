@@ -192,20 +192,10 @@ function CreateServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { setIsCreateServerModalOpen, setServerList, setSelectedServer } = useContext(MainStoreContext);
+  const { setIsCreateServerModalOpen, getUserServerList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
   const [imagePreview, setImagePreview] = useState<string>();
-
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200 && list.data.length !== 0) {
-      setServerList(list.data);
-      setSelectedServer(list.data[list.data.length - 1]);
-    }
-  };
 
   const onSubmitCreateServerModal = async (data: { name: string; description: string; file: FileList }) => {
     const formData = new FormData();
@@ -221,7 +211,8 @@ function CreateServerModal(): JSX.Element {
     });
 
     if (response.status === 201) {
-      getServerList();
+      const isServerOrUserServerCreated = true;
+      getUserServerList(isServerOrUserServerCreated);
       setIsCreateServerModalOpen(false);
     } else {
       const body = await response.json();

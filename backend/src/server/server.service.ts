@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../user/user.entity';
@@ -14,9 +20,7 @@ export class ServerService {
     private readonly userServerService: UserServerService,
     @InjectRepository(ServerRepository)
     private serverRepository: ServerRepository,
-  ) {
-    this.serverRepository = serverRepository;
-  }
+  ) {}
 
   findAll(): Promise<Server[]> {
     return this.serverRepository.find({ relations: ['owner'] });
@@ -47,8 +51,17 @@ export class ServerService {
     await this.serverRepository.update(id, server);
   }
 
-  async deleteServer(id: number): Promise<void> {
-    await this.serverRepository.delete({ id: id });
+  async deleteServer(id: number, user: User) {
+    const server = await this.serverRepository.findOneWithOwner(id);
+
+    if (!server) {
+      throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
+    if (server.owner.id !== user.id) {
+      throw new ForbiddenException('삭제 권한이 없습니다.');
+    }
+
+    return this.serverRepository.delete({ id: id });
   }
 
   findOneWithUsers(serverId: number): Promise<Server> {

@@ -164,15 +164,37 @@ const CloseIcon = styled(Close)`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsServerSettingModalOpen } = useContext(MainStoreContext);
+  const { setIsServerSettingModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
+  const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
   const onChangePreviewImage = (e: React.ChangeEvent & { target: HTMLInputElement }) => {
     const file = e.target.files;
 
     if (file) {
       setImagePreview(URL.createObjectURL(file[0]));
+    }
+  };
+
+  const onClickDeleteServer = async () => {
+    const serverId = selectedServer?.server.id;
+
+    if (serverId) {
+      const response = await fetch(`api/servers/${serverId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.status === 204) {
+        const isServerOrUserServerCreated = false;
+        getUserServerList(isServerOrUserServerCreated);
+        setIsServerSettingModalOpen(false);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
     }
   };
 
@@ -222,11 +244,11 @@ function ServerSettingModal(): JSX.Element {
             </InputDiv>
             <InputDiv>
               <InputName>서버 삭제</InputName>
-              <SubmitButton type="submit" isButtonActive={isButtonActive}>
+              <SubmitButton type="submit" isButtonActive={isButtonActive} onClick={onClickDeleteServer}>
                 서버 삭제
               </SubmitButton>
             </InputDiv>
-            <MessageFailToPost>에러메시지</MessageFailToPost>
+            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
           </Form>
         </ModalInnerBox>
       </ModalBox>

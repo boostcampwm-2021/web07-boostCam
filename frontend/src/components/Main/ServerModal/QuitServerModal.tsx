@@ -139,23 +139,9 @@ const CloseIcon = styled(Close)`
 `;
 
 function QuitServerModal(): JSX.Element {
-  const { setIsQuitServerModalOpen, setServerList, setSelectedServer, selectedServer } = useContext(MainStoreContext);
+  const { setIsQuitServerModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
   const isButtonActive = true;
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
-
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200) {
-      setServerList(list.data);
-      if (list.data.length !== 0) {
-        setSelectedServer(list.data[0]);
-      } else {
-        setSelectedServer(undefined);
-      }
-    }
-  };
 
   const onClickQuitServer = async () => {
     const userServerId = selectedServer.id;
@@ -166,7 +152,8 @@ function QuitServerModal(): JSX.Element {
       },
     });
     if (response.status === 204) {
-      getServerList();
+      const isServerOrUserServerCreated = false;
+      getUserServerList(isServerOrUserServerCreated);
       setIsQuitServerModalOpen(false);
     } else {
       const body = await response.json();

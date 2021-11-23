@@ -1,5 +1,7 @@
+import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { DeleteResult } from 'typeorm';
 import { UserServer } from '../user-server/user-server.entity';
 import { UserServerRepository } from '../user-server/user-server.repository';
 import { UserServerService } from '../user-server/user-server.service';
@@ -21,6 +23,8 @@ const mockServerRepository = () => ({
   save: jest.fn(),
   findOne: jest.fn(),
   findOneWithUsers: jest.fn(),
+  findOneWithOwner: jest.fn(),
+  delete: jest.fn(),
 });
 
 type MockUserServerRepository = Partial<
@@ -36,7 +40,7 @@ describe('ServerService', () => {
   let requestServerDto: RequestServerDto;
   let newServer: Server;
   let newUserServer: UserServer;
-  let existServer: Server;
+  let existsServer: Server;
 
   const existsServerId = 1;
   const userId = 1;
@@ -89,13 +93,53 @@ describe('ServerService', () => {
 
   describe('findOneWithUsers()', () => {
     it('정상적인 값을 입력할 경우', async () => {
-      serverRepository.findOneWithUsers.mockResolvedValue(existServer);
+      serverRepository.findOneWithUsers.mockResolvedValue(existsServer);
 
       const serverWithUseres = await serverService.findOneWithUsers(
         existsServerId,
       );
 
-      expect(serverWithUseres).toBe(existServer);
+      expect(serverWithUseres).toBe(existsServer);
+    });
+  });
+
+  describe('deleteServer()', () => {
+    it('정상적인 값을 입력할 경우', async () => {
+      const deleteResult = new DeleteResult();
+      deleteResult.affected = 1;
+      serverRepository.findOneWithOwner.mockResolvedValue(existsServer);
+      serverRepository.delete.mockResolvedValue(deleteResult);
+
+      const result = await serverService.deleteServer(existsServerId, user);
+
+      expect(result.affected).toBe(deleteResult.affected);
+    });
+
+    it('서버가 존재하지 않을 경우', async () => {
+      const nonExistsId = 0;
+      serverRepository.findOneWithOwner.mockResolvedValue(undefined);
+
+      try {
+        await serverService.deleteServer(nonExistsId, user);
+      } catch (error) {
+        expect(error.response.message).toBe('존재하지 않는 서버입니다.');
+        expect(error.response.error).toBe('Bad Request');
+        expect(error.response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+      }
+    });
+
+    it('삭제 권한이 없을 경우', async () => {
+      const userNotOwner = new User();
+      userNotOwner.id = 0;
+      serverRepository.findOneWithOwner.mockResolvedValue(existsServer);
+
+      try {
+        await serverService.deleteServer(existsServerId, userNotOwner);
+      } catch (error) {
+        expect(error.response.message).toBe('삭제 권한이 없습니다.');
+        expect(error.response.error).toBe('Forbidden');
+        expect(error.response.statusCode).toBe(HttpStatus.FORBIDDEN);
+      }
     });
   });
 
@@ -111,7 +155,8 @@ describe('ServerService', () => {
     newServer.name = serverName;
     newServer.owner = user;
 
-    existServer = new Server();
-    existServer.id = existsServerId;
+    existsServer = new Server();
+    existsServer.id = existsServerId;
+    existsServer.owner = user;
   };
 });

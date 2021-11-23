@@ -93,21 +93,11 @@ function ServerListTab(): JSX.Element {
     setIsCreateServerModalOpen,
     setIsJoinServerModalOpen,
     serverList,
-    setServerList,
+    getUserServerList,
   } = useContext(MainStoreContext);
 
   const initChannel = '1';
   const navigate = useNavigate();
-
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200 && list.data.length !== 0) {
-      setServerList(list.data);
-      setSelectedServer(list.data[0]);
-    }
-  };
 
   const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     e.stopPropagation();
@@ -134,7 +124,8 @@ function ServerListTab(): JSX.Element {
   });
 
   useEffect(() => {
-    getServerList();
+    const isServerOrUserServerCreated = false;
+    getUserServerList(isServerOrUserServerCreated);
   }, []);
 
   useEffect(() => {
