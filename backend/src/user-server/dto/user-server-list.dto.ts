@@ -1,6 +1,6 @@
 import { Server } from '../../server/server.entity';
 
-class UserServerListDto {
+class UserServerDto {
   id: number;
   server: Server;
 
@@ -8,6 +8,10 @@ class UserServerListDto {
     this.id = id;
     this.server = server;
   }
+
+  static fromEntity(userServerEntity: UserServerDto) {
+    return new UserServerDto(userServerEntity.id, userServerEntity.server);
+  }
 }
 
-export default UserServerListDto;
+export default UserServerDto;
