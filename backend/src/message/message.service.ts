@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Channel } from '../channel/channel.entity';
 import { UserServer } from '../user-server/user-server.entity';
 import { User } from '../user/user.entity';
+import { MessageDto } from './message.dto';
 import { Message } from './message.entity';
 
 @Injectable()
@@ -20,7 +21,7 @@ export class MessageService {
     senderId: number,
     channelId: number,
     contents: string,
-  ): Promise<Message> {
+  ): Promise<MessageDto> {
     let newMessage;
 
     const userServer = await this.userServerRepository
@@ -39,6 +40,6 @@ export class MessageService {
 
     newMessage = Message.newInstace(contents, channel, sender);
     newMessage = await this.messageRepository.save(newMessage);
-    return newMessage;
+    return MessageDto.fromEntity(newMessage);
   }
 }
