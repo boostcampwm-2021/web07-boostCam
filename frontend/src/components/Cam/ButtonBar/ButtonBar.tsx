@@ -109,7 +109,7 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
   };
 
   const handleExit = () => {
-    window.location.href = '/camroom';
+    window.history.back();
   };
 
   const handleMouseOverCamPage = (): void => {

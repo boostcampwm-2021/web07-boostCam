@@ -38,20 +38,15 @@ export class CamGateway {
     client.data.userId = userId;
 
     client.on('disconnect', () => {
+      const { roomId, userId } = client.data;
       client.to(roomId).emit('userDisconnected', { userId });
+      if (!client.data.roomId || !client.data.userId) return;
       this.camInnerService.exitRoom(roomId, userId);
-    });
-  }
 
-  @SubscribeMessage('exitRoom')
-  handleExitRoom(client: Socket): void {
-    if (!client.data.roomId || !client.data.userId) return;
-    const { roomId, userId } = client.data;
-    client.to(roomId).emit('userDisconnected', { userId });
-    client.leave(roomId);
-    this.camInnerService.exitRoom(roomId, userId);
-    client.data.roomId = null;
-    client.data.userId = null;
+      client.leave(roomId);
+      client.data.roomId = null;
+      client.data.userId = null;
+    });
   }
 
   @SubscribeMessage('updateUserStatus')

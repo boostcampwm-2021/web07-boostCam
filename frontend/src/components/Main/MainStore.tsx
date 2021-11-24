@@ -128,6 +128,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsCreateCamModalOpen,
         setServerList,
         getUserServerList,
+        getServerCamList,
       }}
     >
       {children}

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { ServerRepository } from '../server/server.repository';
 import { CreateCamDto, ResponseCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
@@ -11,11 +16,12 @@ export class CamService {
   constructor(
     private camRepository: CamRepository,
     private serverRepository: ServerRepository,
+    @Inject(forwardRef(() => CamInnerService))
     private readonly camInnerService: CamInnerService,
   ) {}
 
-  findOne(id: number): Promise<Cam> {
-    return this.camRepository.findOne({ id: id }, { relations: ['server'] });
+  findOne(url: string): Promise<Cam> {
+    return this.camRepository.findOne({ url: url });
   }
 
   async createCam(cam: CreateCamDto): Promise<Cam> {
@@ -38,9 +44,8 @@ export class CamService {
     return savedCam;
   }
 
-  // cam의 exitRooms 로직과 연결이 필요함!
-  async deleteCam(id: number): Promise<void> {
-    await this.camRepository.delete({ id: id });
+  async deleteCam(url: string): Promise<void> {
+    await this.camRepository.delete({ url: url });
   }
 
   async getCamList(serverId: number): Promise<ResponseCamDto[]> {
