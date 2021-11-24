@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Channel } from '../channel/channel.entity';
@@ -6,14 +6,15 @@ import { UserServerService } from '../user-server/user-server.service';
 import { User } from '../user/user.entity';
 import { MessageDto } from './message.dto';
 import { Message } from './message.entity';
+import { MessageRepository } from './message.repository';
 
 @Injectable()
 export class MessageService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    private readonly userServerService: UserServerService,
     @InjectRepository(Channel) private channelReposiotry: Repository<Channel>,
-    @InjectRepository(Message) private messageRepository: Repository<Message>,
+    private readonly userServerService: UserServerService,
+    private messageRepository: MessageRepository,
   ) {}
 
   async sendMessage(
@@ -21,22 +22,25 @@ export class MessageService {
     channelId: number,
     contents: string,
   ): Promise<MessageDto> {
-    let newMessage;
+    await this.checkUserChannelAccess(senderId, channelId);
 
+    const sender = await this.userRepository.findOne(senderId);
+    const channel = await this.channelReposiotry.findOne(channelId);
+
+    const newMessage = await this.messageRepository.save(
+      Message.newInstace(contents, channel, sender),
+    );
+    return MessageDto.fromEntity(newMessage);
+  }
+
+  private async checkUserChannelAccess(senderId: number, channelId: number) {
     const userServer = await this.userServerService.userCanAccessChannel(
       senderId,
       channelId,
     );
 
     if (!userServer) {
-      throw new BadRequestException('잘못된 요청');
+      throw new ForbiddenException('서버나 채널에 참여하지 않았습니다.');
     }
-
-    const sender = await this.userRepository.findOne(senderId);
-    const channel = await this.channelReposiotry.findOne(channelId);
-
-    newMessage = Message.newInstace(contents, channel, sender);
-    newMessage = await this.messageRepository.save(newMessage);
-    return MessageDto.fromEntity(newMessage);
   }
 }
