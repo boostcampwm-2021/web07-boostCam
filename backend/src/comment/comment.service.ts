@@ -38,4 +38,9 @@ export class CommentService {
 
     return CommentDto.fromEntity(newComment);
   }
+
+  async findCommentsByMessageId(messageId: number) {
+    const comments = await this.commentRepository.findByMessageId(messageId);
+    return comments.map(CommentDto.fromEntity);
+  }
 }
