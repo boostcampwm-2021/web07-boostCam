@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
 import { MainStoreContext } from './MainStore';
+import QuitServerModal from './ServerModal/QuitServerModal';
+import ServerInfoModal from './ServerModal/ServerInfoModal';
+import ServerSettingModal from './ServerModal/ServerSettingModal';
 
 const Container = styled.div`
   width: 100%;
@@ -28,15 +31,7 @@ const CurrentServerName = styled.span`
 
 function MainHeader(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
-  const {
-    selectedServer,
-    isServerInfoModalOpen,
-    isServerSettingModalOpen,
-    isQuitServerModalOpen,
-    setIsServerInfoModalOpen,
-    setIsServerSettingModalOpen,
-    setIsQuitServerModalOpen,
-  } = useContext(MainStoreContext);
+  const { selectedServer } = useContext(MainStoreContext);
 
   const onClickServerInfoButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     if (selectedServer !== undefined) {
@@ -56,20 +51,17 @@ function MainHeader(): JSX.Element {
           <DropdownMenu
             name="서버 설정"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isServerSettingModalOpen}
-            stateSetter={setIsServerSettingModalOpen}
+            modalContents={<ServerSettingModal />}
           />
           <DropdownMenu
             name="서버 정보"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isServerInfoModalOpen}
-            stateSetter={setIsServerInfoModalOpen}
+            modalContents={<ServerInfoModal />}
           />
           <DropdownMenu
             name="서버 나가기"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isQuitServerModalOpen}
-            stateSetter={setIsQuitServerModalOpen}
+            modalContents={<QuitServerModal />}
           />
         </Dropdown>
       </HeaderBox>

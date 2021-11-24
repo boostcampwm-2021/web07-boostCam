@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { MainStoreContext } from '../Main/MainStore';
 
 const Container = styled.li`
   border-bottom: 1px solid #dddddd;
@@ -16,19 +17,20 @@ const Container = styled.li`
 `;
 
 type DropdownMenuProps = {
-  setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
   name: string;
-  state: boolean;
-  stateSetter: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
+  modalContents: JSX.Element;
 };
 
 function DropdownMenu(props: DropdownMenuProps): JSX.Element {
-  const { name, state, stateSetter, setIsDropdownActivated } = props;
+  const { setModalContents, setIsModalOpen } = useContext(MainStoreContext);
+  const { name, setIsDropdownActivated, modalContents } = props;
 
   const onClickMenu = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation();
-    stateSetter(!state);
+    setIsModalOpen(true);
     setIsDropdownActivated(false);
+    setModalContents(modalContents);
   };
 
   return <Container onClick={onClickMenu}>{name}</Container>;

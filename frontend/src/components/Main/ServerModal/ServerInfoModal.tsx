@@ -7,27 +7,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
 
@@ -176,7 +155,7 @@ type UserInfo = {
 };
 
 function ServerInfoModal(): JSX.Element {
-  const { setIsServerInfoModalOpen, selectedServer } = useContext(MainStoreContext);
+  const { setIsModalOpen, selectedServer } = useContext(MainStoreContext);
   const [joinedUserList, setJoinedUserList] = useState<UserInfo[]>();
   const [serverDescription, setServerDescription] = useState<string>();
   const [serverName, setServerName] = useState<string>('');
@@ -204,39 +183,36 @@ function ServerInfoModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsServerInfoModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>서버 정보</ModalTitle>
-            <ModalCloseButton onClick={() => setIsServerInfoModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ServerTitleBox>
-            {serverIconUrl ? <ServerIcon src={serverIconUrl} /> : <ServerName>{serverName[0]}</ServerName>}
-            <InfoSpan>{serverName}</InfoSpan>
-          </ServerTitleBox>
-          <InformationBox>
-            <InfoParagraph>{serverDescription}</InfoParagraph>
-          </InformationBox>
-          <InformationBox>
-            <SubTitle>서버 참가 URL</SubTitle>
-            <InfoSpan>서버 참가 url</InfoSpan>
-          </InformationBox>
-          <InformationBox>
-            <SubTitle>서버 사용자 리스트</SubTitle>
-            <InfoParagraph>
-              {joinedUserList
-                ?.map((joinedUser) => {
-                  const { nickname } = joinedUser;
-                  return nickname;
-                })
-                .join('\n')}
-            </InfoParagraph>
-          </InformationBox>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>서버 정보</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ServerTitleBox>
+          {serverIconUrl ? <ServerIcon src={serverIconUrl} /> : <ServerName>{serverName[0]}</ServerName>}
+          <InfoSpan>{serverName}</InfoSpan>
+        </ServerTitleBox>
+        <InformationBox>
+          <InfoParagraph>{serverDescription}</InfoParagraph>
+        </InformationBox>
+        <InformationBox>
+          <SubTitle>서버 참가 URL</SubTitle>
+          <InfoSpan>서버 참가 url</InfoSpan>
+        </InformationBox>
+        <InformationBox>
+          <SubTitle>서버 사용자 리스트</SubTitle>
+          <InfoParagraph>
+            {joinedUserList
+              ?.map((joinedUser) => {
+                const { nickname } = joinedUser;
+                return nickname;
+              })
+              .join('\n')}
+          </InfoParagraph>
+        </InformationBox>
+      </ModalInnerBox>
     </Container>
   );
 }

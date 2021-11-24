@@ -8,27 +8,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
 
@@ -192,7 +171,7 @@ function CreateServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { setIsCreateServerModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
   const [imagePreview, setImagePreview] = useState<string>();
@@ -212,7 +191,7 @@ function CreateServerModal(): JSX.Element {
 
     if (response.status === 201) {
       getUserServerList('created');
-      setIsCreateServerModalOpen(false);
+      setIsModalOpen(false);
     } else {
       const body = await response.json();
       setMessageFailToPost(body.message);
@@ -236,51 +215,48 @@ function CreateServerModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateServerModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>서버 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateServerModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>생성할 서버의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateServerModal)}>
-            <InputDiv>
-              <InputName>이름</InputName>
-              <Input
-                {...register('name', {
-                  validate: (value) => value.trim().length > 1 || '"이름" 칸은 2글자 이상 입력되어야합니다!',
-                })}
-                placeholder="서버명을 입력해주세요"
-              />
-              {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>설명</InputName>
-              <Input
-                {...register('description', {
-                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-                })}
-                placeholder="서버 설명을 입력해주세요"
-              />
-              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>서버 아이콘</InputName>
-              <ImageInputDiv>
-                <ImagePreview src={imagePreview} />
-                <Input type="file" {...register('file')} onChange={onChangePreviewImage} />
-              </ImageInputDiv>
-            </InputDiv>
-            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
-            <SubmitButton type="submit" isButtonActive={isButtonActive}>
-              생성
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>서버 생성</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>생성할 서버의 이름과 설명을 작성해주세요</ModalDescription>
+        <Form onSubmit={handleSubmit(onSubmitCreateServerModal)}>
+          <InputDiv>
+            <InputName>이름</InputName>
+            <Input
+              {...register('name', {
+                validate: (value) => value.trim().length > 1 || '"이름" 칸은 2글자 이상 입력되어야합니다!',
+              })}
+              placeholder="서버명을 입력해주세요"
+            />
+            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+          </InputDiv>
+          <InputDiv>
+            <InputName>설명</InputName>
+            <Input
+              {...register('description', {
+                validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+              })}
+              placeholder="서버 설명을 입력해주세요"
+            />
+            {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
+          </InputDiv>
+          <InputDiv>
+            <InputName>서버 아이콘</InputName>
+            <ImageInputDiv>
+              <ImagePreview src={imagePreview} />
+              <Input type="file" {...register('file')} onChange={onChangePreviewImage} />
+            </ImageInputDiv>
+          </InputDiv>
+          <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
+          <SubmitButton type="submit" isButtonActive={isButtonActive}>
+            생성
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }

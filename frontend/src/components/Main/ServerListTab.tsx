@@ -7,6 +7,8 @@ import { MyServerData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
+import CreateServerModal from './ServerModal/CreateServerModal';
+import JoinServerModal from './ServerModal/JoinServerModal';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -85,16 +87,7 @@ const PlusIcon = styled(Plus)`
 
 function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
-  const {
-    selectedServer,
-    setSelectedServer,
-    isCreateServerModalOpen,
-    isJoinServerModalOpen,
-    setIsCreateServerModalOpen,
-    setIsJoinServerModalOpen,
-    serverList,
-    getUserServerList,
-  } = useContext(MainStoreContext);
+  const { selectedServer, setSelectedServer, serverList, getUserServerList } = useContext(MainStoreContext);
 
   const initChannel = '1';
   const navigate = useNavigate();
@@ -147,14 +140,12 @@ function ServerListTab(): JSX.Element {
           <DropdownMenu
             name="서버 생성"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isCreateServerModalOpen}
-            stateSetter={setIsCreateServerModalOpen}
+            modalContents={<CreateServerModal />}
           />
           <DropdownMenu
             name="서버 참가"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isJoinServerModalOpen}
-            stateSetter={setIsJoinServerModalOpen}
+            modalContents={<JoinServerModal />}
           />
         </Dropdown>
       </AddServerButton>

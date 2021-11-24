@@ -8,27 +8,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
@@ -168,14 +147,14 @@ type CreateModalForm = {
   description: string;
 };
 
-function CreateChannelModal(): JSX.Element {
+function CreateChannelModal2(): JSX.Element {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateChannelModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
@@ -192,7 +171,7 @@ function CreateChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    setIsCreateChannelModalOpen(false);
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -204,45 +183,42 @@ function CreateChannelModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateChannelModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>채널 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateChannelModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>생성할 채널의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
-            <InputDiv>
-              <InputName>이름</InputName>
-              <Input
-                {...register('name', {
-                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
-                })}
-                placeholder="채널명을 입력해주세요"
-              />
-              {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>설명</InputName>
-              <Input
-                {...register('description', {
-                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-                })}
-                placeholder="채널 설명을 입력해주세요"
-              />
-              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
-            </InputDiv>
-            <SubmitButton type="submit" isButtonActive={isButtonActive}>
-              생성
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>채널 생성</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>생성할 채널의 이름과 설명을 작성해주세요</ModalDescription>
+        <Form onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
+          <InputDiv>
+            <InputName>이름</InputName>
+            <Input
+              {...register('name', {
+                validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+              })}
+              placeholder="채널명을 입력해주세요"
+            />
+            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+          </InputDiv>
+          <InputDiv>
+            <InputName>설명</InputName>
+            <Input
+              {...register('description', {
+                validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+              })}
+              placeholder="채널 설명을 입력해주세요"
+            />
+            {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
+          </InputDiv>
+          <SubmitButton type="submit" isButtonActive={isButtonActive}>
+            생성
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }
 
-export default CreateChannelModal;
+export default CreateChannelModal2;

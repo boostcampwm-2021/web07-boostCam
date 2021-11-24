@@ -8,27 +8,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
@@ -179,7 +158,7 @@ function JoinServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<JoinServerModalForm>();
-  const { setIsJoinServerModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
@@ -197,7 +176,7 @@ function JoinServerModal(): JSX.Element {
 
     if (response.status === 201) {
       getUserServerList('created');
-      setIsJoinServerModalOpen(false);
+      setIsModalOpen(false);
     } else {
       const body = await response.json();
       setMessageFailToPost(body.message);
@@ -213,34 +192,31 @@ function JoinServerModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsJoinServerModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>서버 참가</ModalTitle>
-            <ModalCloseButton onClick={() => setIsJoinServerModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>참가 코드를 입력하세요.</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitJoinServerModal)}>
-            <InputDiv>
-              <InputName>참가 코드</InputName>
-              <Input
-                {...register('serverId', {
-                  validate: (value) => value.trim().length > 0 || '"참가코드" 칸을 입력해주세요!',
-                })}
-                placeholder="참가코드를 입력해주세요"
-              />
-              {errors.serverId && <InputErrorMessage>{errors.serverId.message}</InputErrorMessage>}
-            </InputDiv>
-            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
-            <SubmitButton type="submit" isButtonActive={isButtonActive}>
-              생성
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>서버 참가</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>참가 코드를 입력하세요.</ModalDescription>
+        <Form onSubmit={handleSubmit(onSubmitJoinServerModal)}>
+          <InputDiv>
+            <InputName>참가 코드</InputName>
+            <Input
+              {...register('serverId', {
+                validate: (value) => value.trim().length > 0 || '"참가코드" 칸을 입력해주세요!',
+              })}
+              placeholder="참가코드를 입력해주세요"
+            />
+            {errors.serverId && <InputErrorMessage>{errors.serverId.message}</InputErrorMessage>}
+          </InputDiv>
+          <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
+          <SubmitButton type="submit" isButtonActive={isButtonActive}>
+            생성
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }

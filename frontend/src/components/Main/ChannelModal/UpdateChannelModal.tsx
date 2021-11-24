@@ -8,27 +8,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
@@ -218,43 +197,40 @@ function UpdateChannelModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsUpdateChannelModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>채널 수정</ModalTitle>
-            <ModalCloseButton onClick={() => setIsUpdateChannelModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>선택한 채널에 대한 내용을 변경할 수 있습니다.</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitUpdateChannelModal)}>
-            <InputDiv>
-              <InputName>이름</InputName>
-              <Input
-                {...register('name', {
-                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
-                })}
-                placeholder="채널명을 입력해주세요"
-              />
-              {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>설명</InputName>
-              <Input
-                {...register('description', {
-                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-                })}
-                placeholder="채널 설명을 입력해주세요"
-              />
-              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
-            </InputDiv>
-            <SubmitButton type="submit" isButtonActive={isButtonActive}>
-              수정
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>채널 수정</ModalTitle>
+          <ModalCloseButton onClick={() => setIsUpdateChannelModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>선택한 채널에 대한 내용을 변경할 수 있습니다.</ModalDescription>
+        <Form onSubmit={handleSubmit(onSubmitUpdateChannelModal)}>
+          <InputDiv>
+            <InputName>이름</InputName>
+            <Input
+              {...register('name', {
+                validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+              })}
+              placeholder="채널명을 입력해주세요"
+            />
+            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+          </InputDiv>
+          <InputDiv>
+            <InputName>설명</InputName>
+            <Input
+              {...register('description', {
+                validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+              })}
+              placeholder="채널 설명을 입력해주세요"
+            />
+            {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
+          </InputDiv>
+          <SubmitButton type="submit" isButtonActive={isButtonActive}>
+            수정
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }

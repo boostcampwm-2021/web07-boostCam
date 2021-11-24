@@ -14,6 +14,7 @@ import QuitServerModal from './ServerModal/QuitServerModal';
 import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
 import QuitChannelModal from './ChannelModal/QuitChannelModal ';
 import CreateCamModal from './Cam/CreateCamModal';
+import MainModal from './MainModal';
 
 const Container = styled.div`
   width: 100vw;
@@ -26,32 +27,12 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const {
-    isCreateChannelModalOpen,
-    isJoinChannelModalOpen,
-    isUpdateChannelModalOpen,
-    isQuitChannelModalOpen,
-    isCreateServerModalOpen,
-    isJoinServerModalOpen,
-    isServerInfoModalOpen,
-    isServerSettingModalOpen,
-    isQuitServerModalOpen,
-    isCreateCamModalOpen,
-  } = useContext(MainStoreContext);
+  const { isModalOpen } = useContext(MainStoreContext);
   useEffect(() => {}, []);
 
   return (
     <Container>
-      {isCreateChannelModalOpen && <CreateChannelModal />}
-      {isJoinChannelModalOpen && <JoinChannelModal />}
-      {isUpdateChannelModalOpen && <UpdateChannelModal />}
-      {isQuitChannelModalOpen && <QuitChannelModal />}
-      {isCreateServerModalOpen && <CreateServerModal />}
-      {isJoinServerModalOpen && <JoinServerModal />}
-      {isServerSettingModalOpen && <ServerSettingModal />}
-      {isServerInfoModalOpen && <ServerInfoModal />}
-      {isQuitServerModalOpen && <QuitServerModal />}
-      {isCreateCamModalOpen && <CreateCamModal />}
+      {isModalOpen && <MainModal />}
       <ServerListTab />
       <MainSection />
     </Container>

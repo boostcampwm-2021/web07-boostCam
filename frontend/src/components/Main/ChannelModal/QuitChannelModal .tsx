@@ -7,27 +7,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 50%;
   min-width: 400px;
   height: 25%;
@@ -182,26 +161,23 @@ function QuitChannelModal(): JSX.Element {
 
   return (
     <Container>
-      <ModalBackground onClick={() => setIsQuitChannelModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>채널 나가기</ModalTitle>
-            <ModalCloseButton onClick={() => setIsQuitChannelModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>
-            <DescriptionSpan>정말 </DescriptionSpan>
-            <HighlightDescriptionSpan>{selectedChannelName}</HighlightDescriptionSpan>
-            <DescriptionSpan> 에서 나가시겠습니까?</DescriptionSpan>
-          </ModalDescription>
-          <ModalButtonContainer>
-            <SubmitButton onClick={onClickSubmitButton}>확인</SubmitButton>
-            <CancelButton onClick={() => setIsQuitChannelModalOpen(false)}>취소</CancelButton>
-          </ModalButtonContainer>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>채널 나가기</ModalTitle>
+          <ModalCloseButton onClick={() => setIsQuitChannelModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>
+          <DescriptionSpan>정말 </DescriptionSpan>
+          <HighlightDescriptionSpan>{selectedChannelName}</HighlightDescriptionSpan>
+          <DescriptionSpan> 에서 나가시겠습니까?</DescriptionSpan>
+        </ModalDescription>
+        <ModalButtonContainer>
+          <SubmitButton onClick={onClickSubmitButton}>확인</SubmitButton>
+          <CancelButton onClick={() => setIsQuitChannelModalOpen(false)}>취소</CancelButton>
+        </ModalButtonContainer>
+      </ModalInnerBox>
     </Container>
   );
 }

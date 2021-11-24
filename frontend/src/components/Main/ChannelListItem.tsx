@@ -5,6 +5,8 @@ import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { MainStoreContext } from './MainStore';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
+import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
+import QuitChannelModal from './ChannelModal/QuitChannelModal ';
 
 const { Hash } = BoostCamMainIcons;
 
@@ -57,15 +59,7 @@ type ChannelListItemProps = {
 };
 
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
-  const {
-    setSelectedChannel,
-    isUpdateChannelModalOpen,
-    isQuitChannelModalOpen,
-    setIsUpdateChannelModalOpen,
-    setIsQuitChannelModalOpen,
-    setRightClickedChannelId,
-    setRightClickedChannelName,
-  } = useContext(MainStoreContext);
+  const { setSelectedChannel, setRightClickedChannelId, setRightClickedChannelName } = useContext(MainStoreContext);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { dataId, selected, name } = props;
 
@@ -96,15 +90,13 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
           <DropdownMenu
             name="수정"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isUpdateChannelModalOpen}
-            stateSetter={setIsUpdateChannelModalOpen}
+            modalContents={<UpdateChannelModal />}
           />
           <QuitDropdownMenu>
             <DropdownMenu
               name="나가기"
               setIsDropdownActivated={setIsDropdownActivated}
-              state={isQuitChannelModalOpen}
-              stateSetter={setIsQuitChannelModalOpen}
+              modalContents={<QuitChannelModal />}
             />
           </QuitDropdownMenu>
         </Dropdown>

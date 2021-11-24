@@ -5,6 +5,7 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { MainStoreContext } from '../MainStore';
 import Dropdown from '../../core/Dropdown';
 import DropdownMenu from '../../core/DropdownMenu';
+import CreateCamModal from './CreateCamModal';
 
 const { Plus, ListArrow } = BoostCamMainIcons;
 
@@ -58,7 +59,6 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { isListOpen, setIsListOpen } = props;
-  const { isCreateCamModalOpen, setIsCreateCamModalOpen } = useContext(MainStoreContext);
 
   const onClickCamAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     e.stopPropagation();
@@ -79,8 +79,7 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
           <DropdownMenu
             name="추가"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isCreateCamModalOpen}
-            stateSetter={setIsCreateCamModalOpen}
+            modalContents={<CreateCamModal />}
           />
         </Dropdown>
       </CamListHeaderButton>
