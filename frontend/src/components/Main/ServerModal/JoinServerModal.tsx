@@ -196,8 +196,7 @@ function JoinServerModal(): JSX.Element {
     });
 
     if (response.status === 201) {
-      const isServerOrUserServerCreated = true;
-      getUserServerList(isServerOrUserServerCreated);
+      getUserServerList('created');
       setIsJoinServerModalOpen(false);
     } else {
       const body = await response.json();

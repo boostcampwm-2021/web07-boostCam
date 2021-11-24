@@ -10,7 +10,7 @@ class RequestServerDto {
   }
 
   toServerEntity = () => {
-    return Server.newInstance(this.name, this.description);
+    return Server.newInstance(this.description, this.name);
   };
 }
 

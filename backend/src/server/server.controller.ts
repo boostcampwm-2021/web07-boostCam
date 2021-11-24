@@ -55,7 +55,7 @@ export class ServerController {
       );
       let imgUrl: string;
 
-      if (icon !== undefined && icon.mimetype.substring(0, 5) === 'image') {
+      if (icon && icon.mimetype.substring(0, 5) === 'image') {
         const uploadedFile = await this.imageService.uploadFile(icon);
         imgUrl = uploadedFile.Location;
       }
@@ -74,16 +74,38 @@ export class ServerController {
     }
   }
 
-  @Patch('/:id') async updateServer(
+  @Patch('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(FileInterceptor('icon'))
+  async updateServer(
+    @Session()
+    session: ExpressSession,
     @Param('id') id: number,
-    @Body() server: Server,
-  ): Promise<string> {
-    await this.serverService.updateServer(id, server);
-    return Object.assign({
-      data: { ...server },
-      statusCode: 200,
-      statusMsg: `updated successfully`,
-    });
+    @Body() requestServerDto: RequestServerDto,
+    @UploadedFile() icon: Express.Multer.File,
+  ): Promise<ResponseEntity<string>> {
+    try {
+      requestServerDto = new RequestServerDto(
+        requestServerDto.name,
+        requestServerDto.description,
+      );
+      let imgUrl: string;
+
+      if (icon && icon.mimetype.substring(0, 5) === 'image') {
+        const uploadedFile = await this.imageService.uploadFile(icon);
+        imgUrl = uploadedFile.Location;
+      }
+      const user = session.user;
+
+      await this.serverService.updateServer(id, requestServerDto, user, imgUrl);
+
+      return ResponseEntity.noContent();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Delete('/:id')

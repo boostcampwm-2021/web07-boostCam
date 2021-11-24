@@ -8,7 +8,7 @@ type UserInfo = {
 class ServerWithUsersDto {
   description: string;
   name: string;
-  imgurl: string;
+  imgUrl: string;
   users: UserInfo[];
 
   constructor(
@@ -19,7 +19,7 @@ class ServerWithUsersDto {
   ) {
     this.description = description;
     this.name = name;
-    this.imgurl = imgUrl;
+    this.imgUrl = imgUrl;
     this.users = users;
   }
 

@@ -38,14 +38,19 @@ function MainStore(props: MainStoreProps): JSX.Element {
     }
   };
 
-  const getUserServerList = async (isServerOrUserServerCreated: boolean): Promise<void> => {
+  const getUserServerList = async (calledStatus: string | undefined): Promise<void> => {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
 
     if (response.status === 200 && list.data.length !== 0) {
-      const selectedServerIndex = isServerOrUserServerCreated ? list.data.length - 1 : 0;
       setServerList(list.data);
-      setSelectedServer(list.data[selectedServerIndex]);
+      if (calledStatus === 'updated') {
+        const updatedServerId = selectedServer?.server.id;
+        setSelectedServer(list.data.filter((userServer: MyServerData) => userServer.server.id === updatedServerId)[0]);
+      } else {
+        const selectedServerIndex = calledStatus === 'created' ? list.data.length - 1 : 0;
+        setSelectedServer(list.data[selectedServerIndex]);
+      }
     }
   };
 

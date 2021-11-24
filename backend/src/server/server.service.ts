@@ -45,8 +45,25 @@ export class ServerService {
     return createdServer;
   }
 
-  async updateServer(id: number, server: Server): Promise<void> {
-    await this.serverRepository.update(id, server);
+  async updateServer(
+    id: number,
+    requestServer: RequestServerDto,
+    user: User,
+    imgUrl: string | undefined,
+  ): Promise<void> {
+    const server = await this.serverRepository.findOneWithOwner(id);
+
+    if (server.owner.id !== user.id) {
+      throw new ForbiddenException('변경 권한이 없습니다.');
+    }
+
+    const newServer = requestServer.toServerEntity();
+
+    newServer.imgUrl = imgUrl || server.imgUrl;
+    newServer.name = newServer.name || server.name;
+    newServer.description = newServer.description || server.description;
+
+    this.serverRepository.update(id, newServer);
   }
 
   async deleteServer(id: number, user: User) {
