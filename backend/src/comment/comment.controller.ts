@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Session } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Session } from '@nestjs/common';
 import ResponseEntity from '../common/response-entity';
 import { ExpressSession } from '../types/session';
 import { CommentDto } from './comment.dto';
@@ -23,5 +23,13 @@ export class CommentController {
       contents,
     );
     return ResponseEntity.ok(newComment);
+  }
+
+  @Get()
+  async findCommentsByMessageId(@Query('messageId') messageId: number) {
+    const comments = await this.commentService.findCommentsByMessageId(
+      messageId,
+    );
+    return ResponseEntity.ok(comments);
   }
 }
