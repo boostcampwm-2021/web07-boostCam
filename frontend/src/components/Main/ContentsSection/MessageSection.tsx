@@ -12,7 +12,7 @@ const Container = styled.div`
   justify-content: flex-start;
 `;
 
-const ChattingSectionHeader = styled.div`
+const MessageSectionHeader = styled.div`
   width: 100%;
   flex: 1 1 0;
   max-height: 50px;
@@ -50,7 +50,7 @@ const ChannelUserButton = styled.div`
   }
 `;
 
-const ChattingSectionBody = styled.div`
+const MessageSectionBody = styled.div`
   width: 100%;
   flex: 5 1 0;
   overflow-y: auto;
@@ -73,7 +73,7 @@ const ChattingSectionBody = styled.div`
   }
 `;
 
-const ChattingItemBlock = styled.div`
+const MessageItemBlock = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -84,7 +84,7 @@ const ChattingItemBlock = styled.div`
   }
 `;
 
-const ChattingItemIcon = styled.div`
+const MessageItemIcon = styled.div`
   width: 36px;
   height: 36px;
   margin: 10px;
@@ -92,7 +92,7 @@ const ChattingItemIcon = styled.div`
   border-radius: 8px;
 `;
 
-const ChattingItem = styled.div`
+const MessageItem = styled.div`
   width: 90%;
   padding: 8px 0px;
 
@@ -102,24 +102,24 @@ const ChattingItem = styled.div`
   align-items: flex-start;
 `;
 
-const ChattingItemHeader = styled.div`
+const MessageItemHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
 `;
 
-const ChattingSender = styled.span`
+const MessageSender = styled.span`
   font-weight: 600;
   font-size: 15px;
 `;
 
-const ChattingTimelog = styled.span`
+const MessageTimelog = styled.span`
   font-size: 12px;
   margin-left: 15px;
 `;
 
-const ChattingContents = styled.span`
+const MessageContents = styled.span`
   font-size: 15px;
 `;
 
@@ -134,7 +134,7 @@ const TextareaDiv = styled.div`
   align-items: center;
 `;
 
-const ChatTextarea = styled.textarea`
+const MessageTextarea = styled.textarea`
   width: 90%;
   height: 22px;
   max-height: 200px;
@@ -164,12 +164,12 @@ const ChatTextarea = styled.textarea`
   }
 `;
 
-function ChattingSection(): JSX.Element {
+function MessageSection(): JSX.Element {
   const tmpAry = new Array(15).fill('value');
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
 
-  const onKeyDownChatTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const { key, currentTarget, shiftKey } = e;
     const msg = currentTarget.value.trim();
     const divRef = textDivRef.current;
@@ -192,40 +192,40 @@ function ChattingSection(): JSX.Element {
     }
   };
 
-  const tmpChattingItems = tmpAry.map((val: string, idx: number): JSX.Element => {
+  const tmpMessageItems = tmpAry.map((val: string, idx: number): JSX.Element => {
     const key = `${val}-${idx}`;
-    const tmp = new Array(idx).fill('chatting');
+    const tmp = new Array(idx).fill('Message');
     const contents = tmp.reduce((acc, va) => {
       return `${acc}-${va}`;
     }, '');
     return (
-      <ChattingItemBlock key={key}>
-        <ChattingItemIcon />
-        <ChattingItem>
-          <ChattingItemHeader>
-            <ChattingSender> Sender {idx}</ChattingSender>
-            <ChattingTimelog>Timestamp</ChattingTimelog>
-          </ChattingItemHeader>
-          <ChattingContents>
+      <MessageItemBlock key={key}>
+        <MessageItemIcon />
+        <MessageItem>
+          <MessageItemHeader>
+            <MessageSender> Sender {idx}</MessageSender>
+            <MessageTimelog>Timestamp</MessageTimelog>
+          </MessageItemHeader>
+          <MessageContents>
             `${contents}-${idx}`
-          </ChattingContents>
-        </ChattingItem>
-      </ChattingItemBlock>
+          </MessageContents>
+        </MessageItem>
+      </MessageItemBlock>
     );
   });
 
   return (
     <Container>
-      <ChattingSectionHeader>
+      <MessageSectionHeader>
         <ChannelName>{tmpChannelName}</ChannelName>
         <ChannelUserButton>Users 5</ChannelUserButton>
-      </ChattingSectionHeader>
-      <ChattingSectionBody>{tmpChattingItems}</ChattingSectionBody>
+      </MessageSectionHeader>
+      <MessageSectionBody>{tmpMessageItems}</MessageSectionBody>
       <TextareaDiv ref={textDivRef}>
-        <ChatTextarea onKeyDown={onKeyDownChatTextarea} />
+        <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
       </TextareaDiv>
     </Container>
   );
 }
 
-export default ChattingSection;
+export default MessageSection;

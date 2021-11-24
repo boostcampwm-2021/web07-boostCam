@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ChattingSection from './ChattingSection';
+import MessageSection from './MessageSection';
 
 const Container = styled.div`
   flex: 1;
@@ -10,7 +10,7 @@ const Container = styled.div`
 function ContentsSection(): JSX.Element {
   return (
     <Container>
-      <ChattingSection />
+      <MessageSection />
     </Container>
   );
 }
