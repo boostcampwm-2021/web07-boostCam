@@ -33,6 +33,12 @@ export class MessageService {
     return MessageDto.fromEntity(newMessage);
   }
 
+  async findMessagesByChannelId(senderId: number, channelId: number) {
+    await this.checkUserChannelAccess(senderId, channelId);
+    const messages = await this.messageRepository.findByChannelId(channelId);
+    return messages.map(MessageDto.fromEntity);
+  }
+
   private async checkUserChannelAccess(senderId: number, channelId: number) {
     const userServer = await this.userServerService.userCanAccessChannel(
       senderId,
