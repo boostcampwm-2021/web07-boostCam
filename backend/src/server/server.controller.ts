@@ -16,7 +16,6 @@ import {
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
-import { Server } from './server.entity';
 import { LoginGuard } from '../login/login.guard';
 import RequestServerDto from './dto/request-server.dto';
 import { ExpressSession } from '../types/session';
