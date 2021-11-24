@@ -6,8 +6,8 @@ import {
   Param,
   NotFoundException,
 } from '@nestjs/common';
-import ResponseEntity from '../common/response-entity';
 
+import ResponseEntity from '../common/response-entity';
 import { CreateCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
 import { CamService } from './cam.service';

@@ -4,11 +4,12 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
+import { v4 } from 'uuid';
+
 import { ServerRepository } from '../server/server.repository';
 import { CreateCamDto, ResponseCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
 import { CamRepository } from './cam.repository';
-import { v4 } from 'uuid';
 import { CamInnerService } from './cam-inner.service';
 
 @Injectable()

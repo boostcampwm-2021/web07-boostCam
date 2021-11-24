@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+
 import { Cam } from './cam.entity';
 
 @EntityRepository(Cam)
