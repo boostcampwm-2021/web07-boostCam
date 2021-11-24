@@ -22,6 +22,16 @@ const sendMessage = async (channelId: number, contents: string) => {
 function Message(): JSX.Element {
   const [contents, setContents] = useState('');
 
+  const sendMessageToChannel = () => {
+    const channelIdParam = new URLSearchParams(window.location.search).get('channelId');
+    if (!channelIdParam) {
+      return;
+    }
+    const channelId = parseInt(channelIdParam, 10);
+    sendMessage(channelId, contents);
+    setContents('');
+  };
+
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContents(e.target.value);
   };
@@ -30,13 +40,11 @@ function Message(): JSX.Element {
     if (e.key !== 'Enter') {
       return;
     }
-    sendMessage(1, contents);
-    setContents('');
+    sendMessageToChannel();
   };
 
   const onButtonClick = () => {
-    sendMessage(1, contents);
-    setContents('');
+    sendMessageToChannel();
   };
 
   return (
