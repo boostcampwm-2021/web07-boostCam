@@ -23,6 +23,7 @@ import { ExpressSession } from '../types/session';
 import ResponseEntity from '../common/response-entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from '../image/image.service';
+import ServerWithUsersDto from './dto/response-server-users.dto';
 
 @Controller('/api/servers')
 export class ServerController {
@@ -31,27 +32,9 @@ export class ServerController {
     private imageService: ImageService,
   ) {}
 
-  @Get('list') async findAll(): Promise<Server[]> {
-    const serverList = await this.serverService.findAll();
-    return Object.assign({
-      data: serverList,
-      statusCode: 200,
-      statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
-    });
-  }
-
-  @Get('/:id') async findOne(@Param('id') id: number): Promise<Server> {
-    const foundServer = await this.serverService.findOne(id);
-    return Object.assign({
-      data: foundServer,
-      statusCode: 200,
-      statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
-    });
-  }
-
   @Get('/:id/users') async findOneWithUsers(
     @Param('id') id: number,
-  ): Promise<ResponseEntity<Server>> {
+  ): Promise<ResponseEntity<ServerWithUsersDto>> {
     const serverWithUsers = await this.serverService.findOneWithUsers(id);
     return ResponseEntity.ok(serverWithUsers);
   }

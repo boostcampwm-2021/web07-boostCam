@@ -12,7 +12,7 @@ import { Server } from './server.entity';
 import RequestServerDto from './dto/request-server.dto';
 import { UserServerService } from '../user-server/user-server.service';
 import { ServerRepository } from './server.repository';
-import { request } from 'http';
+import ServerWithUsersDto from './dto/response-server-users.dto';
 
 @Injectable()
 export class ServerService {
@@ -22,7 +22,6 @@ export class ServerService {
     @InjectRepository(ServerRepository)
     private serverRepository: ServerRepository,
   ) {}
-
   findAll(): Promise<Server[]> {
     return this.serverRepository.find({ relations: ['owner'] });
   }
@@ -63,7 +62,11 @@ export class ServerService {
     return this.serverRepository.delete({ id: id });
   }
 
-  findOneWithUsers(serverId: number): Promise<Server> {
-    return this.serverRepository.findOneWithUsers(serverId);
+  async findOneWithUsers(serverId: number): Promise<ServerWithUsersDto> {
+    const serverWithUsers = await this.serverRepository.findOneWithUsers(
+      serverId,
+    );
+
+    return ServerWithUsersDto.fromEntity(serverWithUsers);
   }
 }

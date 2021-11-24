@@ -170,19 +170,14 @@ const InfoSpan = styled.span`
     display: none;
   }
 `;
-type User = {
-  id: number;
-  githubId: number;
+type UserInfo = {
   nickname: string;
   profile: string;
 };
-type UserServer = {
-  id: number;
-  user: User;
-};
+
 function ServerInfoModal(): JSX.Element {
   const { setIsServerInfoModalOpen, selectedServer } = useContext(MainStoreContext);
-  const [joinedUserList, setJoinedUserList] = useState<UserServer[]>();
+  const [joinedUserList, setJoinedUserList] = useState<UserInfo[]>();
   const [serverDescription, setServerDescription] = useState<string>();
   const [serverName, setServerName] = useState<string>('');
   const [serverIconUrl, setServerIconUrl] = useState<string>();
@@ -193,9 +188,9 @@ function ServerInfoModal(): JSX.Element {
     const serverInfo = await response.json();
 
     if (response.status === 200) {
-      const { name, description, userServer, imgUrl } = serverInfo.data;
+      const { name, description, users, imgUrl } = serverInfo.data;
 
-      setJoinedUserList(userServer);
+      setJoinedUserList(users);
       setServerDescription(description);
       setServerName(name);
       if (imgUrl) {
@@ -234,8 +229,7 @@ function ServerInfoModal(): JSX.Element {
             <InfoParagraph>
               {joinedUserList
                 ?.map((joinedUser) => {
-                  const { user } = joinedUser;
-                  const { nickname } = user;
+                  const { nickname } = joinedUser;
                   return nickname;
                 })
                 .join('\n')}

@@ -64,14 +64,9 @@ export class UserServerService {
   }
 
   async getServerListByUserId(userId: number): Promise<UserServerDto[]> {
-    const userServerDtoList = [];
-
     const userServerList =
       await this.userServerRepository.getServerListByUserId(userId);
-    userServerList.map((userServer) => {
-      userServerDtoList.push(UserServerDto.fromEntity(userServer));
-    });
-
-    return userServerDtoList;
+    userServerList.map((userServer) => UserServerDto.fromEntity(userServer));
+    return userServerList;
   }
 }
