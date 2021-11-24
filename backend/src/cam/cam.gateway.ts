@@ -127,13 +127,6 @@ export class CamGateway {
       .emit('receiveMessage', { payload, nicknameInfo });
   }
 
-  @SubscribeMessage('changeRoomList')
-  handleChangeRoomList(): void {
-    const roomList = this.camInnerService.getRoomList();
-    const roomListJson = JSON.stringify(Array.from(roomList.entries()));
-    this.server.emit('getRoomList', roomListJson);
-  }
-
   @SubscribeMessage('changeNickname')
   handleChangeNickname(
     client: Socket,
