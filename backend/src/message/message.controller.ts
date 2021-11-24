@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Session, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
@@ -24,5 +32,18 @@ export class MessageController {
     );
 
     return ResponseEntity.ok(newMessage);
+  }
+
+  @Get()
+  async findMessagesByChannelId(
+    @Session() session: ExpressSession,
+    @Query('channelId') channelId: number,
+  ) {
+    const sender = session.user;
+    const channelMessages = await this.messageService.findMessagesByChannelId(
+      sender.id,
+      channelId,
+    );
+    return ResponseEntity.ok(channelMessages);
   }
 }
