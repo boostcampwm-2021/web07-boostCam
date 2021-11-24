@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Channel } from '../channel/channel.entity';
-import { UserServer } from '../user-server/user-server.entity';
+import { UserServerService } from '../user-server/user-server.service';
 import { User } from '../user/user.entity';
 import { MessageDto } from './message.dto';
 import { Message } from './message.entity';
@@ -11,8 +11,7 @@ import { Message } from './message.entity';
 export class MessageService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(UserServer)
-    private userServerRepository: Repository<UserServer>,
+    private readonly userServerService: UserServerService,
     @InjectRepository(Channel) private channelReposiotry: Repository<Channel>,
     @InjectRepository(Message) private messageRepository: Repository<Message>,
   ) {}
@@ -24,12 +23,10 @@ export class MessageService {
   ): Promise<MessageDto> {
     let newMessage;
 
-    const userServer = await this.userServerRepository
-      .createQueryBuilder('userServer')
-      .innerJoin(Channel, 'channel', 'channel.serverId = userServer.serverId')
-      .where('channel.id = :channelId', { channelId })
-      .andWhere('userServer.userId = :senderId', { senderId })
-      .getOne();
+    const userServer = await this.userServerService.userCanAccessChannel(
+      senderId,
+      channelId,
+    );
 
     if (!userServer) {
       throw new BadRequestException('잘못된 요청');
