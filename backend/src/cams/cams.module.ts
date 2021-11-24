@@ -15,5 +15,6 @@ import { CamsService } from './cams.service';
   ],
   providers: [CamsService],
   controllers: [CamsController],
+  exports: [CamsService],
 })
 export class CamsModule {}
