@@ -58,6 +58,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
     const messageList = list.data;
     // eslint-disable-next-line no-console
     console.log(messageList);
+  };
 
   const getServerCamList = async (): Promise<void> => {
     const response = await fetch(`/api/servers/${selectedServer?.server.id}/cams`);
