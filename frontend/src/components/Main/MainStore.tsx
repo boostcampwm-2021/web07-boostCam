@@ -10,7 +10,7 @@ type MainStoreProps = {
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
-  const [selectedChannel, setSelectedChannel] = useState<string>('-1');
+  const [selectedChannel, setSelectedChannel] = useState<string>('');
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
   const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
@@ -29,7 +29,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
     if (channelList.length) {
       setSelectedChannel(channelList[0].id);
     } else {
-      setSelectedChannel('-1');
+      setSelectedChannel('');
     }
     setServerChannelList(channelList);
   };
@@ -50,14 +50,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
     }
   };
 
-  const getMessageList = async (): Promise<void> => {
-    const response = await fetch(`/api/messages?channelId=${selectedChannel}`);
-    const list = await response.json();
-    const messageList = list.data;
-    // eslint-disable-next-line no-console
-    console.log(messageList);
-  };
-
   const getServerCamList = async (): Promise<void> => {
     const response = await fetch(`/api/servers/${selectedServer?.server.id}/cams`);
     const list = await response.json();
@@ -74,12 +66,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
       getServerCamList();
     }
   }, [selectedServer]);
-
-  useEffect(() => {
-    if (selectedChannel) {
-      getMessageList();
-    }
-  }, [selectedChannel]);
 
   return (
     <MainStoreContext.Provider
