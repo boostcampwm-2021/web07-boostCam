@@ -1,104 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { Status, CamMap } from '../types/cam';
-
-type RoomId = string;
-type SocketId = string;
-type ScreenSharingUserId = SocketId;
-type RoomInfo = {
-  socketId: string;
-  userNickname: string;
-};
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { ServerRepository } from '../server/server.repository';
+import { CreateCamDto, ResponseCamDto } from './cam.dto';
+import { Cam } from './cam.entity';
+import { CamRepository } from './cam.repository';
+import { v4 } from 'uuid';
+import { CamInnerService } from './cam-inner.service';
 
 @Injectable()
 export class CamService {
-  private map: Map<string, Array<CamMap>>;
-  private sharedScreen: Map<RoomId, { userId: string | null }>;
+  constructor(
+    private camRepository: CamRepository,
+    private serverRepository: ServerRepository,
+    private readonly camInnerService: CamInnerService,
+  ) {}
 
-  constructor() {
-    this.map = new Map();
-    this.sharedScreen = new Map();
+  findOne(id: number): Promise<Cam> {
+    return this.camRepository.findOne({ id: id }, { relations: ['server'] });
   }
 
-  getRoomList() {
-    return this.map;
-  }
-
-  getRoomNicknameList(roomId: string): RoomInfo[] {
-    const roomInfo: CamMap[] = this.map.get(roomId);
-    return roomInfo.map((data) => {
-      const { socketId, userNickname } = data;
-      return { socketId, userNickname };
+  async createCam(cam: CreateCamDto): Promise<Cam> {
+    const camEntity = this.camRepository.create();
+    const server = await this.serverRepository.findOne({
+      id: cam.serverId,
     });
-  }
 
-  isRoomExist(roomId: string): boolean {
-    return this.map.has(roomId);
-  }
-
-  createRoom(roomId: string): boolean {
-    if (this.map.get(roomId)) return false;
-    this.map.set(roomId, []);
-    this.sharedScreen.set(roomId, { userId: null });
-    return true;
-  }
-
-  joinRoom(
-    roomId: string,
-    userId: string,
-    socketId: string,
-    userNickname: string,
-    status: Status,
-  ): boolean {
-    if (!this.map.get(roomId)) return false;
-    this.map.get(roomId).push({ userId, socketId, userNickname, status });
-    return true;
-  }
-
-  exitRoom(roomId: string, userId: string) {
-    if (!this.map.get(roomId)) return false;
-    const room = this.map.get(roomId).filter((user) => user.userId !== userId);
-    if (!room.length) this.map.delete(roomId);
-    else this.map.set(roomId, room);
-  }
-
-  updateStatus(roomId: string, userId: string, status: Status) {
-    if (!this.map.get(roomId)) return false;
-    const user = this.map.get(roomId).find((user) => user.userId === userId);
-    user.status = status;
-  }
-
-  getStatus(roomId: string, userId: string) {
-    if (!this.map.get(roomId)) return false;
-    return this.map.get(roomId).find((user) => user.userId === userId)?.status;
-  }
-
-  getNickname(roomId: string, userId: string) {
-    if (!this.map.get(roomId)) return false;
-    return this.map.get(roomId).find((user) => user.userId === userId)
-      ?.userNickname;
-  }
-
-  changeNickname(roomId: string, socketId: string, userNickname: string) {
-    if (!this.map.get(roomId)) return false;
-    const user = this.map
-      .get(roomId)
-      .find((user) => user.socketId === socketId);
-    user.userNickname = userNickname;
-  }
-
-  setScreenSharingUser(roomId: RoomId, userId: ScreenSharingUserId) {
-    this.sharedScreen.set(roomId, { userId });
-  }
-
-  endSharingScreen(roomId: RoomId) {
-    this.sharedScreen.set(roomId, { userId: null });
-  }
-
-  getScreenSharingUserInfo(roomId: RoomId) {
-    if (this.sharedScreen.has(roomId)) {
-      return this.sharedScreen.get(roomId);
+    if (!server) {
+      throw new BadRequestException();
     }
 
-    return null;
+    camEntity.name = cam.name;
+    camEntity.server = server;
+    camEntity.url = v4();
+
+    const savedCam = await this.camRepository.save(camEntity);
+    this.camInnerService.createRoom(camEntity.url);
+
+    return savedCam;
+  }
+
+  // cam의 exitRooms 로직과 연결이 필요함!
+  async deleteCam(id: number): Promise<void> {
+    await this.camRepository.delete({ id: id });
+  }
+
+  async getCamList(serverId: number): Promise<ResponseCamDto[]> {
+    const res = await this.camRepository.findByServerId(serverId);
+    return res.map((entry) => ResponseCamDto.fromEntry(entry.name, entry.url));
   }
 }

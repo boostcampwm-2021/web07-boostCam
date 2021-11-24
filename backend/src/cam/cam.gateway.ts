@@ -6,12 +6,12 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import { Status, MessageInfo } from '../types/cam';
-import { CamService } from './cam.service';
+import { CamInnerService } from './cam-inner.service';
 
 @WebSocketGateway()
 export class CamGateway {
   @WebSocketServer() server: Server;
-  constructor(private camService: CamService) {}
+  constructor(private camInnerService: CamInnerService) {}
 
   @SubscribeMessage('joinRoom')
   handleJoinRoom(
@@ -25,7 +25,13 @@ export class CamGateway {
   ): void {
     const { roomId, userId, userNickname, status } = payload;
     client.join(roomId);
-    this.camService.joinRoom(roomId, userId, client.id, userNickname, status);
+    this.camInnerService.joinRoom(
+      roomId,
+      userId,
+      client.id,
+      userNickname,
+      status,
+    );
     client.to(roomId).emit('userConnected', { userId });
 
     client.data.roomId = roomId;
@@ -33,7 +39,7 @@ export class CamGateway {
 
     client.on('disconnect', () => {
       client.to(roomId).emit('userDisconnected', { userId });
-      this.camService.exitRoom(roomId, userId);
+      this.camInnerService.exitRoom(roomId, userId);
     });
   }
 
@@ -43,7 +49,7 @@ export class CamGateway {
     const { roomId, userId } = client.data;
     client.to(roomId).emit('userDisconnected', { userId });
     client.leave(roomId);
-    this.camService.exitRoom(roomId, userId);
+    this.camInnerService.exitRoom(roomId, userId);
     client.data.roomId = null;
     client.data.userId = null;
   }
@@ -53,7 +59,7 @@ export class CamGateway {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId, userId } = client.data;
     const { status } = payload;
-    this.camService.updateStatus(roomId, userId, status);
+    this.camInnerService.updateStatus(roomId, userId, status);
     client.to(roomId).emit('userStatus', { userId, status });
   }
 
@@ -62,8 +68,8 @@ export class CamGateway {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = client.data;
     const { userId } = payload;
-    const status = this.camService.getStatus(roomId, userId);
-    const userNickname = this.camService.getNickname(roomId, userId);
+    const status = this.camInnerService.getStatus(roomId, userId);
+    const userNickname = this.camInnerService.getNickname(roomId, userId);
     if (status) {
       client.emit('userStatus', { userId, status });
     }
@@ -76,7 +82,7 @@ export class CamGateway {
   handleStartScreenShare(client: Socket, payload: { roomId: string }) {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = payload;
-    this.camService.setScreenSharingUser(roomId, client.id);
+    this.camInnerService.setScreenSharingUser(roomId, client.id);
 
     client
       .to(roomId)
@@ -97,7 +103,7 @@ export class CamGateway {
   handleEndSharingScreen(client: Socket, payload: { roomId: string }) {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = payload;
-    this.camService.endSharingScreen(roomId);
+    this.camInnerService.endSharingScreen(roomId);
     client.to(roomId).emit('endSharingScreen');
   }
 
@@ -106,7 +112,7 @@ export class CamGateway {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = payload;
     const screenSharingUserInfo =
-      this.camService.getScreenSharingUserInfo(roomId);
+      this.camInnerService.getScreenSharingUserInfo(roomId);
     if (!screenSharingUserInfo || !screenSharingUserInfo.userId) {
       return;
     }
@@ -120,7 +126,7 @@ export class CamGateway {
   handleSendMessage(client: Socket, payload: MessageInfo): void {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = client.data;
-    const nicknameInfo = this.camService.getRoomNicknameList(roomId);
+    const nicknameInfo = this.camInnerService.getRoomNicknameList(roomId);
     client.broadcast
       .to(roomId)
       .emit('receiveMessage', { payload, nicknameInfo });
@@ -128,7 +134,7 @@ export class CamGateway {
 
   @SubscribeMessage('changeRoomList')
   handleChangeRoomList(): void {
-    const roomList = this.camService.getRoomList();
+    const roomList = this.camInnerService.getRoomList();
     const roomListJson = JSON.stringify(Array.from(roomList.entries()));
     this.server.emit('getRoomList', roomListJson);
   }
@@ -142,8 +148,8 @@ export class CamGateway {
     const { roomId, userId } = client.data;
     const { userNickname } = payload;
 
-    this.camService.changeNickname(roomId, client.id, userNickname);
-    const nicknameInfo = this.camService.getRoomNicknameList(roomId);
+    this.camInnerService.changeNickname(roomId, client.id, userNickname);
+    const nicknameInfo = this.camInnerService.getRoomNicknameList(roomId);
     client.broadcast.to(roomId).emit('getNicknameList', nicknameInfo);
     client.to(roomId).emit('userNickname', { userId, userNickname });
   }

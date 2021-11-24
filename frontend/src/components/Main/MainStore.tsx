@@ -68,7 +68,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   };
 
   const getServerCamList = async (): Promise<void> => {
-    const response = await fetch(`/api/servers/${selectedServer?.server.id}/cams`);
+    const response = await fetch(`/api/servers/${selectedServer?.server.id}/cam`);
     const list = await response.json();
     const camList = list.data;
 

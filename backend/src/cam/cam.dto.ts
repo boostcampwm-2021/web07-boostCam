@@ -1,9 +1,9 @@
-export type CreateCamsDto = {
+export type CreateCamDto = {
   name: string;
   serverId: number;
 };
 
-export class RequestCamsDto {
+export class ResponseCamDto {
   name: string;
   url: string;
   constructor(name: string, url: string) {
@@ -12,6 +12,6 @@ export class RequestCamsDto {
   }
 
   static fromEntry(name: string, url: string) {
-    return new RequestCamsDto(name, url);
+    return new ResponseCamDto(name, url);
   }
 }
