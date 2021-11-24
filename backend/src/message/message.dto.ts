@@ -28,7 +28,7 @@ export class MessageDto {
     return MessageDto.newInstance(
       message.id,
       message.contents,
-      message.channel.id,
+      message.channelId,
       message.createdAt,
       UserDto.fromEntity(message.sender),
     );
