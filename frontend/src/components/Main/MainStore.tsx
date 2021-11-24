@@ -49,9 +49,23 @@ function MainStore(props: MainStoreProps): JSX.Element {
     }
   };
 
+  const getMessageList = async (): Promise<void> => {
+    const response = await fetch(`/api/messages?channelId=${selectedChannel}`);
+    const list = await response.json();
+    const messageList = list.data;
+    // eslint-disable-next-line no-console
+    console.log(messageList);
+  };
+
   useEffect(() => {
     if (selectedServer) getServerChannelList();
   }, [selectedServer]);
+
+  useEffect(() => {
+    if (selectedChannel) {
+      getMessageList();
+    }
+  }, [selectedChannel]);
 
   return (
     <MainStoreContext.Provider
