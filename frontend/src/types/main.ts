@@ -23,4 +23,9 @@ type ChannelData = {
   name: string;
 };
 
-export type { UserData, ServerData, MyServerData, ChannelData };
+type CamData = {
+  name: string;
+  url: string;
+};
+
+export type { UserData, ServerData, MyServerData, ChannelData, CamData };

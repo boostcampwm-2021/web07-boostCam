@@ -31,6 +31,8 @@ const ModalBackground = styled.div`
 const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
+  height: 50%;
+  min-height: 450px;
 
   background-color: #222322;
 
@@ -81,7 +83,7 @@ const ModalDescription = styled.span`
 
 const Form = styled.form`
   width: 90%;
-  height: 100%;
+  height: 70%;
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
 
@@ -96,14 +98,6 @@ const InputDiv = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ImageInputDiv = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
   justify-content: flex-start;
   align-items: flex-start;
 `;
@@ -152,16 +146,6 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
-const ImagePreview = styled.img`
-  width: 40px;
-  height: 40px;
-`;
-const MessageFailToPost = styled.span`
-  color: red;
-  font-size: 16px;
-  font-family: Malgun Gothic;
-`;
-
 const ModalCloseButton = styled.div`
   width: 32px;
   height: 32px;
@@ -182,99 +166,63 @@ const CloseIcon = styled(Close)`
 type CreateModalForm = {
   name: string;
   description: string;
-  file: FileList;
 };
 
-function CreateServerModal(): JSX.Element {
+function CreateCamModal(): JSX.Element {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { setIsCreateServerModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { selectedServer, setIsCreateCamModalOpen } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
-  const [messageFailToPost, setMessageFailToPost] = useState<string>('');
-  const [imagePreview, setImagePreview] = useState<string>();
 
-  const onSubmitCreateServerModal = async (data: { name: string; description: string; file: FileList }) => {
-    const formData = new FormData();
-    const { name, description, file } = data;
-
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('icon', file[0]);
-
-    const response = await fetch('api/servers', {
+  const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
+    const { name } = data;
+    await fetch('api/cams', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        serverId: selectedServer.server.id,
+      }),
     });
-
-    if (response.status === 201) {
-      getUserServerList('created');
-      setIsCreateServerModalOpen(false);
-    } else {
-      const body = await response.json();
-      setMessageFailToPost(body.message);
-    }
-  };
-
-  const onChangePreviewImage = (e: React.ChangeEvent & { target: HTMLInputElement }) => {
-    const file = e.target.files;
-
-    if (file) {
-      setImagePreview(URL.createObjectURL(file[0]));
-    }
+    setIsCreateCamModalOpen(false);
   };
 
   useEffect(() => {
-    const { name, description } = watch();
-    const isActive = name.trim().length > 2 && description.trim().length > 0;
+    const { name } = watch();
+    const isActive = name.trim().length > 2;
     setIsButtonActive(isActive);
   }, [watch()]);
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateServerModalOpen(false)} />
+      <ModalBackground onClick={() => setIsCreateCamModalOpen(false)} />
       <ModalBox>
         <ModalInnerBox>
           <ModalHeader>
-            <ModalTitle>서버 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateServerModalOpen(false)}>
+            <ModalTitle>Cam 생성</ModalTitle>
+            <ModalCloseButton onClick={() => setIsCreateCamModalOpen(false)}>
               <CloseIcon />
             </ModalCloseButton>
           </ModalHeader>
-          <ModalDescription>생성할 서버의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateServerModal)}>
+          <ModalDescription>생성할 Cam의 이름을 작성해주세요</ModalDescription>
+          <Form onSubmit={handleSubmit(onSubmitCreateCamModal)}>
             <InputDiv>
               <InputName>이름</InputName>
               <Input
                 {...register('name', {
-                  validate: (value) => value.trim().length > 1 || '"이름" 칸은 2글자 이상 입력되어야합니다!',
+                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
                 })}
-                placeholder="서버명을 입력해주세요"
+                placeholder="Cam명을 입력해주세요"
               />
               {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
             </InputDiv>
-            <InputDiv>
-              <InputName>설명</InputName>
-              <Input
-                {...register('description', {
-                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-                })}
-                placeholder="서버 설명을 입력해주세요"
-              />
-              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>서버 아이콘</InputName>
-              <ImageInputDiv>
-                <ImagePreview src={imagePreview} />
-                <Input type="file" {...register('file')} onChange={onChangePreviewImage} />
-              </ImageInputDiv>
-            </InputDiv>
-            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
             <SubmitButton type="submit" isButtonActive={isButtonActive}>
               생성
             </SubmitButton>
@@ -285,4 +233,4 @@ function CreateServerModal(): JSX.Element {
   );
 }
 
-export default CreateServerModal;
+export default CreateCamModal;

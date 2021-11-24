@@ -6,7 +6,7 @@ import { UserServer } from '../user-server/user-server.entity';
 import { UserServerRepository } from '../user-server/user-server.repository';
 import { UserServerService } from '../user-server/user-server.service';
 import { User } from '../user/user.entity';
-import RequestServerDto from './dto/RequestServerDto';
+import RequestServerDto from './dto/request-server.dto';
 import { Server } from './server.entity';
 import { ServerRepository } from './server.repository';
 import { ServerService } from './server.service';
@@ -41,6 +41,7 @@ describe('ServerService', () => {
   let newServer: Server;
   let newUserServer: UserServer;
   let existsServer: Server;
+  let existsUserServer: UserServer;
 
   const existsServerId = 1;
   const userId = 1;
@@ -99,7 +100,8 @@ describe('ServerService', () => {
         existsServerId,
       );
 
-      expect(serverWithUseres).toBe(existsServer);
+      expect(serverWithUseres.name).toBe(existsServer.name);
+      expect(serverWithUseres.description).toBe(existsServer.description);
     });
   });
 
@@ -155,8 +157,13 @@ describe('ServerService', () => {
     newServer.name = serverName;
     newServer.owner = user;
 
+    existsUserServer = new UserServer();
+    existsUserServer.id = 1;
+    existsUserServer.user = user;
+
     existsServer = new Server();
     existsServer.id = existsServerId;
     existsServer.owner = user;
+    existsServer.userServer = [existsUserServer];
   };
 });

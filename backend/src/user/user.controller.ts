@@ -1,9 +1,9 @@
 import { Controller, Get, UseGuards, Session } from '@nestjs/common';
-import { UserServer } from '../user-server/user-server.entity';
 import { UserServerService } from '../user-server/user-server.service';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import ResponseEntity from '../common/response-entity';
+import UserServerListDto from '../user-server/dto/user-server-list.dto';
 
 @Controller('/api/user')
 @UseGuards(LoginGuard)
@@ -14,7 +14,7 @@ export class UserController {
   async getServersByUserId(
     @Session()
     session: ExpressSession,
-  ): Promise<ResponseEntity<UserServer[]>> {
+  ): Promise<ResponseEntity<UserServerListDto[]>> {
     const userId = session.user.id;
     const data = await this.userServerService.getServerListByUserId(userId);
 

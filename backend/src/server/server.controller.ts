@@ -16,44 +16,36 @@ import {
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
-import { Server } from './server.entity';
 import { LoginGuard } from '../login/login.guard';
-import RequestServerDto from './dto/RequestServerDto';
+import RequestServerDto from './dto/request-server.dto';
 import { ExpressSession } from '../types/session';
 import ResponseEntity from '../common/response-entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from '../image/image.service';
+import ServerWithUsersDto from './dto/response-server-users.dto';
+import { CamsService } from '../cams/cams.service';
+import { RequestCamsDto } from '../cams/cams.dto';
 
 @Controller('/api/servers')
 export class ServerController {
   constructor(
     private serverService: ServerService,
     private imageService: ImageService,
+    private camsService: CamsService,
   ) {}
-
-  @Get('list') async findAll(): Promise<Server[]> {
-    const serverList = await this.serverService.findAll();
-    return Object.assign({
-      data: serverList,
-      statusCode: 200,
-      statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
-    });
-  }
-
-  @Get('/:id') async findOne(@Param('id') id: number): Promise<Server> {
-    const foundServer = await this.serverService.findOne(id);
-    return Object.assign({
-      data: foundServer,
-      statusCode: 200,
-      statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
-    });
-  }
 
   @Get('/:id/users') async findOneWithUsers(
     @Param('id') id: number,
-  ): Promise<ResponseEntity<Server>> {
+  ): Promise<ResponseEntity<ServerWithUsersDto>> {
     const serverWithUsers = await this.serverService.findOneWithUsers(id);
     return ResponseEntity.ok(serverWithUsers);
+  }
+
+  @Get('/:id/cams') async findCams(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<RequestCamsDto[]>> {
+    const cams = await this.camsService.getCams(id);
+    return ResponseEntity.ok(cams);
   }
 
   @Post()
@@ -66,9 +58,13 @@ export class ServerController {
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<number>> {
     try {
+      requestServerDto = new RequestServerDto(
+        requestServerDto.name,
+        requestServerDto.description,
+      );
       let imgUrl: string;
 
-      if (icon !== undefined && icon.mimetype.substring(0, 5) === 'image') {
+      if (icon && icon.mimetype.substring(0, 5) === 'image') {
         const uploadedFile = await this.imageService.uploadFile(icon);
         imgUrl = uploadedFile.Location;
       }
@@ -87,16 +83,38 @@ export class ServerController {
     }
   }
 
-  @Patch('/:id') async updateServer(
+  @Patch('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(FileInterceptor('icon'))
+  async updateServer(
+    @Session()
+    session: ExpressSession,
     @Param('id') id: number,
-    @Body() server: Server,
-  ): Promise<string> {
-    await this.serverService.updateServer(id, server);
-    return Object.assign({
-      data: { ...server },
-      statusCode: 200,
-      statusMsg: `updated successfully`,
-    });
+    @Body() requestServerDto: RequestServerDto,
+    @UploadedFile() icon: Express.Multer.File,
+  ): Promise<ResponseEntity<string>> {
+    try {
+      requestServerDto = new RequestServerDto(
+        requestServerDto.name,
+        requestServerDto.description,
+      );
+      let imgUrl: string;
+
+      if (icon && icon.mimetype.substring(0, 5) === 'image') {
+        const uploadedFile = await this.imageService.uploadFile(icon);
+        imgUrl = uploadedFile.Location;
+      }
+      const user = session.user;
+
+      await this.serverService.updateServer(id, requestServerDto, user, imgUrl);
+
+      return ResponseEntity.noContent();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Delete('/:id')

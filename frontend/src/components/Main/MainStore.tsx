@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { ChannelData, MyServerData } from '../../types/main';
+import { CamData, ChannelData, MyServerData } from '../../types/main';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -28,6 +28,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
 
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
+  const [isCreateCamModalOpen, setIsCreateCamModalOpen] = useState<boolean>(false);
+  const [serverCamList, setServerCamList] = useState<CamData[]>([]);
+
   const getServerChannelList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
     const list = await response.json();
@@ -40,20 +43,52 @@ function MainStore(props: MainStoreProps): JSX.Element {
     setServerChannelList(channelList);
   };
 
-  const getUserServerList = async (isServerOrUserServerCreated: boolean): Promise<void> => {
+  const getUserServerList = async (calledStatus: string | undefined): Promise<void> => {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
 
     if (response.status === 200 && list.data.length !== 0) {
-      const selectedServerIndex = isServerOrUserServerCreated ? list.data.length - 1 : 0;
       setServerList(list.data);
-      setSelectedServer(list.data[selectedServerIndex]);
+      if (calledStatus === 'updated') {
+        const updatedServerId = selectedServer?.server.id;
+        setSelectedServer(list.data.filter((userServer: MyServerData) => userServer.server.id === updatedServerId)[0]);
+      } else {
+        const selectedServerIndex = calledStatus === 'created' ? list.data.length - 1 : 0;
+        setSelectedServer(list.data[selectedServerIndex]);
+      }
+    }
+  };
+
+  const getMessageList = async (): Promise<void> => {
+    const response = await fetch(`/api/messages?channelId=${selectedChannel}`);
+    const list = await response.json();
+    const messageList = list.data;
+    // eslint-disable-next-line no-console
+    console.log(messageList);
+  };
+
+  const getServerCamList = async (): Promise<void> => {
+    const response = await fetch(`/api/servers/${selectedServer?.server.id}/cams`);
+    const list = await response.json();
+    const camList = list.data;
+
+    if (response.status === 200) {
+      setServerCamList(camList);
     }
   };
 
   useEffect(() => {
-    if (selectedServer) getServerChannelList();
+    if (selectedServer) {
+      getServerChannelList();
+      getServerCamList();
+    }
   }, [selectedServer]);
+
+  useEffect(() => {
+    if (selectedChannel) {
+      getMessageList();
+    }
+  }, [selectedChannel]);
 
   return (
     <MainStoreContext.Provider
@@ -72,7 +107,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
         isServerInfoModalOpen,
         isServerSettingModalOpen,
         isQuitServerModalOpen,
+        isCreateCamModalOpen,
         serverList,
+        serverCamList,
         setSelectedServer,
         setSelectedChannel,
         setRightClickedChannelId,
@@ -88,6 +125,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsServerInfoModalOpen,
         setIsServerSettingModalOpen,
         setIsQuitServerModalOpen,
+        setIsCreateCamModalOpen,
         setServerList,
         getUserServerList,
       }}

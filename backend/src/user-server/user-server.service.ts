@@ -10,6 +10,7 @@ import { UserServer } from './user-server.entity';
 import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
 import { ServerService } from '../server/server.service';
+import UserServerDto from './dto/user-server-list.dto';
 
 @Injectable()
 export class UserServerService {
@@ -39,7 +40,16 @@ export class UserServerService {
     return this.userServerRepository.save(newUserServer);
   }
 
-  deleteById(id: number): Promise<DeleteResult> {
+  async deleteById(id: number, userId: number): Promise<DeleteResult> {
+    const userServer = await this.userServerRepository.findWithServerOwner(id);
+
+    if (!userServer) {
+      throw new BadRequestException('해당 서버에 참가하고 있지 않습니다.');
+    }
+    if (userServer.server.owner.id === userId) {
+      throw new BadRequestException('서버 생성자는 서버에서 나갈 수 없습니다.');
+    }
+
     return this.userServerRepository.delete(id);
   }
 
@@ -53,7 +63,17 @@ export class UserServerService {
     );
   }
 
-  getServerListByUserId(userId: number): Promise<UserServer[]> {
-    return this.userServerRepository.getServerListByUserId(userId);
+  async getServerListByUserId(userId: number): Promise<UserServerDto[]> {
+    const userServerList =
+      await this.userServerRepository.getServerListByUserId(userId);
+    userServerList.map(UserServerDto.fromEntity);
+    return userServerList;
+  }
+
+  async userCanAccessChannel(userId: number, channelId: number) {
+    return await this.userServerRepository.userCanAccessChannel(
+      userId,
+      channelId,
+    );
   }
 }
