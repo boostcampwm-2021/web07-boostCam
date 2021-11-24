@@ -12,7 +12,7 @@ function ContentsSection(): JSX.Element {
   return (
     <Container>
       <ChattingSection />
-      <ThreadSection />
+      {/* <ThreadSection /> */}
     </Container>
   );
 }

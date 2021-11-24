@@ -1,9 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
-
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-
-const { ListArrow } = BoostCamMainIcons;
 
 const Container = styled.div`
   width: 100%;
@@ -18,18 +14,20 @@ const Container = styled.div`
 
 const ChattingSectionHeader = styled.div`
   width: 100%;
-  height: 25px;
-  flex: 0.5;
+  flex: 1 1 0;
+  max-height: 50px;
 
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  border-bottom: 1px solid gray;
 `;
 
 const ChannelName = styled.div`
   margin-left: 15px;
-  padding: 3px 5px;
+  padding: 8px 12px;
   border-radius: 10px;
 
   cursor: pointer;
@@ -54,14 +52,25 @@ const ChannelUserButton = styled.div`
 
 const ChattingSectionBody = styled.div`
   width: 100%;
-  flex: 5;
-
+  flex: 5 1 0;
   overflow-y: auto;
 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
+  }
 `;
 
 const ChattingItemBlock = styled.div`
@@ -94,7 +103,6 @@ const ChattingItem = styled.div`
 `;
 
 const ChattingItemHeader = styled.div`
-  min-width: 150px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -107,27 +115,83 @@ const ChattingSender = styled.span`
 `;
 
 const ChattingTimelog = styled.span`
-  font-size: 10px;
+  font-size: 12px;
+  margin-left: 15px;
 `;
 
 const ChattingContents = styled.span`
-  font-size: 13px;
+  font-size: 15px;
 `;
 
-const ChattingTextarea = styled.textarea`
-  width: 100%;
-  flex: 1;
+const TextareaDiv = styled.div`
+  min-height: 105px;
+  max-height: 250px;
+  background-color: #ece9e9;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 `;
 
-const ListArrowIcon = styled(ListArrow)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-  transform: rotate(90deg);
+const ChatTextarea = styled.textarea`
+  width: 90%;
+  height: 22px;
+  max-height: 200px;
+  border: none;
+  outline: none;
+  resize: none;
+  background: none;
+
+  font-size: 15px;
+
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+
+  background-color: white;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
+  }
 `;
 
 function ChattingSection(): JSX.Element {
-  const tmpAry = new Array(30).fill('value');
+  const tmpAry = new Array(15).fill('value');
+  const textDivRef = useRef<HTMLDivElement>(null);
+  const tmpChannelName = '# ChannelName';
+
+  const onKeyDownChatTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const { key, currentTarget, shiftKey } = e;
+    const msg = currentTarget.value.trim();
+    const divRef = textDivRef.current;
+
+    currentTarget.style.height = '15px';
+    currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
+    if (divRef) {
+      divRef.style.height = `105px`;
+      divRef.style.height = `${90 + currentTarget.scrollHeight - 27}px`;
+    }
+
+    if (!shiftKey && key === 'Enter') {
+      e.preventDefault();
+      if (!msg.length) currentTarget.value = '';
+      else {
+        console.log(msg);
+        currentTarget.value = '';
+      }
+      currentTarget.style.height = '21px';
+      if (divRef) divRef.style.height = `105px`;
+    }
+  };
 
   const tmpChattingItems = tmpAry.map((val: string, idx: number): JSX.Element => {
     const key = `${val}-${idx}`;
@@ -154,11 +218,13 @@ function ChattingSection(): JSX.Element {
   return (
     <Container>
       <ChattingSectionHeader>
-        <ChannelName> # ChannelName</ChannelName>
+        <ChannelName>{tmpChannelName}</ChannelName>
         <ChannelUserButton>Users 5</ChannelUserButton>
       </ChattingSectionHeader>
       <ChattingSectionBody>{tmpChattingItems}</ChattingSectionBody>
-      <ChattingTextarea />
+      <TextareaDiv ref={textDivRef}>
+        <ChatTextarea onKeyDown={onKeyDownChatTextarea} />
+      </TextareaDiv>
     </Container>
   );
 }
