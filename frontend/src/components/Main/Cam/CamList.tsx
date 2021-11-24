@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
+import { MainStoreContext } from '../MainStore';
 
 import CamListHeader from './CamListHeader';
+import CamListItem from './CamListItem';
 
 const Container = styled.div`
   width: 100%;
@@ -29,7 +31,11 @@ const CamListBody = styled.div`
 
 function CamList(): JSX.Element {
   const [isListOpen, setIsListOpen] = useState<boolean>(false);
-  const listElements: Array<JSX.Element> = [];
+  const { serverCamList } = useContext(MainStoreContext);
+
+  const listElements = serverCamList.map((cam: { name: string; url: string }) => (
+    <CamListItem key={cam.name} name={cam.name} url={cam.url} />
+  ));
 
   return (
     <Container>
