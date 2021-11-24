@@ -56,4 +56,11 @@ export class UserServerService {
   getServerListByUserId(userId: number): Promise<UserServer[]> {
     return this.userServerRepository.getServerListByUserId(userId);
   }
+
+  async userCanAccessChannel(userId: number, channelId: number) {
+    return await this.userServerRepository.userCanAccessChannel(
+      userId,
+      channelId,
+    );
+  }
 }
