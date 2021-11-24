@@ -11,6 +11,7 @@ import { UserInfo } from '../../types/cam';
 import STTStore from './STT/STTStore';
 import SharedScreenStore from './SharedScreen/SharedScreenStore';
 import NickNameForm from './Nickname/NickNameForm';
+import CamNotFound from './CamNotFound';
 
 const Container = styled.div`
   width: 100vw;
@@ -90,7 +91,7 @@ function Cam(): JSX.Element {
       </Container>
     );
   }
-  return <div>없는 방입니다~</div>;
+  return <CamNotFound />;
 }
 
 export default Cam;
