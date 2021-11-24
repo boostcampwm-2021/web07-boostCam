@@ -41,6 +41,7 @@ describe('ServerService', () => {
   let newServer: Server;
   let newUserServer: UserServer;
   let existsServer: Server;
+  let existsUserServer: UserServer;
 
   const existsServerId = 1;
   const userId = 1;
@@ -99,7 +100,8 @@ describe('ServerService', () => {
         existsServerId,
       );
 
-      expect(serverWithUseres).toBe(existsServer);
+      expect(serverWithUseres.name).toBe(existsServer.name);
+      expect(serverWithUseres.description).toBe(existsServer.description);
     });
   });
 
@@ -155,8 +157,13 @@ describe('ServerService', () => {
     newServer.name = serverName;
     newServer.owner = user;
 
+    existsUserServer = new UserServer();
+    existsUserServer.id = 1;
+    existsUserServer.user = user;
+
     existsServer = new Server();
     existsServer.id = existsServerId;
     existsServer.owner = user;
+    existsServer.userServer = [existsUserServer];
   };
 });
