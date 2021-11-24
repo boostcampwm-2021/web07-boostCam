@@ -23,12 +23,15 @@ import { ExpressSession } from '../types/session';
 import ResponseEntity from '../common/response-entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from '../image/image.service';
+import { CamsService } from '../cams/cams.service';
+import { RequestCamsDto } from '../cams/cams.dto';
 
 @Controller('/api/servers')
 export class ServerController {
   constructor(
     private serverService: ServerService,
     private imageService: ImageService,
+    private camsService: CamsService,
   ) {}
 
   @Get('list') async findAll(): Promise<Server[]> {
@@ -54,6 +57,13 @@ export class ServerController {
   ): Promise<ResponseEntity<Server>> {
     const serverWithUsers = await this.serverService.findOneWithUsers(id);
     return ResponseEntity.ok(serverWithUsers);
+  }
+
+  @Get('/:id/cams') async findCams(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<RequestCamsDto[]>> {
+    const cams = await this.camsService.getCams(id);
+    return ResponseEntity.ok(cams);
   }
 
   @Post()

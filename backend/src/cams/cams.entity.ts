@@ -2,8 +2,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  JoinColumn,
   ManyToOne,
+  RelationId,
 } from 'typeorm';
 import { Server } from '../server/server.entity';
 
@@ -19,6 +19,8 @@ export class Cams {
   url: string;
 
   @ManyToOne(() => Server)
-  @JoinColumn({ referencedColumnName: 'id' })
   server: Server;
+
+  @RelationId((cams: Cams) => cams.server)
+  serverId: number;
 }

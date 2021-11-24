@@ -72,8 +72,12 @@ function UserScreen(props: UserScreenProps): JSX.Element {
     socket.emit('getUserStatus', { userId });
     return () => {
       if (stream) {
-        stream.getAudioTracks()[0].enabled = true;
-        stream.getVideoTracks()[0].enabled = true;
+        if (stream.getAudioTracks()[0]) {
+          stream.getAudioTracks()[0].enabled = true;
+        }
+        if (stream.getVideoTracks()[0]) {
+          stream.getVideoTracks()[0].enabled = true;
+        }
       }
     };
   }, []);

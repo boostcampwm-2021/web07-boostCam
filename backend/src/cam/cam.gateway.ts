@@ -11,17 +11,7 @@ import { CamService } from './cam.service';
 @WebSocketGateway()
 export class CamGateway {
   @WebSocketServer() server: Server;
-  constructor(private camService: CamService) {
-    this.camService.createRoom('1');
-  }
-
-  handleConnection(client: Socket) {
-    console.log(`${client.id} is connected!`);
-  }
-
-  handleDisconnect(client: Socket) {
-    console.log(`${client.id} is disconnected!`);
-  }
+  constructor(private camService: CamService) {}
 
   @SubscribeMessage('joinRoom')
   handleJoinRoom(
