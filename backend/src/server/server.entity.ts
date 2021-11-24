@@ -29,4 +29,11 @@ export class Server {
 
   @OneToMany(() => UserServer, (userServer) => userServer.server)
   userServer: UserServer[];
+
+  static newInstance(description: string, name: string): Server {
+    const server = new Server();
+    server.description = description;
+    server.name = name;
+    return server;
+  }
 }

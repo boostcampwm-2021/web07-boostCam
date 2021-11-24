@@ -44,9 +44,14 @@ export class UserServerController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: number) {
+  async delete(
+    @Session()
+    session: ExpressSession,
+    @Param('id') id: number,
+  ) {
     try {
-      this.userServerService.deleteById(id);
+      const userId = session.user.id;
+      await this.userServerService.deleteById(id, userId);
       return ResponseEntity.noContent();
     } catch (error) {
       if (error instanceof HttpException) {

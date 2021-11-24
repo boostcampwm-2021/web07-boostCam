@@ -25,6 +25,14 @@ export class UserServerRepository extends Repository<UserServer> {
       .getOne();
   }
 
+  findWithServerOwner(id: number) {
+    return this.createQueryBuilder('user_server')
+      .leftJoinAndSelect('user_server.server', 'server')
+      .leftJoinAndSelect('server.owner', 'user')
+      .where('user_server.id = :id', { id: id })
+      .getOne();
+  }
+
   async userCanAccessChannel(userId: number, channelId: number) {
     const userServer = await this.createQueryBuilder('userServer')
       .innerJoin(Channel, 'channel', 'channel.serverId = userServer.serverId')

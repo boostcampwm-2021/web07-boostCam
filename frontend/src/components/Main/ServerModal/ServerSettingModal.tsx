@@ -169,25 +169,53 @@ function ServerSettingModal(): JSX.Element {
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
-  const onChangePreviewImage = (e: React.ChangeEvent & { target: HTMLInputElement }) => {
-    const file = e.target.files;
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [files, setFiles] = useState<FileList>();
 
-    if (file) {
-      setImagePreview(URL.createObjectURL(file[0]));
+  const serverId = selectedServer?.server.id;
+
+  const onChangePreviewImage = (e: React.ChangeEvent & { target: HTMLInputElement }) => {
+    const iconFile = e.target.files;
+
+    if (iconFile) {
+      setFiles(iconFile);
+      setImagePreview(URL.createObjectURL(iconFile[0]));
+    }
+  };
+
+  const onCliclUpdateServer = async () => {
+    if (serverId) {
+      const formData = new FormData();
+
+      formData.append('name', name);
+      formData.append('description', description);
+      if (files) formData.append('icon', files[0]);
+
+      const response = await fetch(`api/servers/${serverId}`, {
+        method: 'PATCH',
+        body: formData,
+      });
+      if (response.status === 204) {
+        getUserServerList('updated');
+        setIsServerSettingModalOpen(false);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
     }
   };
 
   const onClickDeleteServer = async () => {
-    const serverId = selectedServer?.server.id;
-
     if (serverId) {
       const response = await fetch(`api/servers/${serverId}`, {
         method: 'DELETE',
       });
 
       if (response.status === 204) {
-        const isServerOrUserServerCreated = false;
-        getUserServerList(isServerOrUserServerCreated);
+        getUserServerList();
         setIsServerSettingModalOpen(false);
       } else {
         const body = await response.json();
@@ -213,15 +241,19 @@ function ServerSettingModal(): JSX.Element {
           <Form>
             <InputName>서버 이름 변경</InputName>
             <InputDiv>
-              <Input name="name" placeholder="서버명을 입력해주세요" />
-              <SubmitButton isButtonActive={isButtonActive} type="button">
+              <Input name="name" placeholder="서버명을 입력해주세요" onChange={(e) => setName(e.target.value)} />
+              <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
                 제출
               </SubmitButton>
             </InputDiv>
             <InputName>서버 설명 변경</InputName>
             <InputDiv>
-              <Input name="description" placeholder="서버 설명을 입력해주세요" />
-              <SubmitButton isButtonActive={isButtonActive} type="button">
+              <Input
+                name="description"
+                placeholder="서버 설명을 입력해주세요"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
                 제출
               </SubmitButton>
             </InputDiv>
@@ -231,7 +263,7 @@ function ServerSettingModal(): JSX.Element {
                 <ImagePreview src={imagePreview} />
                 <Input type="file" onChange={onChangePreviewImage} />
               </ImageInputDiv>
-              <SubmitButton isButtonActive={isButtonActive} type="button">
+              <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
                 제출
               </SubmitButton>
             </InputDiv>
