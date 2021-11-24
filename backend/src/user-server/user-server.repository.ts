@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Channel } from '../channel/channel.entity';
 import { UserServer } from './user-server.entity';
 
 @EntityRepository(UserServer)
@@ -30,5 +31,15 @@ export class UserServerRepository extends Repository<UserServer> {
       .leftJoinAndSelect('server.owner', 'user')
       .where('user_server.id = :id', { id: id })
       .getOne();
+  }
+
+  async userCanAccessChannel(userId: number, channelId: number) {
+    const userServer = await this.createQueryBuilder('userServer')
+      .innerJoin(Channel, 'channel', 'channel.serverId = userServer.serverId')
+      .where('channel.id = :channelId', { channelId })
+      .andWhere('userServer.userId = :userId', { userId })
+      .getOne();
+
+    return !!userServer;
   }
 }

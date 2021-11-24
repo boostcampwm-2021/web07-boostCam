@@ -6,6 +6,7 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  RelationId,
 } from 'typeorm';
 
 @Entity()
@@ -18,6 +19,9 @@ export class Message {
 
   @ManyToOne(() => Channel)
   channel: Channel;
+
+  @RelationId((message: Message) => message.channel)
+  channelId: number;
 
   @CreateDateColumn()
   createdAt: Date;
