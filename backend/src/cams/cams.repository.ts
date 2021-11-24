@@ -3,10 +3,11 @@ import { Cams } from './cams.entity';
 
 @EntityRepository(Cams)
 export class CamsRepository extends Repository<Cams> {
-  findWithServerId(serverId: number) {
-    return this.find({
-      where: { server: { id: serverId } },
-      relations: ['server'],
-    });
+  findByServerId(serverId: number) {
+    return this.createQueryBuilder('cams')
+      .where('cams.serverId = :serverId', {
+        serverId,
+      })
+      .getMany();
   }
 }

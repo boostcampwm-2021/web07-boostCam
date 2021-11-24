@@ -44,7 +44,7 @@ export class CamsService {
   }
 
   async getCams(serverId: number): Promise<RequestCamsDto[]> {
-    const res = await this.camsRepository.findWithServerId(serverId);
+    const res = await this.camsRepository.findByServerId(serverId);
     return res.map((entry) => RequestCamsDto.fromEntry(entry.name, entry.url));
   }
 }
