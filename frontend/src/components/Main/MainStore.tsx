@@ -10,7 +10,7 @@ type MainStoreProps = {
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
-  const [selectedChannel, setSelectedChannel] = useState<string>('1');
+  const [selectedChannel, setSelectedChannel] = useState<string>('-1');
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
   const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
@@ -37,8 +37,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
     const channelList = list.data;
     if (channelList.length) {
       setSelectedChannel(channelList[0].id);
-      setServerChannelList(channelList);
+    } else {
+      setSelectedChannel('-1');
     }
+    setServerChannelList(channelList);
   };
 
   const getUserServerList = async (calledStatus: string | undefined): Promise<void> => {
