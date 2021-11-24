@@ -185,7 +185,6 @@ function ChattingSection(): JSX.Element {
       e.preventDefault();
       if (!msg.length) currentTarget.value = '';
       else {
-        console.log(msg);
         currentTarget.value = '';
       }
       currentTarget.style.height = '21px';
