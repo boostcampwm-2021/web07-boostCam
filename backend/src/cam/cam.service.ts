@@ -19,7 +19,9 @@ export class CamService {
     private serverRepository: ServerRepository,
     @Inject(forwardRef(() => CamInnerService))
     private readonly camInnerService: CamInnerService,
-  ) {}
+  ) {
+    this.camRepository.clear();
+  }
 
   findOne(url: string): Promise<Cam> {
     return this.camRepository.findOne({ url: url });
