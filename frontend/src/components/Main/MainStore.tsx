@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { ChannelData, MyServerData } from '../../types/main';
+import { CamData, ChannelData, MyServerData } from '../../types/main';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -28,6 +28,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
 
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
+  const [isCreateCamModalOpen, setIsCreateCamModalOpen] = useState<boolean>(false);
+  const [serverCamList, setServerCamList] = useState<CamData[]>([]);
+
   const getServerChannelList = async (): Promise<void> => {
     const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
     const list = await response.json();
@@ -49,8 +52,21 @@ function MainStore(props: MainStoreProps): JSX.Element {
     }
   };
 
+  const getServerCamList = async (): Promise<void> => {
+    const response = await fetch(`/api/servers/${selectedServer?.server.id}/cams`);
+    const list = await response.json();
+    const camList = list.data;
+
+    if (response.status === 200) {
+      setServerCamList(camList);
+    }
+  };
+
   useEffect(() => {
-    if (selectedServer) getServerChannelList();
+    if (selectedServer) {
+      getServerChannelList();
+      getServerCamList();
+    }
   }, [selectedServer]);
 
   return (
@@ -70,7 +86,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
         isServerInfoModalOpen,
         isServerSettingModalOpen,
         isQuitServerModalOpen,
+        isCreateCamModalOpen,
         serverList,
+        serverCamList,
         setSelectedServer,
         setSelectedChannel,
         setRightClickedChannelId,
@@ -86,6 +104,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsServerInfoModalOpen,
         setIsServerSettingModalOpen,
         setIsQuitServerModalOpen,
+        setIsCreateCamModalOpen,
         setServerList,
         getUserServerList,
       }}
