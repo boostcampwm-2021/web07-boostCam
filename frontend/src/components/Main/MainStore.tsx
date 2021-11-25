@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { CamData, ChannelData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
 
@@ -7,6 +8,10 @@ export const MainStoreContext = createContext<React.ComponentState>(null);
 type MainStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
 };
+
+const socket = io('/message', {
+  withCredentials: true,
+});
 
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
@@ -61,6 +66,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
       setServerCamList(camList);
     }
   };
+
+  useEffect(() => {
+    socket.emit('joinChannels');
+  }, []);
 
   useEffect(() => {
     if (selectedServer) {

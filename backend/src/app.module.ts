@@ -16,6 +16,7 @@ import { UserServerModule } from './user-server/user-server.module';
 import { LoginModule } from './login/login.module';
 import { UserChannelModule } from './user-channel/user-channel.module';
 import { ImageModule } from './image/image.module';
+import { MessageGateway } from './message.gateway';
 import githubConfig from './config/github.config';
 
 @Module({
@@ -39,6 +40,6 @@ import githubConfig from './config/github.config';
     ImageModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MessageGateway],
 })
 export class AppModule {}
