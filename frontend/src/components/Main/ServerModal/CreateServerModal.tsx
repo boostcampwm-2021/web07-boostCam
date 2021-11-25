@@ -138,8 +138,10 @@ const ImagePreview = styled.img`
 `;
 
 const InputFile = styled.input`
-  display: none;
+  width: 0px;
+  height: 0px;
 `;
+
 const InputLabel = styled.label`
   background-color: #26a9ca;
   width: 300px;
