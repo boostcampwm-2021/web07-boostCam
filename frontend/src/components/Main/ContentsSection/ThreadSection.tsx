@@ -188,30 +188,11 @@ function ThreadSection(): JSX.Element {
   const textDivRef = useRef<HTMLDivElement>(null);
   const [commentsList, setCommentsList] = useState<CommentData[]>([]);
 
-  const buildCommentElement = (data: MessageData | undefined) => {
-    if (!data) return <></>;
-    const { id, contents, createdAt, sender } = data;
-    const { nickname, profile } = sender;
-    return (
-      <CommentItemBlock key={id}>
-        <CommentItemIcon imgUrl={profile} />
-        <CommentItem>
-          <CommentItemHeader>
-            <CommentSender> {nickname} </CommentSender>
-            <CommentTimelog>{createdAt}</CommentTimelog>
-          </CommentItemHeader>
-          <CommentContents>{contents}</CommentContents>
-        </CommentItem>
-      </CommentItemBlock>
-    );
-  };
-
-  const buildMessageElement = (data: MessageData | undefined) => {
-    if (!data) return <></>;
+  const commentInnerElement = (data: MessageData) => {
     const { contents, createdAt, sender } = data;
     const { nickname, profile } = sender;
     return (
-      <MessageItemBlock>
+      <>
         <CommentItemIcon imgUrl={profile} />
         <CommentItem>
           <CommentItemHeader>
@@ -220,7 +201,17 @@ function ThreadSection(): JSX.Element {
           </CommentItemHeader>
           <CommentContents>{contents}</CommentContents>
         </CommentItem>
-      </MessageItemBlock>
+      </>
+    );
+  };
+
+  const buildCommentElement = (data: MessageData | undefined, isComment: boolean) => {
+    if (!data) return <></>;
+    const { id } = data;
+    return isComment ? (
+      <CommentItemBlock key={id}>{commentInnerElement(data)}</CommentItemBlock>
+    ) : (
+      <MessageItemBlock key={id}>{commentInnerElement(data)}</MessageItemBlock>
     );
   };
 
@@ -271,8 +262,8 @@ function ThreadSection(): JSX.Element {
     getMessageList();
   }, [selectedMessageData]);
 
-  const mainMessage = buildMessageElement(selectedMessageData);
-  const CommentItemList = commentsList.map(buildCommentElement);
+  const mainMessage = buildCommentElement(selectedMessageData, false);
+  const CommentItemList = commentsList.map((data) => buildCommentElement(data, true));
 
   return (
     <Container>
