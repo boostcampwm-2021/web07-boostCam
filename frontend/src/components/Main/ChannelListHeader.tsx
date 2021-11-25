@@ -6,6 +6,8 @@ import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { MainStoreContext } from './MainStore';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
+import CreateChannelModal from './ChannelModal/CreateChannelModal';
+import JoinChannelModal from './ChannelModal/JoinChannelModal';
 
 const { Plus, ListArrow } = BoostCamMainIcons;
 
@@ -59,14 +61,7 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { isListOpen, setIsListOpen } = props;
-  const {
-    selectedServer,
-    selectedChannel,
-    isCreateChannelModalOpen,
-    isJoinChannelModalOpen,
-    setIsCreateChannelModalOpen,
-    setIsJoinChannelModalOpen,
-  } = useContext(MainStoreContext);
+  const { selectedServer, selectedChannel } = useContext(MainStoreContext);
   const navigate = useNavigate();
 
   const onClickChannelAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
@@ -99,14 +94,12 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
           <DropdownMenu
             name="추가"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isCreateChannelModalOpen}
-            stateSetter={setIsCreateChannelModalOpen}
+            modalContents={<CreateChannelModal />}
           />
           <DropdownMenu
             name="생성"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isJoinChannelModalOpen}
-            stateSetter={setIsJoinChannelModalOpen}
+            modalContents={<JoinChannelModal />}
           />
         </Dropdown>
       </ChannelListHeaderButton>

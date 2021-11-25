@@ -1,5 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+
+import { MainStoreContext } from '../MainStore';
+import { MessageData, MessageRequestBody } from '../../../types/messags';
+import fetchData from '../../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 100%;
@@ -84,11 +88,13 @@ const MessageItemBlock = styled.div`
   }
 `;
 
-const MessageItemIcon = styled.div`
+const MessageItemIcon = styled.div<{ imgUrl: string }>`
   width: 36px;
   height: 36px;
   margin: 10px;
-  background-color: indigo;
+  background-image: url(${(props) => props.imgUrl});
+  background-size: cover;
+  background-repeat: no-repeat;
   border-radius: 8px;
 `;
 
@@ -165,9 +171,28 @@ const MessageTextarea = styled.textarea`
 `;
 
 function MessageSection(): JSX.Element {
-  const tmpAry = new Array(15).fill('value');
+  const { selectedChannel } = useContext(MainStoreContext);
+  const [messageList, setMessageList] = useState<MessageData[]>([]);
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
+
+  const getMessageList = async () => {
+    const responseData = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
+
+    if (responseData) {
+      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
+      setMessageList(responseData);
+    }
+  };
+
+  const sendMessage = async (contents: string) => {
+    const requestBody: MessageRequestBody = {
+      channelId: selectedChannel,
+      contents,
+    };
+    await fetchData<MessageRequestBody, MessageData>('POST', '/api/messages', requestBody);
+    getMessageList();
+  };
 
   const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const { key, currentTarget, shiftKey } = e;
@@ -185,6 +210,7 @@ function MessageSection(): JSX.Element {
       e.preventDefault();
       if (!msg.length) currentTarget.value = '';
       else {
+        sendMessage(currentTarget.value);
         currentTarget.value = '';
       }
       currentTarget.style.height = '21px';
@@ -192,27 +218,26 @@ function MessageSection(): JSX.Element {
     }
   };
 
-  const tmpMessageItems = tmpAry.map((val: string, idx: number): JSX.Element => {
-    const key = `${val}-${idx}`;
-    const tmp = new Array(idx).fill('Message');
-    const contents = tmp.reduce((acc, va) => {
-      return `${acc}-${va}`;
-    }, '');
+  const MessageItemList = messageList.map((val: MessageData): JSX.Element => {
+    const { id, contents, createdAt, sender } = val;
+    const { nickname, profile } = sender;
     return (
-      <MessageItemBlock key={key}>
-        <MessageItemIcon />
+      <MessageItemBlock key={id}>
+        <MessageItemIcon imgUrl={profile} />
         <MessageItem>
           <MessageItemHeader>
-            <MessageSender> Sender {idx}</MessageSender>
-            <MessageTimelog>Timestamp</MessageTimelog>
+            <MessageSender> {nickname} </MessageSender>
+            <MessageTimelog>{createdAt}</MessageTimelog>
           </MessageItemHeader>
-          <MessageContents>
-            `${contents}-${idx}`
-          </MessageContents>
+          <MessageContents>{contents}</MessageContents>
         </MessageItem>
       </MessageItemBlock>
     );
   });
+
+  useEffect(() => {
+    getMessageList();
+  }, [selectedChannel]);
 
   return (
     <Container>
@@ -220,7 +245,7 @@ function MessageSection(): JSX.Element {
         <ChannelName>{tmpChannelName}</ChannelName>
         <ChannelUserButton>Users 5</ChannelUserButton>
       </MessageSectionHeader>
-      <MessageSectionBody>{tmpMessageItems}</MessageSectionBody>
+      <MessageSectionBody>{MessageItemList}</MessageSectionBody>
       <TextareaDiv ref={textDivRef}>
         <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
       </TextareaDiv>

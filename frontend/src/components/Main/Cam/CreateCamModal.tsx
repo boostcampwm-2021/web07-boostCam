@@ -8,27 +8,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
@@ -175,7 +154,7 @@ function CreateCamModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateCamModalOpen, getServerCamList } = useContext(MainStoreContext);
+  const { selectedServer, setIsModalOpen, getServerCamList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
@@ -190,8 +169,8 @@ function CreateCamModal(): JSX.Element {
         serverId: selectedServer.server.id,
       }),
     });
+    setIsModalOpen(false);
     getServerCamList();
-    setIsCreateCamModalOpen(false);
   };
 
   useEffect(() => {
@@ -203,33 +182,30 @@ function CreateCamModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateCamModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>Cam 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateCamModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>생성할 Cam의 이름을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateCamModal)}>
-            <InputDiv>
-              <InputName>이름</InputName>
-              <Input
-                {...register('name', {
-                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
-                })}
-                placeholder="Cam명을 입력해주세요"
-              />
-              {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-            </InputDiv>
-            <SubmitButton type="submit" isButtonActive={isButtonActive}>
-              생성
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>Cam 생성</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>생성할 Cam의 이름을 작성해주세요</ModalDescription>
+        <Form onSubmit={handleSubmit(onSubmitCreateCamModal)}>
+          <InputDiv>
+            <InputName>이름</InputName>
+            <Input
+              {...register('name', {
+                validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+              })}
+              placeholder="Cam명을 입력해주세요"
+            />
+            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+          </InputDiv>
+          <SubmitButton type="submit" isButtonActive={isButtonActive}>
+            생성
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }

@@ -7,27 +7,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
 
@@ -164,7 +143,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsServerSettingModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
@@ -198,7 +177,7 @@ function ServerSettingModal(): JSX.Element {
       });
       if (response.status === 204) {
         getUserServerList('updated');
-        setIsServerSettingModalOpen(false);
+        setIsModalOpen(false);
       } else {
         const body = await response.json();
         setMessageFailToPost(body.message);
@@ -216,7 +195,7 @@ function ServerSettingModal(): JSX.Element {
 
       if (response.status === 204) {
         getUserServerList();
-        setIsServerSettingModalOpen(false);
+        setIsModalOpen(false);
       } else {
         const body = await response.json();
         setMessageFailToPost(body.message);
@@ -229,61 +208,58 @@ function ServerSettingModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsServerSettingModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>서버 설정</ModalTitle>
-            <ModalCloseButton onClick={() => setIsServerSettingModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <Form>
-            <InputName>서버 이름 변경</InputName>
-            <InputDiv>
-              <Input name="name" placeholder="서버명을 입력해주세요" onChange={(e) => setName(e.target.value)} />
-              <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
-                제출
-              </SubmitButton>
-            </InputDiv>
-            <InputName>서버 설명 변경</InputName>
-            <InputDiv>
-              <Input
-                name="description"
-                placeholder="서버 설명을 입력해주세요"
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
-                제출
-              </SubmitButton>
-            </InputDiv>
-            <InputName>서버 아이콘 변경</InputName>
-            <InputDiv>
-              <ImageInputDiv>
-                <ImagePreview src={imagePreview} />
-                <Input type="file" onChange={onChangePreviewImage} />
-              </ImageInputDiv>
-              <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
-                제출
-              </SubmitButton>
-            </InputDiv>
-            <InputName>서버 URL 재생성</InputName>
-            <InputDiv>
-              <Input name="url" />
-              <SubmitButton isButtonActive={isButtonActive} type="button">
-                생성
-              </SubmitButton>
-            </InputDiv>
-            <InputDiv>
-              <InputName>서버 삭제</InputName>
-              <SubmitButton type="submit" isButtonActive={isButtonActive} onClick={onClickDeleteServer}>
-                서버 삭제
-              </SubmitButton>
-            </InputDiv>
-            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>서버 설정</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <Form>
+          <InputName>서버 이름 변경</InputName>
+          <InputDiv>
+            <Input name="name" placeholder="서버명을 입력해주세요" onChange={(e) => setName(e.target.value)} />
+            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
+              제출
+            </SubmitButton>
+          </InputDiv>
+          <InputName>서버 설명 변경</InputName>
+          <InputDiv>
+            <Input
+              name="description"
+              placeholder="서버 설명을 입력해주세요"
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
+              제출
+            </SubmitButton>
+          </InputDiv>
+          <InputName>서버 아이콘 변경</InputName>
+          <InputDiv>
+            <ImageInputDiv>
+              <ImagePreview src={imagePreview} />
+              <Input type="file" onChange={onChangePreviewImage} />
+            </ImageInputDiv>
+            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
+              제출
+            </SubmitButton>
+          </InputDiv>
+          <InputName>서버 URL 재생성</InputName>
+          <InputDiv>
+            <Input name="url" />
+            <SubmitButton isButtonActive={isButtonActive} type="button">
+              생성
+            </SubmitButton>
+          </InputDiv>
+          <InputDiv>
+            <InputName>서버 삭제</InputName>
+            <SubmitButton type="submit" isButtonActive={isButtonActive} onClick={onClickDeleteServer}>
+              서버 삭제
+            </SubmitButton>
+          </InputDiv>
+          <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }

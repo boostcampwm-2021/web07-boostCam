@@ -1,19 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import ServerListTab from './ServerListTab';
 import MainSection from './MainSection';
 import { MainStoreContext } from './MainStore';
-import CreateChannelModal from './ChannelModal/CreateChannelModal';
-import JoinChannelModal from './ChannelModal/JoinChannelModal';
-import CreateServerModal from './ServerModal/CreateServerModal';
-import JoinServerModal from './ServerModal/JoinServerModal';
-import ServerSettingModal from './ServerModal/ServerSettingModal';
-import ServerInfoModal from './ServerModal/ServerInfoModal';
-import QuitServerModal from './ServerModal/QuitServerModal';
-import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
-import QuitChannelModal from './ChannelModal/QuitChannelModal ';
-import CreateCamModal from './Cam/CreateCamModal';
+import MainModal from './MainModal';
 
 const Container = styled.div`
   width: 100vw;
@@ -26,32 +17,11 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const {
-    isCreateChannelModalOpen,
-    isJoinChannelModalOpen,
-    isUpdateChannelModalOpen,
-    isQuitChannelModalOpen,
-    isCreateServerModalOpen,
-    isJoinServerModalOpen,
-    isServerInfoModalOpen,
-    isServerSettingModalOpen,
-    isQuitServerModalOpen,
-    isCreateCamModalOpen,
-  } = useContext(MainStoreContext);
-  useEffect(() => {}, []);
+  const { isModalOpen } = useContext(MainStoreContext);
 
   return (
     <Container>
-      {isCreateChannelModalOpen && <CreateChannelModal />}
-      {isJoinChannelModalOpen && <JoinChannelModal />}
-      {isUpdateChannelModalOpen && <UpdateChannelModal />}
-      {isQuitChannelModalOpen && <QuitChannelModal />}
-      {isCreateServerModalOpen && <CreateServerModal />}
-      {isJoinServerModalOpen && <JoinServerModal />}
-      {isServerSettingModalOpen && <ServerSettingModal />}
-      {isServerInfoModalOpen && <ServerInfoModal />}
-      {isQuitServerModalOpen && <QuitServerModal />}
-      {isCreateCamModalOpen && <CreateCamModal />}
+      {isModalOpen && <MainModal />}
       <ServerListTab />
       <MainSection />
     </Container>
