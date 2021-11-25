@@ -72,26 +72,20 @@ const ThreadSectionBody = styled.div`
   }
 `;
 
-const MessageItemBlock = styled.div`
+const CommentItemBlock = styled.div<{ isComment: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
 
-  padding: 10px 0px;
-
-  border-bottom: 1px solid gray;
-`;
-
-const CommentItemBlock = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-
-  &:hover {
+  ${(props) =>
+    props.isComment
+      ? `&:hover {
     background-color: #f0e7e7;
-  }
+  }`
+      : `
+  padding: 10px 0px;
+  border-bottom: 1px solid gray;`}
 `;
 
 const CommentItemIcon = styled.div<{ imgUrl: string }>`
@@ -208,10 +202,10 @@ function ThreadSection(): JSX.Element {
   const buildCommentElement = (data: MessageData | undefined, isComment: boolean) => {
     if (!data) return <></>;
     const { id } = data;
-    return isComment ? (
-      <CommentItemBlock key={id}>{commentInnerElement(data)}</CommentItemBlock>
-    ) : (
-      <MessageItemBlock key={id}>{commentInnerElement(data)}</MessageItemBlock>
+    return (
+      <CommentItemBlock isComment={isComment} key={id}>
+        {commentInnerElement(data)}
+      </CommentItemBlock>
     );
   };
 
