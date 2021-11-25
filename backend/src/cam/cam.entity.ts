@@ -5,10 +5,11 @@ import {
   ManyToOne,
   RelationId,
 } from 'typeorm';
+
 import { Server } from '../server/server.entity';
 
 @Entity()
-export class Cams {
+export class Cam {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -21,6 +22,6 @@ export class Cams {
   @ManyToOne(() => Server)
   server: Server;
 
-  @RelationId((cams: Cams) => cams.server)
+  @RelationId((cam: Cam) => cam.server)
   serverId: number;
 }

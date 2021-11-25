@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -70,7 +71,15 @@ export class UserServerService {
     return userServerList;
   }
 
-  async userCanAccessChannel(userId: number, channelId: number) {
+  async checkUserChannelAccess(senderId: number, channelId: number) {
+    const userServer = await this.userCanAccessChannel(senderId, channelId);
+
+    if (!userServer) {
+      throw new ForbiddenException('서버나 채널에 참여하지 않았습니다.');
+    }
+  }
+
+  private async userCanAccessChannel(userId: number, channelId: number) {
     return await this.userServerRepository.userCanAccessChannel(
       userId,
       channelId,

@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
+  RelationId,
 } from 'typeorm';
 import { Message } from '../message/message.entity';
 import { User } from '../user/user.entity';
@@ -22,6 +23,20 @@ export class Comment {
   @ManyToOne(() => User)
   sender: User;
 
+  @RelationId((comment: Comment) => comment.sender)
+  senderId: number;
+
   @ManyToOne(() => Message)
   message: Message;
+
+  @RelationId((comment: Comment) => comment.message)
+  messageId: number;
+
+  static newInstance(sender: User, message: Message, contents: string) {
+    const newInstance = new Comment();
+    newInstance.contents = contents;
+    newInstance.sender = sender;
+    newInstance.message = message;
+    return newInstance;
+  }
 }
