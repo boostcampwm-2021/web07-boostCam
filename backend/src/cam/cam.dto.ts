@@ -1,3 +1,5 @@
+import { Cam } from './cam.entity';
+
 export type CreateCamDto = {
   name: string;
   serverId: number;
@@ -11,7 +13,7 @@ export class ResponseCamDto {
     this.url = url;
   }
 
-  static fromEntry(name: string, url: string) {
-    return new ResponseCamDto(name, url);
+  static fromEntry(cam: Cam) {
+    return new ResponseCamDto(cam.name, cam.url);
   }
 }

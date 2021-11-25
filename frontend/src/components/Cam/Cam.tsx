@@ -42,7 +42,7 @@ function Cam(): JSX.Element {
   const camRef = useRef<HTMLDivElement>(null);
 
   const checkRoomExist = async (roomId: string) => {
-    const response = await fetch(`api/cam/${roomId}`, {
+    const response = await fetch(`/api/cam/${roomId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

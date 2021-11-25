@@ -53,6 +53,6 @@ export class CamService {
 
   async getCamList(serverId: number): Promise<ResponseCamDto[]> {
     const res = await this.camRepository.findByServerId(serverId);
-    return res.map((entry) => ResponseCamDto.fromEntry(entry.name, entry.url));
+    return res.map((entry) => ResponseCamDto.fromEntry(entry));
   }
 }
