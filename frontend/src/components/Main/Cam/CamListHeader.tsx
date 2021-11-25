@@ -76,7 +76,7 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
         <PlusIcon onClick={onClickCamAddButton} />
         <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
           <DropdownMenu
-            name="추가"
+            name="Cam 생성"
             setIsDropdownActivated={setIsDropdownActivated}
             modalContents={<CreateCamModal />}
           />
