@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import MessageSection from './MessageSection';
 
 const Container = styled.div`
   flex: 1;
@@ -7,9 +8,11 @@ const Container = styled.div`
 `;
 
 function ContentsSection(): JSX.Element {
-  useEffect(() => {}, []);
-
-  return <Container>ContentsSection</Container>;
+  return (
+    <Container>
+      <MessageSection />
+    </Container>
+  );
 }
 
 export default ContentsSection;

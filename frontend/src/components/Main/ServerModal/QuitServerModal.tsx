@@ -7,27 +7,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
@@ -139,23 +118,9 @@ const CloseIcon = styled(Close)`
 `;
 
 function QuitServerModal(): JSX.Element {
-  const { setIsQuitServerModalOpen, setServerList, setSelectedServer, selectedServer } = useContext(MainStoreContext);
+  const { setIsModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
   const isButtonActive = true;
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
-
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200) {
-      setServerList(list.data);
-      if (list.data.length !== 0) {
-        setSelectedServer(list.data[0]);
-      } else {
-        setSelectedServer(undefined);
-      }
-    }
-  };
 
   const onClickQuitServer = async () => {
     const userServerId = selectedServer.id;
@@ -166,8 +131,9 @@ function QuitServerModal(): JSX.Element {
       },
     });
     if (response.status === 204) {
-      getServerList();
-      setIsQuitServerModalOpen(false);
+      const isServerOrUserServerCreated = false;
+      getUserServerList(isServerOrUserServerCreated);
+      setIsModalOpen(false);
     } else {
       const body = await response.json();
       setMessageFailToPost(body.message);
@@ -176,24 +142,21 @@ function QuitServerModal(): JSX.Element {
 
   return (
     <Container>
-      <ModalBackground onClick={() => setIsQuitServerModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>서버 나가기</ModalTitle>
-            <ModalCloseButton onClick={() => setIsQuitServerModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>서버에서 나가시겠습니까?</ModalDescription>
-          <Form>
-            <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
-            <SubmitButton type="button" isButtonActive={isButtonActive} onClick={onClickQuitServer}>
-              예
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>서버 나가기</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>서버에서 나가시겠습니까?</ModalDescription>
+        <Form>
+          <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
+          <SubmitButton type="button" isButtonActive={isButtonActive} onClick={onClickQuitServer}>
+            예
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }

@@ -1,3 +1,5 @@
+import { Server } from '../server.entity';
+
 class RequestServerDto {
   name: string;
   description: string;
@@ -6,6 +8,10 @@ class RequestServerDto {
     this.name = name;
     this.description = description;
   }
+
+  toServerEntity = () => {
+    return Server.newInstance(this.description, this.name);
+  };
 }
 
 export default RequestServerDto;

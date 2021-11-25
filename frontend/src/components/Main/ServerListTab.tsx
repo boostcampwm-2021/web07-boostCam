@@ -7,6 +7,8 @@ import { MyServerData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
+import CreateServerModal from './ServerModal/CreateServerModal';
+import JoinServerModal from './ServerModal/JoinServerModal';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -85,29 +87,10 @@ const PlusIcon = styled(Plus)`
 
 function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
-  const {
-    selectedServer,
-    setSelectedServer,
-    isCreateServerModalOpen,
-    isJoinServerModalOpen,
-    setIsCreateServerModalOpen,
-    setIsJoinServerModalOpen,
-    serverList,
-    setServerList,
-  } = useContext(MainStoreContext);
+  const { selectedServer, setSelectedServer, serverList, getUserServerList } = useContext(MainStoreContext);
 
   const initChannel = '1';
   const navigate = useNavigate();
-
-  const getServerList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
-
-    if (response.status === 200 && list.data.length !== 0) {
-      setServerList(list.data);
-      setSelectedServer(list.data[0]);
-    }
-  };
 
   const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     e.stopPropagation();
@@ -134,7 +117,8 @@ function ServerListTab(): JSX.Element {
   });
 
   useEffect(() => {
-    getServerList();
+    const isServerOrUserServerCreated = false;
+    getUserServerList(isServerOrUserServerCreated);
   }, []);
 
   useEffect(() => {
@@ -156,14 +140,12 @@ function ServerListTab(): JSX.Element {
           <DropdownMenu
             name="서버 생성"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isCreateServerModalOpen}
-            stateSetter={setIsCreateServerModalOpen}
+            modalContents={<CreateServerModal />}
           />
           <DropdownMenu
             name="서버 참가"
             setIsDropdownActivated={setIsDropdownActivated}
-            state={isJoinServerModalOpen}
-            stateSetter={setIsJoinServerModalOpen}
+            modalContents={<JoinServerModal />}
           />
         </Dropdown>
       </AddServerButton>

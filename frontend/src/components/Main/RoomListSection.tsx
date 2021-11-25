@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import ChannelList from './ChannelList';
-import CamList from './CamList';
+import CamList from './Cam/CamList';
 
 const Container = styled.div`
   width: 180px;
@@ -11,8 +11,6 @@ const Container = styled.div`
 `;
 
 function RoomListSection(): JSX.Element {
-  useEffect(() => {}, []);
-
   return (
     <Container>
       <ChannelList />

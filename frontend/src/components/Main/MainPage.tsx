@@ -1,16 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import ServerListTab from './ServerListTab';
 import MainSection from './MainSection';
 import { MainStoreContext } from './MainStore';
-import CreateChannelModal from './Modal/CreateChannelModal';
-import JoinChannelModal from './Modal/JoinChannelModal';
-import CreateServerModal from './ServerModal/CreateServerModal';
-import JoinServerModal from './ServerModal/JoinServerModal';
-import ServerSettingModal from './ServerModal/ServerSettingModal';
-import ServerInfoModal from './ServerModal/ServerInfoModal';
-import QuitServerModal from './ServerModal/QuitServerModal';
+import MainModal from './MainModal';
 
 const Container = styled.div`
   width: 100vw;
@@ -23,26 +17,11 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const {
-    isCreateModalOpen,
-    isJoinModalOpen,
-    isCreateServerModalOpen,
-    isJoinServerModalOpen,
-    isServerInfoModalOpen,
-    isServerSettingModalOpen,
-    isQuitServerModalOpen,
-  } = useContext(MainStoreContext);
-  useEffect(() => {}, []);
+  const { isModalOpen } = useContext(MainStoreContext);
 
   return (
     <Container>
-      {isCreateModalOpen && <CreateChannelModal />}
-      {isJoinModalOpen && <JoinChannelModal />}
-      {isCreateServerModalOpen && <CreateServerModal />}
-      {isJoinServerModalOpen && <JoinServerModal />}
-      {isServerSettingModalOpen && <ServerSettingModal />}
-      {isServerInfoModalOpen && <ServerInfoModal />}
-      {isQuitServerModalOpen && <QuitServerModal />}
+      {isModalOpen && <MainModal />}
       <ServerListTab />
       <MainSection />
     </Container>

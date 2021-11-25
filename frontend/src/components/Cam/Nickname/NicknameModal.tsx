@@ -28,12 +28,12 @@ const ModalBackground = styled.div`
 `;
 
 const ModalBox = styled.div`
-  width: 20%;
+  width: 30%;
   height: 20%;
   background-color: white;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   padding: 20px;
   border-radius: 20px;
@@ -45,7 +45,6 @@ const Form = styled.form`
   border-radius: 20px;
 
   display: flex;
-  flex-direction: column;
   justify-content: space-around;
   align-items: center;
 `;
@@ -54,29 +53,21 @@ const Input = styled.input`
   border: 1px solid grey;
   outline: none;
   padding: 8px 10px;
-  margin-top: 10px;
+  margin-right: 20px;
   border-radius: 10px;
 `;
 
 const SubmitButton = styled.button`
   width: 30%;
-  margin-top: 15px;
   height: 35px;
   background: none;
 
-  border: 0;
   outline: 0;
 
+  border: 1px solid grey;
   border-radius: 10px;
-  background-color: #2dc2e6;
   cursor: pointer;
   text-align: center;
-  transition: all 0.3s;
-
-  &:hover {
-    background-color: #26a9ca;
-    transition: all 0.3s;
-  }
 
   a {
     text-decoration: none;

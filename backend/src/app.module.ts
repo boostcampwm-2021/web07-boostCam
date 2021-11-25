@@ -12,7 +12,6 @@ import { ChannelModule } from './channel/channel.module';
 import { MessageModule } from './message/message.module';
 import { EmoticonModule } from './emoticon/emoticon.module';
 import { ServerModule } from './server/server.module';
-import { CamsModule } from './cams/cams.module';
 import { UserServerModule } from './user-server/user-server.module';
 import { LoginModule } from './login/login.module';
 import { UserChannelModule } from './user-channel/user-channel.module';
@@ -34,7 +33,6 @@ import githubConfig from './config/github.config';
     MessageModule,
     EmoticonModule,
     ServerModule,
-    CamsModule,
     UserServerModule,
     LoginModule,
     UserChannelModule,

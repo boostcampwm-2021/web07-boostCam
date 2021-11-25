@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
@@ -6,7 +6,17 @@ import userState from '../../atoms/user';
 
 import User from '../../types/user';
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: #492148;
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+  font-size: 36px;
+  font-weight: bold;
+  color: #eeeeee;
+`;
 
 const requestLogin = async (code: string, service: string): Promise<User> => {
   const response = await fetch(`/api/login/${service}?code=${code}`);
@@ -26,6 +36,8 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
+  const [loginStatus, setLoginStatus] = useState<string>('로그인 중');
+  const loginStatusRef = useRef('로그인 중');
 
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
@@ -50,6 +62,22 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
     tryLogin();
   }, [code]);
 
+  const changeLoginStatusMessage = () => {
+    loginStatusRef.current += '.';
+    if (loginStatusRef.current.length > 8) {
+      loginStatusRef.current = loginStatusRef.current.substring(0, 5);
+    }
+    setLoginStatus(loginStatusRef.current);
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(changeLoginStatusMessage, 200);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   if (loggedInUser || isSuccess) {
     return <Navigate to="/main" />;
   }
@@ -57,7 +85,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   if (loading) {
     return (
       <Container>
-        <div>로그인 중...</div>
+        <div>{loginStatus}</div>
       </Container>
     );
   }

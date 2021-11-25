@@ -8,27 +8,6 @@ import { ChannelData } from '../../../types/main';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 50%;
   min-width: 400px;
   height: 70%;
@@ -191,7 +170,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function JoinChannelModal(): JSX.Element {
-  const { selectedServer, setIsJoinModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
   const [channelList, setChannelList] = useState<ChannelData[]>([]);
 
   const getNotJoinedChannelList = async () => {
@@ -201,7 +180,7 @@ function JoinChannelModal(): JSX.Element {
   };
 
   const onClickChannelListButton = async (id: string) => {
-    await fetch('/api/user/channels', {
+    await fetch('/api/user/servers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -212,14 +191,14 @@ function JoinChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    setIsJoinModalOpen(false);
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
     getNotJoinedChannelList();
   }, []);
 
-  const tmpList = channelList.map((val) => (
+  const notJoinedChannelList = channelList.map((val) => (
     <ModalChannelListItem key={val.id}>
       <ItemText>
         <ItemTitle>{val.name}</ItemTitle>
@@ -232,19 +211,16 @@ function JoinChannelModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsJoinModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>채널 참가</ModalTitle>
-            <ModalCloseButton onClick={() => setIsJoinModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>참가할 채널을 선택해주세요</ModalDescription>
-          <ModalChannelList>{tmpList}</ModalChannelList>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>채널 참가</ModalTitle>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>참가할 채널을 선택해주세요</ModalDescription>
+        <ModalChannelList>{notJoinedChannelList}</ModalChannelList>
+      </ModalInnerBox>
     </Container>
   );
 }

@@ -8,27 +8,6 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
   width: 35%;
   min-width: 400px;
   height: 50%;
@@ -163,25 +142,27 @@ const CloseIcon = styled(Close)`
   fill: #a69c96;
 `;
 
-type CreateModalForm = {
+type UpdateModalForm = {
   name: string;
   description: string;
 };
 
-function CreateChannelModal(): JSX.Element {
+function UpdateChannelModal(): JSX.Element {
   const {
     register,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors },
-  } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  } = useForm<UpdateModalForm>();
+  const { selectedServer, rightClickedChannelId, setIsUpdateChannelModalOpen, getServerChannelList } =
+    useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
-  const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
+  const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch('api/channel', {
-      method: 'POST',
+    await fetch(`api/channel/${rightClickedChannelId}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -192,8 +173,20 @@ function CreateChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    setIsCreateModalOpen(false);
+    setIsUpdateChannelModalOpen(false);
   };
+
+  const setSelectedChannelData = async () => {
+    const response = await fetch(`/api/channel/${rightClickedChannelId}`);
+    const responseObj = await response.json();
+    const channelData = responseObj.data;
+    setValue('name', channelData.name);
+    setValue('description', channelData.description);
+  };
+
+  useEffect(() => {
+    setSelectedChannelData();
+  }, []);
 
   useEffect(() => {
     const { name, description } = watch();
@@ -204,45 +197,42 @@ function CreateChannelModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
-      <ModalBackground onClick={() => setIsCreateModalOpen(false)} />
-      <ModalBox>
-        <ModalInnerBox>
-          <ModalHeader>
-            <ModalTitle>채널 생성</ModalTitle>
-            <ModalCloseButton onClick={() => setIsCreateModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescription>생성할 채널의 이름과 설명을 작성해주세요</ModalDescription>
-          <Form onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
-            <InputDiv>
-              <InputName>이름</InputName>
-              <Input
-                {...register('name', {
-                  validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
-                })}
-                placeholder="채널명을 입력해주세요"
-              />
-              {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-            </InputDiv>
-            <InputDiv>
-              <InputName>설명</InputName>
-              <Input
-                {...register('description', {
-                  validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-                })}
-                placeholder="채널 설명을 입력해주세요"
-              />
-              {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
-            </InputDiv>
-            <SubmitButton type="submit" isButtonActive={isButtonActive}>
-              생성
-            </SubmitButton>
-          </Form>
-        </ModalInnerBox>
-      </ModalBox>
+      <ModalInnerBox>
+        <ModalHeader>
+          <ModalTitle>채널 수정</ModalTitle>
+          <ModalCloseButton onClick={() => setIsUpdateChannelModalOpen(false)}>
+            <CloseIcon />
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalDescription>선택한 채널에 대한 내용을 변경할 수 있습니다.</ModalDescription>
+        <Form onSubmit={handleSubmit(onSubmitUpdateChannelModal)}>
+          <InputDiv>
+            <InputName>이름</InputName>
+            <Input
+              {...register('name', {
+                validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+              })}
+              placeholder="채널명을 입력해주세요"
+            />
+            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+          </InputDiv>
+          <InputDiv>
+            <InputName>설명</InputName>
+            <Input
+              {...register('description', {
+                validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+              })}
+              placeholder="채널 설명을 입력해주세요"
+            />
+            {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
+          </InputDiv>
+          <SubmitButton type="submit" isButtonActive={isButtonActive}>
+            수정
+          </SubmitButton>
+        </Form>
+      </ModalInnerBox>
     </Container>
   );
 }
 
-export default CreateChannelModal;
+export default UpdateChannelModal;

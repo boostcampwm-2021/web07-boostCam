@@ -8,6 +8,7 @@ import {
   UseGuards,
   HttpException,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { Server } from '../server/server.entity';
 import { LoginGuard } from '../login/login.guard';
@@ -21,7 +22,7 @@ export class UserServerController {
   constructor(private userServerService: UserServerService) {}
 
   @Post()
-  async create(
+  async createUserServer(
     @Session()
     session: ExpressSession,
     @Body() server: Server,
@@ -34,18 +35,29 @@ export class UserServerController {
       );
       return ResponseEntity.created(newUserServer.id);
     } catch (error) {
-      throw new HttpException(error.response, 403);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Delete('/:id')
-  @HttpCode(204)
-  delete(@Param('id') id: number) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(
+    @Session()
+    session: ExpressSession,
+    @Param('id') id: number,
+  ) {
     try {
-      this.userServerService.deleteById(id);
+      const userId = session.user.id;
+      await this.userServerService.deleteById(id, userId);
       return ResponseEntity.noContent();
     } catch (error) {
-      throw new HttpException(error.response, 403);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }
