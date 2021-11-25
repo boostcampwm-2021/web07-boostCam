@@ -72,11 +72,11 @@ const InputDiv = styled.div`
 `;
 
 const ImageInputDiv = styled.div`
-  width: 250px;
+  width: 270px;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const InputName = styled.span`
@@ -112,6 +112,27 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   &:hover {
     background-color: ${(props) => (props.isButtonActive ? '#2dc2e6' : 'gray')};
     transition: all 0.3s;
+  }
+`;
+const InputFile = styled.input`
+  display: none;
+`;
+const InputLabel = styled.label`
+  background-color: #26a9ca;
+  width: 220px;
+  height: 40px;
+  border-radius: 10px;
+  font-weight: 400;
+  transition: all 0.3s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: '#2dc2e6';
+    transition: all 0.3s;
+    cursor: pointer;
   }
 `;
 
@@ -275,7 +296,8 @@ function ServerSettingModal(): JSX.Element {
           <InputDiv>
             <ImageInputDiv>
               <ImagePreview src={imagePreview} />
-              <Input type="file" onChange={onChangePreviewImage} />
+              <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
+              <InputFile id="file" type="file" onChange={onChangePreviewImage} />
             </ImageInputDiv>
             <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
               제출
