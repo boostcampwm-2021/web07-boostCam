@@ -6,7 +6,7 @@ import { MessageData, MessageRequestBody } from '../../../types/messags';
 import fetchData from '../../../utils/fetchMethods';
 
 const Container = styled.div`
-  width: 100%;
+  width: 50%;
   height: 100%;
 
   background-color: white;
@@ -14,6 +14,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  border-right: 1px solid black;
 `;
 
 const MessageSectionHeader = styled.div`
@@ -171,7 +172,7 @@ const MessageTextarea = styled.textarea`
 `;
 
 function MessageSection(): JSX.Element {
-  const { selectedChannel } = useContext(MainStoreContext);
+  const { selectedChannel, setSelectedMessageData } = useContext(MainStoreContext);
   const [messageList, setMessageList] = useState<MessageData[]>([]);
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
@@ -218,11 +219,15 @@ function MessageSection(): JSX.Element {
     }
   };
 
+  const onClickMessageItemBlock = (data: MessageData) => {
+    setSelectedMessageData(data);
+  };
+
   const MessageItemList = messageList.map((val: MessageData): JSX.Element => {
     const { id, contents, createdAt, sender } = val;
     const { nickname, profile } = sender;
     return (
-      <MessageItemBlock key={id}>
+      <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
         <MessageItemIcon imgUrl={profile} />
         <MessageItem>
           <MessageItemHeader>
