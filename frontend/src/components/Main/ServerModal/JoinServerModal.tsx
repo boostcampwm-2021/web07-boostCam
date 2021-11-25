@@ -148,7 +148,7 @@ const CloseIcon = styled(Close)`
 `;
 
 type JoinServerModalForm = {
-  serverId: string;
+  code: string;
 };
 
 function JoinServerModal(): JSX.Element {
@@ -162,15 +162,15 @@ function JoinServerModal(): JSX.Element {
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
-  const onSubmitJoinServerModal = async (data: { serverId: string }) => {
-    const { serverId } = data;
+  const onSubmitJoinServerModal = async (data: { code: string }) => {
+    const { code } = data;
     const response = await fetch('api/users/servers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: serverId.trim(),
+        id: code.trim(),
       }),
     });
 
@@ -184,8 +184,8 @@ function JoinServerModal(): JSX.Element {
   };
 
   useEffect(() => {
-    const { serverId } = watch();
-    const isActive = serverId.trim().length > 0;
+    const { code } = watch();
+    const isActive = code.trim().length > 0;
     setIsButtonActive(isActive);
   }, [watch()]);
 
@@ -204,12 +204,12 @@ function JoinServerModal(): JSX.Element {
           <InputDiv>
             <InputName>참가 코드</InputName>
             <Input
-              {...register('serverId', {
+              {...register('code', {
                 validate: (value) => value.trim().length > 0 || '"참가코드" 칸을 입력해주세요!',
               })}
               placeholder="참가코드를 입력해주세요"
             />
-            {errors.serverId && <InputErrorMessage>{errors.serverId.message}</InputErrorMessage>}
+            {errors.code && <InputErrorMessage>{errors.code.message}</InputErrorMessage>}
           </InputDiv>
           <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
           <SubmitButton type="submit" isButtonActive={isButtonActive}>

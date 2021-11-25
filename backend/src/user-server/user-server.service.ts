@@ -22,17 +22,17 @@ export class UserServerService {
     private userServerRepository: UserServerRepository,
   ) {}
 
-  async create(user: User, serverId: number): Promise<UserServer> {
+  async create(user: User, code: string): Promise<UserServer> {
     const newUserServer = new UserServer();
     newUserServer.user = user;
-    newUserServer.server = await this.serverService.findOne(serverId);
+    newUserServer.server = await this.serverService.findByCode(code);
 
     if (newUserServer.server == undefined) {
       throw new BadRequestException('존재하지 않는 서버입니다.');
     }
     const userServer = await this.userServerRepository.findByUserIdAndServerId(
       user.id,
-      serverId,
+      newUserServer.server.id,
     );
     if (userServer !== undefined) {
       throw new BadRequestException('이미 등록된 서버입니다.');

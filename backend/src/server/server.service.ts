@@ -6,6 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { v4 } from 'uuid';
 
 import { User } from '../user/user.entity';
 import { Server } from './server.entity';
@@ -30,6 +31,10 @@ export class ServerService {
     return this.serverRepository.findOne({ id: id });
   }
 
+  findByCode(code: string): Promise<Server> {
+    return this.serverRepository.findOne({ code });
+  }
+
   async create(
     user: User,
     requestServerDto: RequestServerDto,
@@ -38,9 +43,10 @@ export class ServerService {
     const server = requestServerDto.toServerEntity();
     server.owner = user;
     server.imgUrl = imgUrl || '';
+    server.code = v4();
 
     const createdServer = await this.serverRepository.save(server);
-    this.userServerService.create(user, createdServer.id);
+    this.userServerService.create(user, createdServer.code);
 
     return createdServer;
   }

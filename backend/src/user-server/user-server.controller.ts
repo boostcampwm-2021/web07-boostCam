@@ -25,14 +25,11 @@ export class UserServerController {
   async createUserServer(
     @Session()
     session: ExpressSession,
-    @Body() server: Server,
+    @Body() code: string,
   ) {
     try {
       const user = session.user;
-      const newUserServer = await this.userServerService.create(
-        user,
-        server.id,
-      );
+      const newUserServer = await this.userServerService.create(user, code);
       return ResponseEntity.created(newUserServer.id);
     } catch (error) {
       if (error instanceof HttpException) {
