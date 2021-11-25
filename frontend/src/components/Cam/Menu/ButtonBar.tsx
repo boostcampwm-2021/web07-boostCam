@@ -20,6 +20,7 @@ const {
   ExitIcon,
   STTIcon,
   STTDisabledIcon,
+  CopyIcon,
 } = ButtonBarIcons;
 
 const Container = styled.div<{ isMouseOnCamPage: boolean }>`
@@ -120,6 +121,11 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
     setMouseOnCamPage(false);
   };
 
+  const onClickCopyURLButton = async () => {
+    const url = window.location.href;
+    await navigator.clipboard.writeText(url);
+  };
+
   useEffect(() => {
     if (camRef?.current) {
       camRef.current.onmouseover = handleMouseOverCamPage;
@@ -144,6 +150,10 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
           </Button>
         </ButtonContainer>
         <ButtonContainer>
+          <Button onClick={onClickCopyURLButton}>
+            <CopyIcon />
+            <span>URL 복사</span>
+          </Button>
           <Button onClick={onClickNicknameChangeButton}>
             <IdentificationIcon />
             <span>닉네임</span>
