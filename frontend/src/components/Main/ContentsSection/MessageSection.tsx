@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { MessageData, MessageRequestBody } from '../../../types/messags';
-import fetchData from '../../../utils/fetchMethods';
+import { MessageData, MessageRequestBody } from '../../../types/message';
 
 const Container = styled.div`
-  width: 100%;
+  width: 50%;
   height: 100%;
 
   background-color: white;
@@ -14,6 +13,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  border-right: 1px solid black;
 `;
 
 const MessageSectionHeader = styled.div`
@@ -170,28 +170,22 @@ const MessageTextarea = styled.textarea`
   }
 `;
 
-function MessageSection(): JSX.Element {
-  const { selectedChannel } = useContext(MainStoreContext);
-  const [messageList, setMessageList] = useState<MessageData[]>([]);
+type MessageSectionProps = {
+  messageList: MessageData[];
+};
+
+function MessageSection(props: MessageSectionProps): JSX.Element {
+  const { selectedChannel, setSelectedMessageData, socket } = useContext(MainStoreContext);
+  const { messageList } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
-
-  const getMessageList = async () => {
-    const responseData = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
-
-    if (responseData) {
-      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
-      setMessageList(responseData);
-    }
-  };
 
   const sendMessage = async (contents: string) => {
     const requestBody: MessageRequestBody = {
       channelId: selectedChannel,
       contents,
     };
-    await fetchData<MessageRequestBody, MessageData>('POST', '/api/messages', requestBody);
-    getMessageList();
+    socket.emit('sendMessage', requestBody);
   };
 
   const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -218,11 +212,15 @@ function MessageSection(): JSX.Element {
     }
   };
 
+  const onClickMessageItemBlock = (data: MessageData) => {
+    setSelectedMessageData(data);
+  };
+
   const MessageItemList = messageList.map((val: MessageData): JSX.Element => {
     const { id, contents, createdAt, sender } = val;
     const { nickname, profile } = sender;
     return (
-      <MessageItemBlock key={id}>
+      <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
         <MessageItemIcon imgUrl={profile} />
         <MessageItem>
           <MessageItemHeader>
@@ -234,10 +232,6 @@ function MessageSection(): JSX.Element {
       </MessageItemBlock>
     );
   });
-
-  useEffect(() => {
-    getMessageList();
-  }, [selectedChannel]);
 
   return (
     <Container>

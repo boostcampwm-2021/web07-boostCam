@@ -38,4 +38,14 @@ export class MessageService {
     const messages = await this.messageRepository.findByChannelId(channelId);
     return messages.map(MessageDto.fromEntity);
   }
+
+  async findMessagesByMessageId(
+    senderId: number,
+    channelId: number,
+    messageId: number,
+  ) {
+    await this.userServerService.checkUserChannelAccess(senderId, channelId);
+    const message = await this.messageRepository.findOne(messageId);
+    return MessageDto.fromEntity(message);
+  }
 }

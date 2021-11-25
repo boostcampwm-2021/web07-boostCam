@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { CamData, ChannelData, MyServerData } from '../../types/main';
+import { MessageData } from '../../types/message';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -16,6 +17,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
   const [selectedChannel, setSelectedChannel] = useState<string>('');
+  const [selectedMessageData, setSelectedMessageData] = useState<MessageData>();
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
   const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
@@ -66,10 +68,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
   };
 
   useEffect(() => {
-    socket.emit('joinChannels');
-  }, []);
-
-  useEffect(() => {
     if (selectedServer) {
       getServerChannelList();
       getServerCamList();
@@ -79,10 +77,12 @@ function MainStore(props: MainStoreProps): JSX.Element {
   return (
     <MainStoreContext.Provider
       value={{
+        socket,
         isModalOpen,
         modalContents,
         selectedServer,
         selectedChannel,
+        selectedMessageData,
         rightClickedChannelId,
         rightClickedChannelName,
         serverChannelList,
@@ -92,6 +92,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setModalContents,
         setSelectedServer,
         setSelectedChannel,
+        setSelectedMessageData,
         setRightClickedChannelId,
         setRightClickedChannelName,
         setServerChannelList,
