@@ -195,11 +195,8 @@ function ServerInfoModal(): JSX.Element {
           <InfoSpan>{serverName}</InfoSpan>
         </ServerTitleBox>
         <InformationBox>
+          <SubTitle>서버 설명</SubTitle>
           <InfoParagraph>{serverDescription}</InfoParagraph>
-        </InformationBox>
-        <InformationBox>
-          <SubTitle>서버 참가 URL</SubTitle>
-          <InfoSpan>서버 참가 url</InfoSpan>
         </InformationBox>
         <InformationBox>
           <SubTitle>서버 사용자 리스트</SubTitle>
