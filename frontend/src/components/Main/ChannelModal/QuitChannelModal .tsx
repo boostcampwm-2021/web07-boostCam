@@ -143,7 +143,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function QuitChannelModal(): JSX.Element {
-  const { rightClickedChannelId, rightClickedChannelName, setIsQuitChannelModalOpen, getServerChannelList } =
+  const { rightClickedChannelId, rightClickedChannelName, setIsModalOpen, getServerChannelList } =
     useContext(MainStoreContext);
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
@@ -152,7 +152,7 @@ function QuitChannelModal(): JSX.Element {
       method: 'DELETE',
     });
     getServerChannelList();
-    setIsQuitChannelModalOpen(false);
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -164,7 +164,7 @@ function QuitChannelModal(): JSX.Element {
       <ModalInnerBox>
         <ModalHeader>
           <ModalTitle>채널 나가기</ModalTitle>
-          <ModalCloseButton onClick={() => setIsQuitChannelModalOpen(false)}>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
             <CloseIcon />
           </ModalCloseButton>
         </ModalHeader>
@@ -175,7 +175,7 @@ function QuitChannelModal(): JSX.Element {
         </ModalDescription>
         <ModalButtonContainer>
           <SubmitButton onClick={onClickSubmitButton}>확인</SubmitButton>
-          <CancelButton onClick={() => setIsQuitChannelModalOpen(false)}>취소</CancelButton>
+          <CancelButton onClick={() => setIsModalOpen(false)}>취소</CancelButton>
         </ModalButtonContainer>
       </ModalInnerBox>
     </Container>
