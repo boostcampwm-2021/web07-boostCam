@@ -12,7 +12,7 @@ const Container = styled.div`
   background-color: #492148;
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding-top: 100px;
   font-size: 36px;
   font-weight: bold;
   color: #eeeeee;
@@ -37,7 +37,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
   const [loginStatus, setLoginStatus] = useState<string>('로그인 중');
-  const loginStatusRef = useRef('로그인 중중');
+  const loginStatusRef = useRef('로그인 중');
 
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');

@@ -3,28 +3,14 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  margin-left: 40px;
+  justify-content: center;
+  aligh-items: center;
   width: 100%;
-  height: 45%;
-`;
-
-const DivTitle = styled.span`
-  width: 80%;
-  font-size: 15px;
-  color: black;
-`;
-
-const ButtonDiv = styled.div`
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  max-width: 500px;
 `;
 
 const OAuthLoginButton = styled.div`
-  width: 80%;
+  width: 70%;
   margin-top: 15px;
   height: 25px;
   background-color: #4ddddf;
@@ -52,11 +38,7 @@ function OAuthLogin(): JSX.Element {
 
   return (
     <Container>
-      <DivTitle>OAuth Login</DivTitle>
-      <ButtonDiv>
-        <OAuthLoginButton onClick={onClick}>Github</OAuthLoginButton>
-        <OAuthLoginButton>Google</OAuthLoginButton>
-      </ButtonDiv>
+      <OAuthLoginButton onClick={onClick}>Github</OAuthLoginButton>
     </Container>
   );
 }
