@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-import socketState from '../../../atoms/socket';
 import STTScreen from '../STT/STTScreen';
 import { ToggleStoreContext } from '../ToggleStore';
 import { CamStoreContext } from '../CamStore';
@@ -154,8 +152,7 @@ const getCurrentDate = (): CurrentDate => {
 
 function ChattingTab(): JSX.Element {
   const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
-  const { userInfo, setLocalStatus } = useContext(CamStoreContext);
-  const socket = useRecoilValue(socketState);
+  const { userInfo, setLocalStatus, socket } = useContext(CamStoreContext);
   const [chatLogs, setChatLogs] = useState<MessageInfo[]>([]);
   const [nicknameList, setNicknameList] = useState<RoomInfo[]>([
     {

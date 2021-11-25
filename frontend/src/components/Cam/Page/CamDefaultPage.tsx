@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+type CamDefaultPageProps = {
+  backgroundSrc: string;
+  children: React.ReactChild | React.ReactChild[];
+};
+
 const Container = styled.div`
   position: fixed;
   width: 100vw;
@@ -11,17 +16,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const Title = styled.div`
-  background-color: rgba(0, 0, 0, 0.7);
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 44px;
+  background-color: white;
 `;
 
 const Background = styled.img`
@@ -30,15 +25,17 @@ const Background = styled.img`
   height: auto;
   margin: 0 auto;
   opacity: 0.1;
+  z-index: -1;
 `;
 
-function CamNotFound(): JSX.Element {
+function CamDefaultPage(props: CamDefaultPageProps): JSX.Element {
+  const { children, backgroundSrc } = props;
   return (
     <Container>
-      <Background alt="not-found-background" src="/not-found.jpg" />
-      <Title>존재하지 않는 방입니다.</Title>
+      <Background alt="cam-background" src={backgroundSrc} />
+      {children}
     </Container>
   );
 }
 
-export default CamNotFound;
+export default CamDefaultPage;

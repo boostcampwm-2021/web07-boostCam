@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { v4 } from 'uuid';
 
@@ -23,8 +25,20 @@ export class CamService {
     this.camRepository.clear();
   }
 
-  findOne(url: string): Promise<Cam> {
-    return this.camRepository.findOne({ url: url });
+  async findOne(url: string): Promise<Cam> {
+    const cam = await this.camRepository.findOne({ url: url });
+
+    if (!cam) {
+      throw new NotFoundException();
+    }
+
+    const available = this.camInnerService.checkRoomAvailable(url);
+
+    if (!available) {
+      throw new ForbiddenException();
+    }
+
+    return cam;
   }
 
   async createCam(cam: CreateCamDto): Promise<Cam> {

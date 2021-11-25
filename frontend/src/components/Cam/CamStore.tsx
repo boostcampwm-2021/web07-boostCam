@@ -1,8 +1,7 @@
 import React, { createContext } from 'react';
-import { useRecoilValue } from 'recoil';
+import { io } from 'socket.io-client';
 
 import useUserMedia from '../../hooks/useUserMedia';
-import SocketState from '../../atoms/socket';
 import { UserInfo } from '../../types/cam';
 
 type CamStoreProps = {
@@ -12,10 +11,10 @@ type CamStoreProps = {
 };
 
 export const CamStoreContext = createContext<React.ComponentState>(null);
+const socket = io();
 
 function CamStore(props: CamStoreProps): JSX.Element {
   const { children, userInfo, setUserInfo } = props;
-  const socket = useRecoilValue(SocketState);
   const currentURL = new URL(window.location.href);
   const roomId = currentURL.searchParams.get('roomid');
   const { localStatus, localStream, setLocalStatus, screenList } = useUserMedia({
@@ -25,7 +24,9 @@ function CamStore(props: CamStoreProps): JSX.Element {
   });
 
   return (
-    <CamStoreContext.Provider value={{ localStream, localStatus, setLocalStatus, screenList, userInfo, setUserInfo }}>
+    <CamStoreContext.Provider
+      value={{ socket, localStream, localStatus, setLocalStatus, screenList, userInfo, setUserInfo }}
+    >
       {children}
     </CamStoreContext.Provider>
   );

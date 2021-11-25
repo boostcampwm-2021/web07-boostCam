@@ -15,7 +15,7 @@ const DefaultImg = styled.img`
 function DefaultScreen(): JSX.Element {
   return (
     <Container>
-      <DefaultImg src="/user-default.jpg" />
+      <DefaultImg src="/pepes/pepe-1.jpg" />
     </Container>
   );
 }

@@ -1,9 +1,8 @@
-import React from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import socketState from '../../../atoms/socket';
 import { UserInfo } from '../../../types/cam';
+import { CamStoreContext } from '../CamStore';
 
 const Container = styled.div`
   position: fixed;
@@ -83,7 +82,7 @@ type NicknameModalProps = {
 
 function NicknameModal(props: NicknameModalProps): JSX.Element {
   const { setUserInfo, setIsActiveNicknameModal } = props;
-  const socket = useRecoilValue(socketState);
+  const { socket } = useContext(CamStoreContext);
 
   const onSubmitNicknameForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

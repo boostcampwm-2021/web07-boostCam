@@ -10,6 +10,8 @@ type RoomInfo = {
   userNickname: string;
 };
 
+const MAX_PEOPLE = 5;
+
 @Injectable()
 export class CamInnerService {
   private map: Map<string, Array<CamMap>>;
@@ -23,20 +25,12 @@ export class CamInnerService {
     this.sharedScreen = new Map();
   }
 
-  getRoomList() {
-    return this.map;
-  }
-
   getRoomNicknameList(roomId: string): RoomInfo[] {
     const roomInfo: CamMap[] = this.map.get(roomId);
     return roomInfo.map((data) => {
       const { socketId, userNickname } = data;
       return { socketId, userNickname };
     });
-  }
-
-  isRoomExist(roomId: string): boolean {
-    return this.map.has(roomId);
   }
 
   createRoom(roomId: string): boolean {
@@ -53,8 +47,8 @@ export class CamInnerService {
     userNickname: string,
     status: Status,
   ): boolean {
-    if (!this.map.get(roomId)) return false;
-    this.map.get(roomId).push({ userId, socketId, userNickname, status });
+    const room = this.map.get(roomId);
+    room.push({ userId, socketId, userNickname, status });
     return true;
   }
 
@@ -108,5 +102,10 @@ export class CamInnerService {
     }
 
     return null;
+  }
+
+  checkRoomAvailable(roomId: RoomId) {
+    const room = this.map.get(roomId);
+    return room && room.length < MAX_PEOPLE;
   }
 }
