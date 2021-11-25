@@ -71,4 +71,12 @@ export class UserChannelService {
       serverId,
     );
   }
+
+  async findChannelsByUserId(userId: number) {
+    const userChannels = await this.userChannelRepository.find({
+      select: ['id'],
+      where: { user: { id: userId } },
+    });
+    return userChannels.map((uc) => uc.id.toString());
+  }
 }
