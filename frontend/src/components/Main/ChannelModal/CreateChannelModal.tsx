@@ -147,7 +147,7 @@ type CreateModalForm = {
   description: string;
 };
 
-function CreateChannelModal2(): JSX.Element {
+function CreateChannelModal(): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -221,4 +221,4 @@ function CreateChannelModal2(): JSX.Element {
   );
 }
 
-export default CreateChannelModal2;
+export default CreateChannelModal;
