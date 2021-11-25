@@ -28,7 +28,7 @@ const MainBody = styled.div`
 `;
 
 function MainSection(): JSX.Element {
-  const { selectedChannel } = useContext(MainStoreContext);
+  const { selectedChannel, socket } = useContext(MainStoreContext);
   const [messageList, setMessageList] = useState<MessageData[]>([]);
 
   const getMessageList = async () => {
@@ -41,10 +41,20 @@ function MainSection(): JSX.Element {
   };
 
   useEffect(() => {
-    getMessageList();
-  }, [selectedChannel]);
+    socket.emit('joinChannels');
+  }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const receiveMessageHandler = (message: MessageData) => {
+      if (selectedChannel === message.channelId) setMessageList((list) => [...list, message]);
+    };
+
+    socket.on('receiveMessage', receiveMessageHandler);
+    getMessageList();
+    return () => {
+      socket.off('receiveMessage', receiveMessageHandler);
+    };
+  }, [selectedChannel]);
 
   return (
     <Container>

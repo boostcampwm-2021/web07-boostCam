@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { MessageData, MessageRequestBody } from '../../../types/message';
-import fetchData from '../../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 50%;
@@ -176,7 +175,7 @@ type MessageSectionProps = {
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
-  const { selectedChannel, setSelectedMessageData } = useContext(MainStoreContext);
+  const { selectedChannel, setSelectedMessageData, socket } = useContext(MainStoreContext);
   const { messageList } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
@@ -186,7 +185,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
       channelId: selectedChannel,
       contents,
     };
-    await fetchData<MessageRequestBody, MessageData>('POST', '/api/messages', requestBody);
+    socket.emit('sendMessage', requestBody);
   };
 
   const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

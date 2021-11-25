@@ -8,7 +8,7 @@ type CommentRequestBody = {
 
 type CommentData = {
   id: string;
-  channdId: string;
+  channelId: string;
   contents: string;
   createdAt: string;
   sender: MessageSender;

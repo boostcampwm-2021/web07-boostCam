@@ -5,6 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessageDto } from './message/message.dto';
+import { MessageService } from './message/message.service';
 import { ExpressSession } from './types/session';
 import { UserChannelService } from './user-channel/user-channel.service';
 
@@ -19,7 +20,10 @@ export class MessageGateway {
   @WebSocketServer()
   private server: Server;
 
-  constructor(private userChannelService: UserChannelService) {}
+  constructor(
+    private userChannelService: UserChannelService,
+    private messageService: MessageService,
+  ) {}
 
   @SubscribeMessage('joinChannels')
   async handleConnect(client: Socket, payload: any) {
@@ -36,12 +40,30 @@ export class MessageGateway {
   }
 
   @SubscribeMessage('joinChannel')
-  handleMessage(client: Socket, payload: { channelId: number }) {
+  handleConnectOne(client: Socket, payload: { channelId: number }) {
     if (!this.checkLoginSession(client)) {
       return;
     }
     const channelRoom = payload.channelId.toString();
     client.join(channelRoom);
+  }
+
+  @SubscribeMessage('sendMessage')
+  async handleSendedMessage(
+    client: Socket,
+    payload: { channelId: number; contents: string },
+  ) {
+    if (!this.checkLoginSession(client)) {
+      return;
+    }
+    const { channelId, contents } = payload;
+    const user = client.request.session.user;
+    const newMessage = await this.messageService.sendMessage(
+      user.id,
+      channelId,
+      contents,
+    );
+    this.emitMessage(channelId, newMessage);
   }
 
   private checkLoginSession(client: Socket): boolean {
@@ -50,6 +72,6 @@ export class MessageGateway {
   }
 
   emitMessage(channelId: number, message: MessageDto) {
-    this.server.to(`${channelId}`).emit('sendMessage', message);
+    this.server.to(`${channelId}`).emit('receiveMessage', message);
   }
 }

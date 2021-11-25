@@ -11,7 +11,7 @@ type MessageSender = {
 
 type MessageData = {
   id: string;
-  channdId: string;
+  channelId: string;
   contents: string;
   createdAt: string;
   sender: MessageSender;

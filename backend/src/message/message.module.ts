@@ -21,6 +21,7 @@ import { MessageRepository } from './message.repository';
     ]),
     UserServerModule,
   ],
+  exports: [MessageService],
   controllers: [MessageController],
   providers: [MessageService],
 })

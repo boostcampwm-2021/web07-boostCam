@@ -68,10 +68,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
   };
 
   useEffect(() => {
-    socket.emit('joinChannels');
-  }, []);
-
-  useEffect(() => {
     if (selectedServer) {
       getServerChannelList();
       getServerCamList();
@@ -81,6 +77,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   return (
     <MainStoreContext.Provider
       value={{
+        socket,
         isModalOpen,
         modalContents,
         selectedServer,

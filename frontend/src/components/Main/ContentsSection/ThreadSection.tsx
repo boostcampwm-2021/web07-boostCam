@@ -272,12 +272,7 @@ function ThreadSection(): JSX.Element {
 
   useEffect(() => {
     getMessageList();
-    console.log(selectedMessageData);
   }, [selectedMessageData]);
-
-  useEffect(() => {
-    console.log(commentsList);
-  }, [commentsList]);
 
   const mainMessage = buildMessageElement(selectedMessageData);
   const CommentItemList = commentsList.map(buildCommentElement);
