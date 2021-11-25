@@ -226,13 +226,10 @@ function ThreadSection(): JSX.Element {
 
   const getMessageList = async () => {
     if (!selectedMessageData) return;
-    const responseData = await fetchData<null, CommentData[]>(
-      'GET',
-      `/api/comments?messageId=${selectedMessageData.id}`,
-    );
-    if (responseData) {
-      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
-      setCommentsList(responseData);
+    const { data } = await fetchData<null, CommentData[]>('GET', `/api/comments?messageId=${selectedMessageData.id}`);
+    if (data) {
+      data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
+      setCommentsList(data);
     }
   };
 

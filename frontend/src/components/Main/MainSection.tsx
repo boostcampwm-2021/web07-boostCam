@@ -32,11 +32,11 @@ function MainSection(): JSX.Element {
   const [messageList, setMessageList] = useState<MessageData[]>([]);
 
   const getMessageList = async () => {
-    const responseData = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
+    const { data } = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
 
-    if (responseData) {
-      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
-      setMessageList(responseData);
+    if (data) {
+      data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
+      setMessageList(data);
     }
   };
 
