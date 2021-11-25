@@ -14,6 +14,7 @@ import RequestServerDto from './dto/request-server.dto';
 import { UserServerService } from '../user-server/user-server.service';
 import { ServerRepository } from './server.repository';
 import ServerWithUsersDto from './dto/response-server-users.dto';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class ServerService {
@@ -31,17 +32,33 @@ export class ServerService {
     return this.serverRepository.findOne({ id: id });
   }
 
-  findByCode(code: string): Promise<Server> {
-    return this.serverRepository.findOne({ code });
+  async findByCode(code: string): Promise<Server> {
+    const server = await this.serverRepository.findOne({ code });
+
+    if (!server) {
+      throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
+
+    return server;
   }
 
   async findCode(id: number): Promise<string> {
     const server = await this.serverRepository.findOne(id);
+
+    if (!server) {
+      throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
+
     return server.code;
   }
 
   async refreshCode(id: number): Promise<string> {
     const server = await this.serverRepository.findOne(id);
+
+    if (!server) {
+      throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
+
     server.code = v4();
     this.serverRepository.save(server);
     return server.code;
@@ -68,7 +85,7 @@ export class ServerService {
     requestServer: RequestServerDto,
     user: User,
     imgUrl: string | undefined,
-  ): Promise<void> {
+  ): Promise<UpdateResult> {
     const server = await this.serverRepository.findOneWithOwner(id);
 
     if (server.owner.id !== user.id) {
@@ -81,7 +98,7 @@ export class ServerService {
     newServer.name = newServer.name || server.name;
     newServer.description = newServer.description || server.description;
 
-    this.serverRepository.update(id, newServer);
+    return this.serverRepository.update(id, newServer);
   }
 
   async deleteServer(id: number, user: User) {
