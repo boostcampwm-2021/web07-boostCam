@@ -170,7 +170,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function JoinChannelModal(): JSX.Element {
-  const { selectedServer, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [channelList, setChannelList] = useState<ChannelData[]>([]);
 
   const getNotJoinedChannelList = async () => {
@@ -191,6 +191,7 @@ function JoinChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
+    socket.emit('joinChannel', { channelId: parseInt(id, 10) });
     setIsModalOpen(false);
   };
 

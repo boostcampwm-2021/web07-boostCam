@@ -154,12 +154,12 @@ function CreateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch('api/channel', {
+    const response = await fetch('/api/channel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -170,7 +170,11 @@ function CreateChannelModal(): JSX.Element {
         serverId: selectedServer.server.id,
       }),
     });
+
+    const createdChannelData = await response.json();
+    const createdChannel = createdChannelData.data;
     getServerChannelList();
+    socket.emit('joinChannel', { channelId: parseInt(createdChannel.id, 10) });
     setIsModalOpen(false);
   };
 

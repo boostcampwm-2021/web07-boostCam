@@ -50,7 +50,9 @@ function MainSection(): JSX.Element {
     };
 
     socket.on('receiveMessage', receiveMessageHandler);
-    getMessageList();
+    if (selectedChannel) {
+      getMessageList();
+    }
     return () => {
       socket.off('receiveMessage', receiveMessageHandler);
     };

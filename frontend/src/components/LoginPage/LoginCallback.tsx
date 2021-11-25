@@ -90,7 +90,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
     );
   }
 
-  return <Navigate to="/main" />;
+  return <Navigate to="/" />;
 }
 
 export default LoginCallback;

@@ -92,12 +92,12 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
         <PlusIcon onClick={onClickChannelAddButton} />
         <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
           <DropdownMenu
-            name="추가"
+            name="채널 생성"
             setIsDropdownActivated={setIsDropdownActivated}
             modalContents={<CreateChannelModal />}
           />
           <DropdownMenu
-            name="생성"
+            name="채널 참가"
             setIsDropdownActivated={setIsDropdownActivated}
             modalContents={<JoinChannelModal />}
           />
