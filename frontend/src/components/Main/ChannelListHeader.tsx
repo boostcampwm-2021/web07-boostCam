@@ -38,12 +38,12 @@ const ChannelListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
   visibility: ${(props) => (props.isButtonVisible ? 'visible' : 'hidden')};
 `;
 
-const ListArrowIcon = styled(ListArrow)<{ isListOpen: boolean }>`
+const ListArrowIcon = styled(ListArrow)<{ $isListOpen: boolean }>`
   width: 20px;
   height: 20px;
   fill: #a69c96;
   transition: all ease-out 0.3s;
-  ${(props) => (props.isListOpen ? 'transform: rotate(90deg);' : 'transform: rotate(0deg);')}
+  ${(props) => (props.$isListOpen ? 'transform: rotate(90deg);' : 'transform: rotate(0deg);')}
 `;
 
 const PlusIcon = styled(Plus)`
@@ -86,7 +86,7 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
       onMouseLeave={() => setIsButtonVisible(false)}
       onClick={() => setIsListOpen(!isListOpen)}
     >
-      <ListArrowIcon isListOpen={isListOpen} />
+      <ListArrowIcon $isListOpen={isListOpen} />
       <ChannelListHeaderSpan>채널</ChannelListHeaderSpan>
       <ChannelListHeaderButton isButtonVisible={isButtonVisible}>
         <PlusIcon onClick={onClickChannelAddButton} />

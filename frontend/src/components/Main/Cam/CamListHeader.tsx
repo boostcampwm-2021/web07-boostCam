@@ -35,12 +35,12 @@ const CamListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
   visibility: ${(props) => (props.isButtonVisible ? 'visible' : 'hidden')};
 `;
 
-const ListArrowIcon = styled(ListArrow)<{ isListOpen: boolean }>`
+const ListArrowIcon = styled(ListArrow)<{ $isListOpen: boolean }>`
   width: 20px;
   height: 20px;
   fill: #a69c96;
   transition: all ease-out 0.3s;
-  ${(props) => (props.isListOpen ? 'transform: rotate(90deg);' : 'transform: rotate(0deg);')}
+  ${(props) => (props.$isListOpen ? 'transform: rotate(90deg);' : 'transform: rotate(0deg);')}
 `;
 
 const PlusIcon = styled(Plus)`
@@ -70,7 +70,7 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
       onMouseLeave={() => setIsButtonVisible(false)}
       onClick={() => setIsListOpen(!isListOpen)}
     >
-      <ListArrowIcon isListOpen={isListOpen} />
+      <ListArrowIcon $isListOpen={isListOpen} />
       <CamListHeaderSpan>Cam</CamListHeaderSpan>
       <CamListHeaderButton isButtonVisible={isButtonVisible}>
         <PlusIcon onClick={onClickCamAddButton} />
