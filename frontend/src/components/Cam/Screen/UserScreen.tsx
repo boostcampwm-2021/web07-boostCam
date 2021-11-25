@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import socketState from '../../../atoms/socket';
 import DefaultScreen from './DefaultScreen';
 import type { Control, Status } from '../../../types/cam';
 import StreamStatusIndicator from './StreamStatusIndicator';
 import ControlMenu from './ControlMenu';
+import { CamStoreContext } from '../CamStore';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
@@ -31,7 +30,7 @@ const Video = styled.video<{ isSpeaking: boolean }>`
 
 function UserScreen(props: UserScreenProps): JSX.Element {
   const { stream, userId } = props;
-  const socket = useRecoilValue(socketState);
+  const { socket } = useContext(CamStoreContext);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [nickname, setNickname] = useState<string>('김철수');
   const [status, setStatus] = useState<Status>({
@@ -59,12 +58,12 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   });
 
   useEffect(() => {
-    socket.on('userStatus', (payload) => {
+    socket.on('userStatus', (payload: { userId: string; status: Status }) => {
       if (payload.userId === userId) {
         setStatus(payload.status);
       }
     });
-    socket.on('userNickname', (payload) => {
+    socket.on('userNickname', (payload: { userId: string; userNickname: string }) => {
       if (payload.userId === userId) {
         setNickname(payload.userNickname);
       }
