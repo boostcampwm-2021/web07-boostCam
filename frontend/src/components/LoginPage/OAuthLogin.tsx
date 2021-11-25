@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { BoostCamMainIcons } from '../../utils/SvgIcons';
+
+const { Github } = BoostCamMainIcons;
 
 const Container = styled.div`
   display: flex;
@@ -13,18 +16,29 @@ const OAuthLoginButton = styled.div`
   width: 70%;
   margin-top: 15px;
   height: 25px;
-  background-color: #4ddddf;
+  background-color: #92508f;
   border-radius: 10px;
-  padding: 5px 10px;
+  padding: 8px 10px;
   cursor: pointer;
   text-align: center;
   box-shadow: 5px 3px 3px #7c7b7b;
   transition: all 0.3s;
+  color: white;
 
-  &:hover {
-    padding: 8px 15px;
-    transition: all 0.3s;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: centerl;
+`;
+
+const GithubIcon = styled(Github)`
+  width: 24px;
+  margin: -3px 20px 0 0;
+  position: absolute;
+  left: -40px;
+`;
+
+const Content = styled.div`
+  position: relative;
 `;
 
 function OAuthLogin(): JSX.Element {
@@ -38,7 +52,12 @@ function OAuthLogin(): JSX.Element {
 
   return (
     <Container>
-      <OAuthLoginButton onClick={onClick}>Github</OAuthLoginButton>
+      <OAuthLoginButton onClick={onClick}>
+        <Content>
+          <GithubIcon />
+          Log in with Github
+        </Content>
+      </OAuthLoginButton>
     </Container>
   );
 }
