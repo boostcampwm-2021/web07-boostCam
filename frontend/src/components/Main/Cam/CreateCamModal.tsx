@@ -175,12 +175,12 @@ function CreateCamModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsCreateCamModalOpen } = useContext(MainStoreContext);
+  const { selectedServer, setIsCreateCamModalOpen, getServerCamList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
     const { name } = data;
-    await fetch('api/cams', {
+    await fetch('api/cam', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -190,6 +190,7 @@ function CreateCamModal(): JSX.Element {
         serverId: selectedServer.server.id,
       }),
     });
+    getServerCamList();
     setIsCreateCamModalOpen(false);
   };
 

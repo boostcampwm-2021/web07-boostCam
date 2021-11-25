@@ -7,15 +7,14 @@ import { ServerController } from './server.controller';
 import { UserServerModule } from '../user-server/user-server.module';
 import { ImageModule } from '../image/image.module';
 import { ServerRepository } from './server.repository';
-import { CamsModule } from '../cams/cams.module';
-import { CamsRepository } from '../cams/cams.repository';
+import { CamModule } from '../cam/cam.module';
 
 @Module({
   imports: [
     ImageModule,
     forwardRef(() => UserServerModule),
-    TypeOrmModule.forFeature([User, ServerRepository, CamsRepository]),
-    CamsModule,
+    TypeOrmModule.forFeature([User, ServerRepository]),
+    CamModule,
   ],
   providers: [ServerService],
   controllers: [ServerController],
