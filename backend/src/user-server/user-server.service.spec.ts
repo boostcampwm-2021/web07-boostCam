@@ -9,6 +9,7 @@ import { DeleteResult } from 'typeorm';
 import { ServerService } from '../server/server.service';
 import { ServerRepository } from '../server/server.repository';
 import { HttpStatus } from '@nestjs/common';
+import { v4 } from 'uuid';
 
 const mockUserServerRepository = () => ({
   save: jest.fn(),
@@ -17,6 +18,7 @@ const mockUserServerRepository = () => ({
   deleteByUserIdAndServerId: jest.fn(),
   getServerListByUserId: jest.fn(),
   findWithServerOwner: jest.fn(),
+  findByCode: jest.fn(),
 });
 
 const mockServerRepository = () => ({
@@ -73,19 +75,18 @@ describe('UserServerService', () => {
       serverRepository.findOne.mockResolvedValue(server);
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
 
-      const newUserServer = await service.create(user, serverId);
+      const newUserServer = await service.create(user, server.code);
 
       expect(newUserServer.user).toBe(user);
       expect(newUserServer.server).toBe(server);
     });
 
     it('서버가 존재하지 않는 경우', async () => {
-      const nonExistsId = 0;
       userServerRepository.save.mockResolvedValue(userServer);
       serverRepository.findOne.mockResolvedValue(undefined);
 
       try {
-        await service.create(user, nonExistsId);
+        await service.create(user, v4());
       } catch (error) {
         expect(error.response.message).toBe('존재하지 않는 서버입니다.');
         expect(error.response.error).toBe('Bad Request');
@@ -101,7 +102,7 @@ describe('UserServerService', () => {
       );
 
       try {
-        await service.create(user, serverId);
+        await service.create(user, server.code);
       } catch (error) {
         expect(error.response.message).toBe('이미 등록된 서버입니다.');
         expect(error.response.error).toBe('Bad Request');
@@ -182,6 +183,7 @@ describe('UserServerService', () => {
     server = new Server();
     server.id = serverId;
     server.owner = user;
+    server.code = v4();
 
     userServer = new UserServer();
     userServer.user = user;

@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
-import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
 import { ServerService } from '../server/server.service';
 import UserServerDto from './dto/user-server-list.dto';
@@ -52,16 +52,6 @@ export class UserServerService {
     }
 
     return this.userServerRepository.delete(id);
-  }
-
-  deleteByUserIdAndServerId(
-    userId: number,
-    serverId: number,
-  ): DeleteQueryBuilder<UserServer> {
-    return this.userServerRepository.deleteByUserIdAndServerId(
-      userId,
-      serverId,
-    );
   }
 
   async getServerListByUserId(userId: number): Promise<UserServerDto[]> {
