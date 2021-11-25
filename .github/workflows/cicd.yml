@@ -63,6 +63,9 @@ jobs:
           ^NCP_STORAGE_SECRET_KEY: ${{ secrets.NCP_STORAGE_SECRET_KEY }}
           ^NCP_STORAGE_BUCKET_NAME: ${{ secrets.NCP_STORAGE_BUCKET_NAME }}
           ^NCP_STORAGE_REGION: ${{ secrets.NCP_STORAGE_REGION }}
+          ^SESSION: ${{ secrets.SESSION }}
+          ^SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+
       - name: Create .env.github
         uses: weyheyhey/create-dotenv-action@v1
         with:
@@ -72,8 +75,15 @@ jobs:
           ^CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
           ^CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
           ^CALLBACK_URL_GITHUB: ${{ secrets.CALLBACK_URL_GITHUB }}
+      - name: Create .env.redis
+        uses: weyheyhey/create-dotenv-action@v1
+        with:
+          wildecard: '^'
+          filename: '.env.redis'
+        env:
+          ^REDIS_HOST: ${{ secrets.REDIS_HOST }}
       - name: Move .envs
-        run: mv .env .env.github ./backend
+        run: mv .env .env.github .env.redis ./backend
       - name: Test
         run: npm run test
         working-directory: ${{env.working-directory}}
@@ -146,6 +156,8 @@ jobs:
           ^NCP_STORAGE_SECRET_KEY: ${{ secrets.NCP_STORAGE_SECRET_KEY }}
           ^NCP_STORAGE_BUCKET_NAME: ${{ secrets.NCP_STORAGE_BUCKET_NAME }}
           ^NCP_STORAGE_REGION: ${{ secrets.NCP_STORAGE_REGION }}
+          ^SESSION: ${{ secrets.SESSION }}
+          ^SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
       - name: Create .env.github
         uses: weyheyhey/create-dotenv-action@v1
@@ -156,8 +168,15 @@ jobs:
           ^CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
           ^CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
           ^CALLBACK_URL_GITHUB: ${{ secrets.CALLBACK_URL_GITHUB }}
+      - name: Create .env.redis
+        uses: weyheyhey/create-dotenv-action@v1
+        with:
+          wildecard: '^'
+          filename: '.env.redis'
+        env:
+          ^REDIS_HOST: ${{ secrets.REDIS_HOST }}
       - name: Move .envs
-        run: mv .env .env.github ./backend
+        run: mv .env .env.github .env.redis ./backend
       - name: Build
         run: npm run build
         working-directory: ${{env.working-directory}}
