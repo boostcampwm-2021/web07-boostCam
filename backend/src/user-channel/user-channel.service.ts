@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 
 import { UserChannelRepository } from './user-channel.repository';
 import { UserChannel } from './user-channel.entity';
@@ -28,7 +28,7 @@ export class UserChannelService {
   }
 
   deleteById(id: number): Promise<DeleteResult> {
-    return this.userChannelRepository.delete(id);
+    return this.userChannelRepository.delete({ channelId: id });
   }
 
   getJoinedChannelListByUserId(
@@ -62,14 +62,13 @@ export class UserChannelService {
     return notJoinedList;
   }
 
-  deleteByUserIdAndChannelId(
-    userId: number,
-    serverId: number,
-  ): DeleteQueryBuilder<UserChannel> {
-    return this.userChannelRepository.deleteByUserIdAndChannelId(
-      userId,
-      serverId,
-    );
+  async deleteByUserIdAndChannelId(userId: number, channelId: number) {
+    const res =
+      await this.userChannelRepository.getUserChannelByUserIdAndChannelId(
+        userId,
+        channelId,
+      );
+    this.userChannelRepository.delete({ id: res.id });
   }
 
   async findChannelsByUserId(userId: number) {

@@ -7,6 +7,8 @@ import {
   UseGuards,
   Post,
   Body,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
@@ -72,8 +74,22 @@ export class UserChannelController {
     return ResponseEntity.ok<UserChannel>(savedChannel);
   }
 
-  @Delete('/:id')
-  delete(@Param('id') id: number) {
-    return this.userChannelService.deleteById(id);
+  @Delete('/:id/channels')
+  async delete(
+    @Param('id') channeld: number,
+    @Session() session: ExpressSession,
+  ) {
+    try {
+      this.userChannelService.deleteByUserIdAndChannelId(
+        session.user.id,
+        channeld,
+      );
+      return ResponseEntity.noContent();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

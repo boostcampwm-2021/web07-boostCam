@@ -58,6 +58,6 @@ export class ChannelController {
     @Param('id') id: number,
   ): Promise<ResponseEntity<number>> {
     await this.channelService.deleteChannel(id);
-    return ResponseEntity.ok<number>(id);
+    return ResponseEntity.noContent();
   }
 }

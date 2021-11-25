@@ -18,19 +18,12 @@ export class UserChannelRepository extends Repository<UserChannel> {
       .getMany();
   }
 
-  getNotJoinedChannelListByUserId(userId: number, serverId: number) {
-    return this.createQueryBuilder('user_channel')
-      .leftJoinAndSelect('user_channel.channel', 'channel')
-      .where('user_channel.channel IN (:id)', {
-        id: this.getJoinedChannelListByUserId(userId, serverId),
-      })
-      .getMany();
-  }
-
-  deleteByUserIdAndChannelId(userId: number, channelId: number) {
+  getUserChannelByUserIdAndChannelId(userId: number, channelId: number) {
     return this.createQueryBuilder('user_channel')
       .where('user_channel.user = :userId', { userId: userId })
-      .andWhere('user_channel.channelId = :channelId', { channelId: channelId })
-      .delete();
+      .andWhere('user_channel.channelId = :channelId', {
+        channelId: channelId,
+      })
+      .getOne();
   }
 }
