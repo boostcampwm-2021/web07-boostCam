@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import ButtonBar from './ButtonBar/ButtonBar';
-import ChattingTab from './Chatting/ChattingTab';
+import ButtonBar from './Menu/ButtonBar';
+import ChattingTab from './Menu/ChattingTab';
 import MainScreen from './Screen/MainScreen';
 import CamStore from './CamStore';
-import UserListTab from './UserList/UserListTab';
+import UserListTab from './Menu/UserListTab';
 import ToggleStore from './ToggleStore';
 import { UserInfo } from '../../types/cam';
 import STTStore from './STT/STTStore';
 import SharedScreenStore from './SharedScreen/SharedScreenStore';
-import NickNameForm from './Nickname/NickNameForm';
-import CamNotFound from './CamNotFound';
+import CamNickNameInputPage from './Page/CamNickNameInputPage';
+import CamNotFoundPage from './Page/CamNotFoundPage';
 
 const Container = styled.div`
   width: 100vw;
@@ -37,7 +37,7 @@ const UpperTab = styled.div`
 
 function Cam(): JSX.Element {
   const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: null });
-  const [isRoomExist, setIsRoomExist] = useState(false);
+  const [statusCode, setStatusCode] = useState(0);
 
   const camRef = useRef<HTMLDivElement>(null);
 
@@ -51,11 +51,7 @@ function Cam(): JSX.Element {
 
     const json = await response.json();
 
-    if (json.statusCode === 200) {
-      setIsRoomExist(true);
-    } else {
-      setIsRoomExist(false);
-    }
+    setStatusCode(json.statusCode);
   };
 
   useEffect(() => {
@@ -67,12 +63,23 @@ function Cam(): JSX.Element {
     setUserInfo((prev) => ({ ...prev, roomId }));
   }, []);
 
-  if (isRoomExist) {
-    return (
-      <Container ref={camRef}>
-        {!userInfo?.nickname ? (
-          <NickNameForm setUserInfo={setUserInfo} />
-        ) : (
+  switch (statusCode) {
+    case 0:
+      return <div>로?딩</div>;
+    case 403:
+      return <div>방이 꽉?찬</div>;
+    case 404:
+      return <CamNotFoundPage />;
+    case 200:
+      if (!userInfo?.nickname) {
+        return (
+          <Container>
+            <CamNickNameInputPage setUserInfo={setUserInfo} />
+          </Container>
+        );
+      }
+      return (
+        <Container ref={camRef}>
           <CamStore userInfo={userInfo} setUserInfo={setUserInfo}>
             <ToggleStore>
               <STTStore>
@@ -87,11 +94,11 @@ function Cam(): JSX.Element {
               </STTStore>
             </ToggleStore>
           </CamStore>
-        )}
-      </Container>
-    );
+        </Container>
+      );
+    default:
+      return <div>뭔가 오류</div>;
   }
-  return <CamNotFound />;
 }
 
 export default Cam;

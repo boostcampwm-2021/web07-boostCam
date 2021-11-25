@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 
 import ResponseEntity from '../common/response-entity';
 import { CreateCamDto } from './cam.dto';
@@ -29,10 +22,6 @@ export class CamController {
   ): Promise<ResponseEntity<Cam>> {
     const cam = await this.camService.findOne(url);
 
-    if (cam) {
-      return ResponseEntity.ok<Cam>(cam);
-    } else {
-      throw new NotFoundException();
-    }
+    return ResponseEntity.ok<Cam>(cam);
   }
 }
