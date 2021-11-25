@@ -7,7 +7,7 @@ import type { Status } from '../../../types/cam';
 import { ToggleStoreContext } from '../ToggleStore';
 import { STTStoreContext } from '../STT/STTStore';
 import { SharedScreenStoreContext } from '../SharedScreen/SharedScreenStore';
-import NicknameModal from '../Nickname/NicknameModal';
+import NicknameModal from './NicknameModal';
 
 const {
   MicIcon,
