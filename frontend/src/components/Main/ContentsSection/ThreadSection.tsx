@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { MessageData } from '../../../types/messags';
+import { CommentData, CommentRequestBody } from '../../../types/comment';
+import { MessageData } from '../../../types/message';
 import fetchData from '../../../utils/fetchMethods';
 
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
@@ -12,11 +13,16 @@ const Container = styled.div`
   flex: 1 0 0;
   height: 100%;
   background-color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const ThreadSectionHeader = styled.div`
   width: 100%;
-  height: 50px;
+  flex: 1 1 0;
+  max-height: 50px;
 
   font-size: 18px;
 
@@ -45,6 +51,7 @@ const ChannelNameSpan = styled.span`
 
 const ThreadSectionBody = styled.div`
   width: 100%;
+  flex: 5 0 0;
   overflow-y: auto;
 
   display: flex;
@@ -177,14 +184,16 @@ const CloseIcon = styled(Close)`
 `;
 
 function ThreadSection(): JSX.Element {
-  const { selectedMessageData } = useContext(MainStoreContext);
+  const { selectedMessageData, selectedChannel } = useContext(MainStoreContext);
+  const textDivRef = useRef<HTMLDivElement>(null);
+  const [commentsList, setCommentsList] = useState<CommentData[]>([]);
 
   const buildCommentElement = (data: MessageData | undefined) => {
     if (!data) return <></>;
-    const { contents, createdAt, sender } = data;
+    const { id, contents, createdAt, sender } = data;
     const { nickname, profile } = sender;
     return (
-      <CommentItemBlock>
+      <CommentItemBlock key={id}>
         <CommentItemIcon imgUrl={profile} />
         <CommentItem>
           <CommentItemHeader>
@@ -215,11 +224,63 @@ function ThreadSection(): JSX.Element {
     );
   };
 
+  const getMessageList = async () => {
+    if (!selectedMessageData) return;
+    const responseData = await fetchData<null, CommentData[]>(
+      'GET',
+      `/api/comments?messageId=${selectedMessageData.id}`,
+    );
+    if (responseData) {
+      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
+      setCommentsList(responseData);
+    }
+  };
+
+  const sendComment = async (contents: string) => {
+    const requestBody: CommentRequestBody = {
+      channelId: parseInt(selectedChannel, 10),
+      messageId: parseInt(selectedMessageData.id, 10),
+      contents,
+    };
+    await fetchData<CommentRequestBody, CommentData>('POST', '/api/comments', requestBody);
+    getMessageList();
+  };
+
+  const onKeyDownCommentTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const { key, currentTarget, shiftKey } = e;
+    const msg = currentTarget.value.trim();
+    const divRef = textDivRef.current;
+
+    currentTarget.style.height = '15px';
+    currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
+    if (divRef) {
+      divRef.style.height = `105px`;
+      divRef.style.height = `${90 + currentTarget.scrollHeight - 27}px`;
+    }
+
+    if (!shiftKey && key === 'Enter') {
+      e.preventDefault();
+      if (!msg.length) currentTarget.value = '';
+      else {
+        sendComment(currentTarget.value);
+        currentTarget.value = '';
+      }
+      currentTarget.style.height = '21px';
+      if (divRef) divRef.style.height = `105px`;
+    }
+  };
+
   useEffect(() => {
+    getMessageList();
     console.log(selectedMessageData);
   }, [selectedMessageData]);
 
+  useEffect(() => {
+    console.log(commentsList);
+  }, [commentsList]);
+
   const mainMessage = buildMessageElement(selectedMessageData);
+  const CommentItemList = commentsList.map(buildCommentElement);
 
   return (
     <Container>
@@ -230,9 +291,12 @@ function ThreadSection(): JSX.Element {
         </ChannelName>
         <CloseIcon />
       </ThreadSectionHeader>
-      <ThreadSectionBody>{mainMessage}</ThreadSectionBody>
-      <TextareaDiv>
-        <CommentTextarea />
+      <ThreadSectionBody>
+        {mainMessage}
+        {CommentItemList}
+      </ThreadSectionBody>
+      <TextareaDiv ref={textDivRef}>
+        <CommentTextarea onKeyDown={onKeyDownCommentTextarea} />
       </TextareaDiv>
     </Container>
   );

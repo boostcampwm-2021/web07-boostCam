@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { CamData, ChannelData, MyServerData } from '../../types/main';
-import { MessageData } from '../../types/messags';
+import { MessageData } from '../../types/message';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 

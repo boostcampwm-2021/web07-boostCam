@@ -17,4 +17,4 @@ type MessageData = {
   sender: MessageSender;
 };
 
-export type { MessageRequestBody, MessageData };
+export type { MessageRequestBody, MessageSender, MessageData };

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { MessageData, MessageRequestBody } from '../../../types/messags';
+import { MessageData, MessageRequestBody } from '../../../types/message';
 import fetchData from '../../../utils/fetchMethods';
 
 const Container = styled.div`
@@ -171,20 +171,15 @@ const MessageTextarea = styled.textarea`
   }
 `;
 
-function MessageSection(): JSX.Element {
+type MessageSectionProps = {
+  messageList: MessageData[];
+};
+
+function MessageSection(props: MessageSectionProps): JSX.Element {
   const { selectedChannel, setSelectedMessageData } = useContext(MainStoreContext);
-  const [messageList, setMessageList] = useState<MessageData[]>([]);
+  const { messageList } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
-
-  const getMessageList = async () => {
-    const responseData = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
-
-    if (responseData) {
-      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
-      setMessageList(responseData);
-    }
-  };
 
   const sendMessage = async (contents: string) => {
     const requestBody: MessageRequestBody = {
@@ -192,7 +187,6 @@ function MessageSection(): JSX.Element {
       contents,
     };
     await fetchData<MessageRequestBody, MessageData>('POST', '/api/messages', requestBody);
-    getMessageList();
   };
 
   const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -239,10 +233,6 @@ function MessageSection(): JSX.Element {
       </MessageItemBlock>
     );
   });
-
-  useEffect(() => {
-    getMessageList();
-  }, [selectedChannel]);
 
   return (
     <Container>
