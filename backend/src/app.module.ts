@@ -22,7 +22,7 @@ import githubConfig from './config/github.config';
   imports: [
     ConfigModule.forRoot({
       load: [githubConfig],
-      envFilePath: ['.env', '.env.github'],
+      envFilePath: ['.env', '.env.github', '.env.redis'],
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(ormConfig()),
