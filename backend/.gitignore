@@ -30,6 +30,7 @@ lerna-debug.log*
 # .env
 .env
 .env.github
+.env.redis
 
 # IDE - VSCode
 .vscode/*

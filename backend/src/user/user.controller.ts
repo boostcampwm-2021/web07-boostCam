@@ -1,17 +1,24 @@
-import { Controller, Get, Param, UseGuards, Session } from '@nestjs/common';
-import { UserServer } from '../user-server/user-server.entity';
+import { Controller, Get, UseGuards, Session } from '@nestjs/common';
 import { UserServerService } from '../user-server/user-server.service';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
+import ResponseEntity from '../common/response-entity';
+import UserServerListDto from '../user-server/dto/user-server-list.dto';
 
 @Controller('/api/user')
 @UseGuards(LoginGuard)
 export class UserController {
   constructor(private userServerService: UserServerService) {}
 
-  @Get('/:id/servers')
-  getServersByUserId(@Param('id') userId: number): Promise<UserServer[]> {
-    return this.userServerService.getServerListByUserId(userId);
+  @Get('/servers')
+  async getServersByUserId(
+    @Session()
+    session: ExpressSession,
+  ): Promise<ResponseEntity<UserServerListDto[]>> {
+    const userId = session.user.id;
+    const data = await this.userServerService.getServerListByUserId(userId);
+
+    return ResponseEntity.ok(data);
   }
 
   @Get()

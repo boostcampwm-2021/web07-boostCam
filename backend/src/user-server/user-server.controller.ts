@@ -1,18 +1,59 @@
-import { Controller, Post, Body, Delete, Param } from '@nestjs/common';
-import { UserServer } from './user-server.entity';
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  Param,
+  Session,
+  UseGuards,
+  HttpException,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { LoginGuard } from '../login/login.guard';
+import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
+import ResponseEntity from '../common/response-entity';
 
 @Controller('/api/users/servers')
+@UseGuards(LoginGuard)
 export class UserServerController {
   constructor(private userServerService: UserServerService) {}
 
   @Post()
-  create(@Body() userServer: UserServer) {
-    return this.userServerService.create(userServer);
+  async createUserServer(
+    @Session()
+    session: ExpressSession,
+    @Body() { code },
+  ) {
+    try {
+      const user = session.user;
+      const newUserServer = await this.userServerService.create(user, code);
+      return ResponseEntity.created(newUserServer.id);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: number) {
-    return this.userServerService.deleteById(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(
+    @Session()
+    session: ExpressSession,
+    @Param('id') id: number,
+  ) {
+    try {
+      const userId = session.user.id;
+      await this.userServerService.deleteById(id, userId);
+      return ResponseEntity.noContent();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

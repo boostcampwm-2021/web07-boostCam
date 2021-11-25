@@ -9,11 +9,13 @@ import { ReactComponent as UsersIcon } from '../assets/icons/users.svg';
 import { ReactComponent as ExitIcon } from '../assets/icons/exit.svg';
 import { ReactComponent as STTIcon } from '../assets/icons/speech.svg';
 import { ReactComponent as STTDisabledIcon } from '../assets/icons/speech-disabled.svg';
+import { ReactComponent as CopyIcon } from '../assets/icons/copy.svg';
 
 import { ReactComponent as Hash } from '../assets/icons/hash.svg';
 import { ReactComponent as Plus } from '../assets/icons/plus.svg';
 import { ReactComponent as ListArrow } from '../assets/icons/listarrow.svg';
 import { ReactComponent as Close } from '../assets/icons/close.svg';
+import { ReactComponent as Github } from '../assets/icons/github.svg';
 
 export const ButtonBarIcons = {
   MicIcon,
@@ -27,6 +29,7 @@ export const ButtonBarIcons = {
   ExitIcon,
   STTIcon,
   STTDisabledIcon,
+  CopyIcon,
 };
 
 export const BoostCamMainIcons = {
@@ -35,4 +38,5 @@ export const BoostCamMainIcons = {
   Plus,
   ListArrow,
   Close,
+  Github,
 };

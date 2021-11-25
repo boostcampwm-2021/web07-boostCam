@@ -1,38 +1,27 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+
+import ResponseEntity from '../common/response-entity';
+import { CreateCamDto } from './cam.dto';
+import { Cam } from './cam.entity';
 import { CamService } from './cam.service';
 
 @Controller('api/cam')
 export class CamController {
   constructor(private camService: CamService) {}
 
-  @Post('/room')
-  createRoom(@Body() payload: { roomid: string }): string {
-    const { roomid } = payload;
-    let statusCode = 201;
-    if (!this.camService.createRoom(roomid)) statusCode = 500;
-    return Object.assign({
-      statusCode,
-      data: payload,
-    });
+  @Post() async createCam(
+    @Body() cam: CreateCamDto,
+  ): Promise<ResponseEntity<number>> {
+    const savedCam = await this.camService.createCam(cam);
+
+    return ResponseEntity.created(savedCam.id);
   }
 
-  @Get('/room/:id')
-  isRoomExist(@Param('id') id: string): string {
-    let statusCode = 201;
-    if (!this.camService.isRoomExist(id)) statusCode = 500;
-    return Object.assign({
-      statusCode,
-      data: { id },
-    });
-  }
+  @Get('/:url') async checkCam(
+    @Param('url') url: string,
+  ): Promise<ResponseEntity<Cam>> {
+    const cam = await this.camService.findOne(url);
 
-  @Get('/roomlist')
-  getRoomList(): string {
-    const roomList = this.camService.getRoomList();
-    const roomListJson = JSON.stringify(Array.from(roomList.entries()));
-    return Object.assign({
-      statusCode: 201,
-      data: { roomListJson },
-    });
+    return ResponseEntity.ok<Cam>(cam);
   }
 }

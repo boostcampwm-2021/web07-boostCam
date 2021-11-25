@@ -1,13 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ServerRepository } from '../server/server.repository';
+import { ServerService } from '../server/server.service';
 import { UserServerRepository } from '../user-server/user-server.repository';
 import { UserServerService } from '../user-server/user-server.service';
 import { UserController } from './user.controller';
 
-const mockRepository = () => ({
+const mockUserServerRepository = () => ({
   save: jest.fn(),
   delete: jest.fn(),
   deleteByUserIdAndServerId: jest.fn(),
+});
+const mockServerRepository = () => ({
+  findOne: jest.fn(),
 });
 
 describe('UserController', () => {
@@ -19,7 +24,12 @@ describe('UserController', () => {
         UserServerService,
         {
           provide: getRepositoryToken(UserServerRepository),
-          useValue: mockRepository(),
+          useValue: mockUserServerRepository(),
+        },
+        ServerService,
+        {
+          provide: getRepositoryToken(ServerRepository),
+          useValue: mockServerRepository(),
         },
       ],
       controllers: [UserController],

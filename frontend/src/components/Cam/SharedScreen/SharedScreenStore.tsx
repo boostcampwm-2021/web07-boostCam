@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 
 import SharedScreenReceiver from './SharedScreenReceiver';
-import SocketState from '../../../atoms/socket';
 import SharedScreenSender from './SharedScreenSender';
 import { ToggleStoreContext } from '../ToggleStore';
+import { CamStoreContext } from '../CamStore';
 
 type SharedScreenStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
@@ -14,7 +13,7 @@ export const SharedScreenStoreContext = createContext<React.ComponentState>(null
 
 function SharedScreenStore(props: SharedScreenStoreProps): JSX.Element {
   const { children } = props;
-  const socket = useRecoilValue(SocketState);
+  const { socket } = useContext(CamStoreContext);
 
   const [sharedScreen, setSharedScreen] = useState<MediaStream | null>(null);
   const [sharedFromMe, setSharedFromMe] = useState(false);

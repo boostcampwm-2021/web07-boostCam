@@ -6,58 +6,58 @@ import {
   Param,
   Post,
   Patch,
+  Session,
+  UseGuards,
 } from '@nestjs/common';
+import { LoginGuard } from '../login/login.guard';
+import { ExpressSession } from '../types/session';
 
 import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
+import { ChannelFormDto } from './channe.dto';
+import { UserChannelService } from '../user-channel/user-channel.service';
+import ResponseEntity from '../common/response-entity';
 
 @Controller('api/channel')
+@UseGuards(LoginGuard)
 export class ChannelController {
-  constructor(private channelService: ChannelService) {
+  constructor(
+    private channelService: ChannelService,
+    private userChannelService: UserChannelService,
+  ) {
     this.channelService = channelService;
+    this.userChannelService = userChannelService;
   }
-  @Get('list') async findAll(): Promise<Channel[]> {
-    const serverList = await this.channelService.findAll();
-    return Object.assign({
-      data: serverList,
-      statusCode: 200,
-      statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
-    });
+  @Get() async findAll(): Promise<ResponseEntity<Channel[]>> {
+    const channelList = await this.channelService.findAll();
+    return ResponseEntity.ok<Channel[]>(channelList);
   }
-  @Get(':id') async findOne(@Param('id') id: string): Promise<Channel> {
-    const foundServer = await this.channelService.findOne(+id);
-    return Object.assign({
-      data: foundServer,
-      statusCode: 200,
-      statusMsg: `데이터 조회가 성공적으로 완료되었습니다.`,
-    });
+  @Get(':id') async findOne(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<Channel>> {
+    const foundServer = await this.channelService.findOne(id);
+    return ResponseEntity.ok<Channel>(foundServer);
   }
-  @Post() async saveChannel(@Body() channel: Channel): Promise<string> {
-    await this.channelService.addChannel(channel);
-    return Object.assign({
-      data: { ...channel },
-      statusCode: 200,
-      statusMsg: `saved successfully`,
-    });
+  @Post() async saveChannel(
+    @Body() channel: ChannelFormDto,
+    @Session() session: ExpressSession,
+  ): Promise<ResponseEntity<Channel>> {
+    const savedChannel = await this.channelService.createChannel(channel);
+    await this.userChannelService.addNewChannel(savedChannel, session.user.id);
+    return ResponseEntity.ok<Channel>(savedChannel);
   }
   @Patch(':id') async updateUser(
     @Param('id') id: number,
-    @Body() channel: Channel,
-  ): Promise<string> {
-    await this.channelService.updateChannel(id, channel);
-    return Object.assign({
-      data: { ...channel },
-      statusCode: 200,
-      statusMsg: `updated successfully`,
-    });
+    @Body() channel: ChannelFormDto,
+  ): Promise<ResponseEntity<Channel>> {
+    const changedChannel = await this.channelService.updateChannel(id, channel);
+    return ResponseEntity.ok<Channel>(changedChannel);
   }
 
-  @Delete(':id') async deleteChannel(@Param('id') id: string): Promise<string> {
-    await this.channelService.deleteChannel(+id);
-    return Object.assign({
-      data: { id },
-      statusCode: 200,
-      statusMsg: `deleted successfully`,
-    });
+  @Delete(':id') async deleteChannel(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<number>> {
+    await this.channelService.deleteChannel(id);
+    return ResponseEntity.ok<number>(id);
   }
 }

@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import ServerListTab from './ServerListTab';
 import MainSection from './MainSection';
 import { MainStoreContext } from './MainStore';
-import CreateChannelModal from './Modal/CreateChannelModal';
-import JoinChannelModal from './Modal/JoinChannelModal';
+import MainModal from './MainModal';
 
 const Container = styled.div`
   width: 100vw;
@@ -18,13 +17,11 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const { isCreateModalOpen, isJoinModalOpen } = useContext(MainStoreContext);
-  useEffect(() => {}, []);
+  const { isModalOpen } = useContext(MainStoreContext);
 
   return (
     <Container>
-      {isCreateModalOpen && <CreateChannelModal />}
-      {isJoinModalOpen && <JoinChannelModal />}
+      {isModalOpen && <MainModal />}
       <ServerListTab />
       <MainSection />
     </Container>

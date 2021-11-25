@@ -4,7 +4,7 @@ import { Server } from '../server/server.entity';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UserController } from './user.controller';
-import { UserServerModule } from 'src/user-server/user-server.module';
+import { UserServerModule } from '../user-server/user-server.module';
 
 @Module({
   imports: [UserServerModule, TypeOrmModule.forFeature([User, Server])],
