@@ -7,6 +7,17 @@ import fetchData from '../../../utils/fetchMethods';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { MainStoreContext } from '../MainStore';
 
+import {
+  MessageItemIcon,
+  MessageItem,
+  MessageItemHeader,
+  MessageSender,
+  MessageTimelog,
+  MessageContents,
+  TextareaDiv,
+  MessageTextarea,
+} from './ContentsSectionStyle';
+
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
@@ -72,7 +83,7 @@ const ThreadSectionBody = styled.div`
   }
 `;
 
-const CommentItemBlock = styled.div<{ isComment: boolean }>`
+const MessageItemBlock = styled.div<{ isComment: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -81,93 +92,12 @@ const CommentItemBlock = styled.div<{ isComment: boolean }>`
   ${(props) =>
     props.isComment
       ? `&:hover {
-    background-color: #f0e7e7;
-  }`
-      : `
+  background-color: #f0e7e7;
+}`
+      : ` 
   padding: 10px 0px;
-  border-bottom: 1px solid gray;`}
-`;
-
-const CommentItemIcon = styled.div<{ imgUrl: string }>`
-  width: 36px;
-  height: 36px;
-  margin: 10px;
-  background-image: url(${(props) => props.imgUrl});
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 8px;
-`;
-
-const CommentItem = styled.div`
-  width: 90%;
-  padding: 8px 0px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const CommentItemHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const CommentSender = styled.span`
-  font-weight: 600;
-  font-size: 15px;
-`;
-
-const CommentTimelog = styled.span`
-  font-size: 12px;
-  margin-left: 15px;
-`;
-
-const CommentContents = styled.span`
-  font-size: 15px;
-`;
-
-const TextareaDiv = styled.div`
-  min-height: 105px;
-  max-height: 250px;
-  background-color: #ece9e9;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const CommentTextarea = styled.textarea`
-  width: 90%;
-  height: 22px;
-  max-height: 200px;
-  border: none;
-  outline: none;
-  resize: none;
-  background: none;
-
-  font-size: 15px;
-
-  padding: 10px;
-  border: 1px solid gray;
-  border-radius: 5px;
-
-  background-color: white;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  border-bottom: 1px solid gray;
+`}
 `;
 
 const CloseIcon = styled(Close)`
@@ -187,14 +117,14 @@ function ThreadSection(): JSX.Element {
     const { nickname, profile } = sender;
     return (
       <>
-        <CommentItemIcon imgUrl={profile} />
-        <CommentItem>
-          <CommentItemHeader>
-            <CommentSender> {nickname} </CommentSender>
-            <CommentTimelog>{createdAt}</CommentTimelog>
-          </CommentItemHeader>
-          <CommentContents>{contents}</CommentContents>
-        </CommentItem>
+        <MessageItemIcon imgUrl={profile} />
+        <MessageItem>
+          <MessageItemHeader>
+            <MessageSender> {nickname} </MessageSender>
+            <MessageTimelog>{createdAt}</MessageTimelog>
+          </MessageItemHeader>
+          <MessageContents>{contents}</MessageContents>
+        </MessageItem>
       </>
     );
   };
@@ -203,9 +133,9 @@ function ThreadSection(): JSX.Element {
     if (!data) return <></>;
     const { id } = data;
     return (
-      <CommentItemBlock isComment={isComment} key={id}>
+      <MessageItemBlock isComment={isComment} key={id}>
         {commentInnerElement(data)}
-      </CommentItemBlock>
+      </MessageItemBlock>
     );
   };
 
@@ -273,7 +203,7 @@ function ThreadSection(): JSX.Element {
         {CommentItemList}
       </ThreadSectionBody>
       <TextareaDiv ref={textDivRef}>
-        <CommentTextarea onKeyDown={onKeyDownCommentTextarea} />
+        <MessageTextarea onKeyDown={onKeyDownCommentTextarea} />
       </TextareaDiv>
     </Container>
   );
