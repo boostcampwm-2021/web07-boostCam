@@ -34,6 +34,21 @@ export class MessageController {
     return ResponseEntity.ok(newMessage);
   }
 
+  @Get('/getone')
+  async findMessageByMessageId(
+    @Session() session: ExpressSession,
+    @Query('messageId') messageId: number,
+    @Query('channelId') channelId: number,
+  ) {
+    const sender = session.user;
+    const selectedMessage = await this.messageService.findMessagesByMessageId(
+      sender.id,
+      channelId,
+      messageId,
+    );
+    return ResponseEntity.ok(selectedMessage);
+  }
+
   @Get()
   async findMessagesByChannelId(
     @Session() session: ExpressSession,
