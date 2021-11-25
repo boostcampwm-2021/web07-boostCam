@@ -85,6 +85,10 @@ const PlusIcon = styled(Plus)`
   fill: #a69c96;
 `;
 
+const DropDownWrapper = styled.div`
+  position: absolute;
+`;
+
 function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { selectedServer, setSelectedServer, serverList, getUserServerList } = useContext(MainStoreContext);
@@ -136,18 +140,20 @@ function ServerListTab(): JSX.Element {
       {listElements}
       <AddServerButton>
         <PlusIcon onClick={onClickServerAddButton} />
-        <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-          <DropdownMenu
-            name="서버 생성"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<CreateServerModal />}
-          />
-          <DropdownMenu
-            name="서버 참가"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<JoinServerModal />}
-          />
-        </Dropdown>
+        <DropDownWrapper>
+          <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
+            <DropdownMenu
+              name="서버 생성"
+              setIsDropdownActivated={setIsDropdownActivated}
+              modalContents={<CreateServerModal />}
+            />
+            <DropdownMenu
+              name="서버 참가"
+              setIsDropdownActivated={setIsDropdownActivated}
+              modalContents={<JoinServerModal />}
+            />
+          </Dropdown>
+        </DropDownWrapper>
       </AddServerButton>
     </Container>
   );

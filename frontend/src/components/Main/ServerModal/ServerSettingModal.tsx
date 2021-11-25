@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -72,11 +72,11 @@ const InputDiv = styled.div`
 `;
 
 const ImageInputDiv = styled.div`
-  width: 250px;
+  width: 270px;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const InputName = styled.span`
@@ -112,6 +112,27 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   &:hover {
     background-color: ${(props) => (props.isButtonActive ? '#2dc2e6' : 'gray')};
     transition: all 0.3s;
+  }
+`;
+const InputFile = styled.input`
+  display: none;
+`;
+const InputLabel = styled.label`
+  background-color: #26a9ca;
+  width: 220px;
+  height: 40px;
+  border-radius: 10px;
+  font-weight: 400;
+  transition: all 0.3s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: '#2dc2e6';
+    transition: all 0.3s;
+    cursor: pointer;
   }
 `;
 
@@ -151,6 +172,7 @@ function ServerSettingModal(): JSX.Element {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [files, setFiles] = useState<FileList>();
+  const [code, setCode] = useState<string>();
 
   const serverId = selectedServer?.server.id;
 
@@ -205,6 +227,42 @@ function ServerSettingModal(): JSX.Element {
     }
   };
 
+  const onClickRefreshCode = async () => {
+    if (serverId) {
+      const response = await fetch(`api/servers/${serverId}/code`, { method: 'PATCH' });
+
+      if (response.status === 200) {
+        const body = await response.json();
+        setCode(body.data);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
+    }
+  };
+
+  const setServerParticipationCode = async () => {
+    if (serverId) {
+      const response = await fetch(`api/servers/${serverId}/code`);
+
+      if (response.status === 200) {
+        const body = await response.json();
+        setCode(body.data);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
+    }
+  };
+
+  useEffect(() => {
+    setServerParticipationCode();
+  }, []);
+
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
@@ -238,16 +296,17 @@ function ServerSettingModal(): JSX.Element {
           <InputDiv>
             <ImageInputDiv>
               <ImagePreview src={imagePreview} />
-              <Input type="file" onChange={onChangePreviewImage} />
+              <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
+              <InputFile id="file" type="file" onChange={onChangePreviewImage} />
             </ImageInputDiv>
             <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
               제출
             </SubmitButton>
           </InputDiv>
-          <InputName>서버 URL 재생성</InputName>
+          <InputName>서버 참여 코드 재생성</InputName>
           <InputDiv>
-            <Input name="url" />
-            <SubmitButton isButtonActive={isButtonActive} type="button">
+            <Input name="url" value={code} readOnly />
+            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onClickRefreshCode}>
               생성
             </SubmitButton>
           </InputDiv>

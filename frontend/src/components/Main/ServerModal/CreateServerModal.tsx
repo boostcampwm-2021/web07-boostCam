@@ -77,6 +77,7 @@ const InputDiv = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  margin: 10px 0px;
 `;
 
 const ImageInputDiv = styled.div`
@@ -84,7 +85,7 @@ const ImageInputDiv = styled.div`
   height: 100%;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 const InputName = styled.span`
@@ -135,6 +136,30 @@ const ImagePreview = styled.img`
   width: 40px;
   height: 40px;
 `;
+
+const InputFile = styled.input`
+  display: none;
+`;
+const InputLabel = styled.label`
+  background-color: #26a9ca;
+  width: 300px;
+  height: 40px;
+  border-radius: 10px;
+  margin: 10px;
+  font-weight: 400;
+  transition: all 0.3s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: '#2dc2e6';
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+`;
+
 const MessageFailToPost = styled.span`
   color: red;
   font-size: 16px;
@@ -248,7 +273,8 @@ function CreateServerModal(): JSX.Element {
             <InputName>서버 아이콘</InputName>
             <ImageInputDiv>
               <ImagePreview src={imagePreview} />
-              <Input type="file" {...register('file')} onChange={onChangePreviewImage} />
+              <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
+              <InputFile id="file" type="file" {...register('file')} onChange={onChangePreviewImage} />
             </ImageInputDiv>
           </InputDiv>
           <MessageFailToPost>{messageFailToPost}</MessageFailToPost>

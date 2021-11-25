@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserServerRepository } from './user-server.repository';
 import { UserServer } from './user-server.entity';
-import { DeleteQueryBuilder, DeleteResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { User } from '../user/user.entity';
 import { ServerService } from '../server/server.service';
 import UserServerDto from './dto/user-server-list.dto';
@@ -22,17 +22,17 @@ export class UserServerService {
     private userServerRepository: UserServerRepository,
   ) {}
 
-  async create(user: User, serverId: number): Promise<UserServer> {
+  async create(user: User, code: string): Promise<UserServer> {
     const newUserServer = new UserServer();
     newUserServer.user = user;
-    newUserServer.server = await this.serverService.findOne(serverId);
+    newUserServer.server = await this.serverService.findByCode(code);
 
     if (newUserServer.server == undefined) {
       throw new BadRequestException('존재하지 않는 서버입니다.');
     }
     const userServer = await this.userServerRepository.findByUserIdAndServerId(
       user.id,
-      serverId,
+      newUserServer.server.id,
     );
     if (userServer !== undefined) {
       throw new BadRequestException('이미 등록된 서버입니다.');
@@ -52,16 +52,6 @@ export class UserServerService {
     }
 
     return this.userServerRepository.delete(id);
-  }
-
-  deleteByUserIdAndServerId(
-    userId: number,
-    serverId: number,
-  ): DeleteQueryBuilder<UserServer> {
-    return this.userServerRepository.deleteByUserIdAndServerId(
-      userId,
-      serverId,
-    );
   }
 
   async getServerListByUserId(userId: number): Promise<UserServerDto[]> {

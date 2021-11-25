@@ -25,7 +25,7 @@ const InnerContainer = styled.div`
   background-color: white;
   border-radius: 8px;
   position: relative;
-  width: 90px;
+  width: 100px;
   text-align: center;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
   z-index: 99;
