@@ -155,8 +155,7 @@ function UpdateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<UpdateModalForm>();
-  const { selectedServer, rightClickedChannelId, setIsUpdateChannelModalOpen, getServerChannelList } =
-    useContext(MainStoreContext);
+  const { selectedServer, rightClickedChannelId, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
@@ -173,7 +172,7 @@ function UpdateChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    setIsUpdateChannelModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const setSelectedChannelData = async () => {
@@ -200,7 +199,7 @@ function UpdateChannelModal(): JSX.Element {
       <ModalInnerBox>
         <ModalHeader>
           <ModalTitle>채널 수정</ModalTitle>
-          <ModalCloseButton onClick={() => setIsUpdateChannelModalOpen(false)}>
+          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
             <CloseIcon />
           </ModalCloseButton>
         </ModalHeader>
