@@ -1,19 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { UserInfo } from '../../../types/cam';
-
-const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-`;
+import CamDefaultPage from './CamDefaultPage';
 
 const Form = styled.form`
   background-color: rgba(0, 0, 0, 0.7);
@@ -48,20 +36,11 @@ const SubmitButton = styled.button`
   }
 `;
 
-const Background = styled.img`
-  position: absolute;
-  width: 70%;
-  height: auto;
-  margin: 0 auto;
-  opacity: 0.1;
-  z-index: -1;
-`;
-
-type NickNameFormProps = {
+type CamNickNameInputPageProps = {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
-function NickNameForm(props: NickNameFormProps): JSX.Element {
+function CamNickNameInputPage(props: CamNickNameInputPageProps): JSX.Element {
   const { setUserInfo } = props;
 
   const onSubmitNicknameForm = (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,14 +54,13 @@ function NickNameForm(props: NickNameFormProps): JSX.Element {
   };
 
   return (
-    <Container>
-      <Background alt="nickname-form-background" src="/nickname-form.jpg" />
+    <CamDefaultPage backgroundSrc="/pepes/pepe-3.jpg">
       <Form onSubmit={onSubmitNicknameForm}>
         <Input name="nickname" placeholder="닉네임을 입력해주세요" required />
         <SubmitButton type="submit">입력</SubmitButton>
       </Form>
-    </Container>
+    </CamDefaultPage>
   );
 }
 
-export default NickNameForm;
+export default CamNickNameInputPage;

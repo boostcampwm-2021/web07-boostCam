@@ -12,6 +12,9 @@ import STTStore from './STT/STTStore';
 import SharedScreenStore from './SharedScreen/SharedScreenStore';
 import CamNickNameInputPage from './Page/CamNickNameInputPage';
 import CamNotFoundPage from './Page/CamNotFoundPage';
+import CamLoadingPage from './Page/CamLoadingPage';
+import CamNotAvailablePage from './Page/CamNotAvailablePage';
+import CamErrorPage from './Page/CamErrorPage';
 
 const Container = styled.div`
   width: 100vw;
@@ -65,18 +68,14 @@ function Cam(): JSX.Element {
 
   switch (statusCode) {
     case 0:
-      return <div>로?딩</div>;
+      return <CamLoadingPage />;
     case 403:
-      return <div>방이 꽉?찬</div>;
+      return <CamNotAvailablePage />;
     case 404:
       return <CamNotFoundPage />;
     case 200:
       if (!userInfo?.nickname) {
-        return (
-          <Container>
-            <CamNickNameInputPage setUserInfo={setUserInfo} />
-          </Container>
-        );
+        return <CamNickNameInputPage setUserInfo={setUserInfo} />;
       }
       return (
         <Container ref={camRef}>
@@ -97,7 +96,7 @@ function Cam(): JSX.Element {
         </Container>
       );
     default:
-      return <div>뭔가 오류</div>;
+      return <CamErrorPage />;
   }
 }
 
