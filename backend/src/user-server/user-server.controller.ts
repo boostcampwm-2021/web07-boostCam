@@ -10,7 +10,6 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { Server } from '../server/server.entity';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
@@ -25,7 +24,7 @@ export class UserServerController {
   async createUserServer(
     @Session()
     session: ExpressSession,
-    @Body() code: string,
+    @Body() { code },
   ) {
     try {
       const user = session.user;

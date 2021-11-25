@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -151,6 +151,7 @@ function ServerSettingModal(): JSX.Element {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [files, setFiles] = useState<FileList>();
+  const [code, setCode] = useState<string>();
 
   const serverId = selectedServer?.server.id;
 
@@ -205,6 +206,42 @@ function ServerSettingModal(): JSX.Element {
     }
   };
 
+  const onClickRefreshCode = async () => {
+    if (serverId) {
+      const response = await fetch(`api/servers/${serverId}/code`, { method: 'PATCH' });
+
+      if (response.status === 200) {
+        const body = await response.json();
+        setCode(body.data);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
+    }
+  };
+
+  const setServerParticipationCode = async () => {
+    if (serverId) {
+      const response = await fetch(`api/servers/${serverId}/code`);
+
+      if (response.status === 200) {
+        const body = await response.json();
+        setCode(body.data);
+      } else {
+        const body = await response.json();
+        setMessageFailToPost(body.message);
+      }
+    } else {
+      setMessageFailToPost('선택된 서버가 없습니다.');
+    }
+  };
+
+  useEffect(() => {
+    setServerParticipationCode();
+  }, []);
+
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
@@ -244,10 +281,10 @@ function ServerSettingModal(): JSX.Element {
               제출
             </SubmitButton>
           </InputDiv>
-          <InputName>서버 URL 재생성</InputName>
+          <InputName>서버 참여 코드 재생성</InputName>
           <InputDiv>
-            <Input name="url" />
-            <SubmitButton isButtonActive={isButtonActive} type="button">
+            <Input name="url" value={code} readOnly />
+            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onClickRefreshCode}>
               생성
             </SubmitButton>
           </InputDiv>

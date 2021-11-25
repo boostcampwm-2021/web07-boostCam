@@ -48,6 +48,20 @@ export class ServerController {
     return ResponseEntity.ok(cam);
   }
 
+  @Get('/:id/code') async findCode(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<string>> {
+    const code = await this.serverService.findCode(id);
+    return ResponseEntity.ok(code);
+  }
+
+  @Patch('/:id/code') async refreshCode(
+    @Param('id') id: number,
+  ): Promise<ResponseEntity<string>> {
+    const code = await this.serverService.refreshCode(id);
+    return ResponseEntity.ok(code);
+  }
+
   @Post()
   @UseGuards(LoginGuard)
   @UseInterceptors(FileInterceptor('icon'))

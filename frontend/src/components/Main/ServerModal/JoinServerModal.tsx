@@ -166,12 +166,8 @@ function JoinServerModal(): JSX.Element {
     const { code } = data;
     const response = await fetch('api/users/servers', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: code.trim(),
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code.trim() }),
     });
 
     if (response.status === 201) {

@@ -35,6 +35,18 @@ export class ServerService {
     return this.serverRepository.findOne({ code });
   }
 
+  async findCode(id: number): Promise<string> {
+    const server = await this.serverRepository.findOne(id);
+    return server.code;
+  }
+
+  async refreshCode(id: number): Promise<string> {
+    const server = await this.serverRepository.findOne(id);
+    server.code = v4();
+    this.serverRepository.save(server);
+    return server.code;
+  }
+
   async create(
     user: User,
     requestServerDto: RequestServerDto,
