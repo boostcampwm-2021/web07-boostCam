@@ -52,11 +52,14 @@ export class ServerService {
     return server.code;
   }
 
-  async refreshCode(id: number): Promise<string> {
-    const server = await this.serverRepository.findOne(id);
+  async refreshCode(id: number, user: User): Promise<string> {
+    const server = await this.serverRepository.findOneWithOwner(id);
 
     if (!server) {
       throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
+    if (server.owner.id !== user.id) {
+      throw new ForbiddenException('권한이 없습니다.');
     }
 
     server.code = v4();
