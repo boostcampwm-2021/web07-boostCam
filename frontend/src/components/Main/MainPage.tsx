@@ -6,6 +6,8 @@ import MainSection from './MainSection';
 import { MainStoreContext } from './MainStore';
 import MainModal from './MainModal';
 
+import MainDropdown from './MainDropdown';
+
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -21,6 +23,7 @@ function MainPage(): JSX.Element {
 
   return (
     <Container>
+      <MainDropdown />
       {isModalOpen && <MainModal />}
       <ServerListTab />
       <MainSection />

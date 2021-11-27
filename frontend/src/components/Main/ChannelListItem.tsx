@@ -59,7 +59,13 @@ type ChannelListItemProps = {
 };
 
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
-  const { setSelectedChannel, setRightClickedChannelId, setRightClickedChannelName } = useContext(MainStoreContext);
+  const {
+    setSelectedChannel,
+    setRightClickedChannelId,
+    setRightClickedChannelName,
+    setIsDropdownOpen,
+    setDropdownInfo,
+  } = useContext(MainStoreContext);
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { dataId, selected, name } = props;
 
@@ -70,10 +76,18 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
 
   const onRightClickChannelItem = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setDropdownInfo({
+      position: [e.pageX, e.pageY],
+      components: [
+        { name: '수정', component: <UpdateChannelModal key={1} /> },
+        { name: '나가기', component: <QuitChannelModal key={2} /> },
+      ],
+    });
+    setIsDropdownOpen(true);
     const channelId = e.currentTarget.dataset.id;
     setRightClickedChannelId(channelId);
     setRightClickedChannelName(name);
-    setIsDropdownActivated(!isDropdownActivated);
+    // setIsDropdownActivated(!isDropdownActivated);
   };
 
   return (

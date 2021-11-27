@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { DropdownInfo } from '../../types/dropdown';
 import { CamData, ChannelData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
 
@@ -24,6 +25,9 @@ function MainStore(props: MainStoreProps): JSX.Element {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContents, setModalContents] = useState<JSX.Element>(<></>);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownInfo, setDropdownInfo] = useState<DropdownInfo>({ position: [0, 0], components: [] });
 
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
@@ -100,6 +104,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setServerList,
         getUserServerList,
         getServerCamList,
+        isDropdownOpen,
+        setIsDropdownOpen,
+        dropdownInfo,
+        setDropdownInfo,
       }}
     >
       {children}
