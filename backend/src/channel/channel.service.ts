@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/index';
 
@@ -53,20 +53,18 @@ export class ChannelService {
     channel: ChannelFormDto,
     userId: number,
   ): Promise<Channel> {
-    const channelEntity = this.channelRepository.create();
+    const { name, description, serverId } = channel;
     const server = await this.serverRepository.findOne({
-      id: channel.serverId,
+      id: serverId,
     });
     const user = await this.userRepository.findOne({
       id: userId,
     });
 
-    if (!server) throw new BadRequestException();
+    if (!server) throw new NotFoundException('서버가 존재하지 않습니다!');
+    if (!user) throw new NotFoundException('사용자가 존재하지 않습니다!');
 
-    channelEntity.name = channel.name;
-    channelEntity.description = channel.description;
-    channelEntity.server = server;
-    channelEntity.owner = user;
-    return channelEntity;
+    const newChannel = Channel.newInstance(name, description, server, user);
+    return newChannel;
   }
 }
