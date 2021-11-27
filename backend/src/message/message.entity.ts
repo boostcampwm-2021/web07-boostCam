@@ -17,7 +17,7 @@ export class Message {
   @Column()
   contents: string;
 
-  @ManyToOne(() => Channel)
+  @ManyToOne(() => Channel, { onDelete: 'CASCADE' })
   channel: Channel;
 
   @RelationId((message: Message) => message.channel)
