@@ -6,6 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  RelationId,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
@@ -29,6 +30,9 @@ export class Server {
   @ManyToOne(() => User)
   @JoinColumn({ referencedColumnName: 'id' })
   owner: User;
+
+  @RelationId((server: Server) => server.owner)
+  ownerId: number;
 
   @OneToMany(() => UserServer, (userServer) => userServer.server)
   userServer: UserServer[];

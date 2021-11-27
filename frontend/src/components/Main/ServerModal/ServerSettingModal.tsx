@@ -102,6 +102,7 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
 
   border: 0;
   outline: 0;
+  font-weight: bold;
 
   text-align: center;
   vertical-align: middle;
@@ -124,8 +125,8 @@ const InputLabel = styled.label`
   width: 220px;
   height: 40px;
   border-radius: 10px;
-  font-weight: 400;
   transition: all 0.3s;
+  font-weight: bold;
 
   display: flex;
   justify-content: center;
@@ -189,6 +190,21 @@ const ResizedCopyIcon = styled(CopyIcon)`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const DeleteButton = styled.button`
+  width: 80px;
+  height: 30px;
+  font-weight: bold;
+  border: 0;
+  outline: 0;
+  text-align: center;
+  vertical-align: middle;
+
+  border-radius: 10px;
+  background-color: red;
+  cursor: pointer;
+  transition: all 0.3s;
 `;
 
 function ServerSettingModal(): JSX.Element {
@@ -365,9 +381,9 @@ function ServerSettingModal(): JSX.Element {
           </InputDiv>
           <InputDiv>
             <InputName>서버 삭제</InputName>
-            <SubmitButton type="submit" isButtonActive={isButtonActive} onClick={onClickDeleteServer}>
+            <DeleteButton type="submit" onClick={onClickDeleteServer}>
               서버 삭제
-            </SubmitButton>
+            </DeleteButton>
           </InputDiv>
           <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
         </Form>

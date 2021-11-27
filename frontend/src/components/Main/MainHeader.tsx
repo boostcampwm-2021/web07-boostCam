@@ -1,5 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import userState from '../../atoms/user';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
 import { MainStoreContext } from './MainStore';
@@ -32,6 +34,8 @@ const CurrentServerName = styled.span`
 function MainHeader(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { selectedServer } = useContext(MainStoreContext);
+  const [isOwnerOfServer, setIsOwnerOfServer] = useState<boolean>(false);
+  const user = useRecoilValue(userState);
 
   const onClickServerInfoButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     if (selectedServer !== undefined) {
@@ -40,6 +44,12 @@ function MainHeader(): JSX.Element {
     }
   };
 
+  useEffect(() => {
+    if (selectedServer && user) {
+      setIsOwnerOfServer(user.id === selectedServer.server.ownerId);
+    }
+  }, [selectedServer]);
+
   return (
     <Container>
       <HeaderBox>
@@ -47,21 +57,29 @@ function MainHeader(): JSX.Element {
           {selectedServer !== undefined ? selectedServer.server.name : '새로운 서버에 참여하세요.'}
         </CurrentServerName>
         <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-          <DropdownMenu
-            name="서버 설정"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<ServerSettingModal />}
-          />
+          {isOwnerOfServer ? (
+            <DropdownMenu
+              name="서버 설정"
+              setIsDropdownActivated={setIsDropdownActivated}
+              modalContents={<ServerSettingModal />}
+            />
+          ) : (
+            <></>
+          )}
           <DropdownMenu
             name="서버 정보"
             setIsDropdownActivated={setIsDropdownActivated}
             modalContents={<ServerInfoModal />}
           />
-          <DropdownMenu
-            name="서버 나가기"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<QuitServerModal />}
-          />
+          {isOwnerOfServer ? (
+            <></>
+          ) : (
+            <DropdownMenu
+              name="서버 나가기"
+              setIsDropdownActivated={setIsDropdownActivated}
+              modalContents={<QuitServerModal />}
+            />
+          )}
         </Dropdown>
       </HeaderBox>
     </Container>
