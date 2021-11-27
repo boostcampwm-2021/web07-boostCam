@@ -54,10 +54,7 @@ export class UserChannelController {
         serverId,
         session.user.id,
       );
-    const notJoinedChannelList = response.map(
-      (userChannel) => userChannel.channel,
-    );
-    return ResponseEntity.ok<Channel[]>(notJoinedChannelList);
+    return ResponseEntity.ok<Channel[]>(response);
   }
 
   @Post()

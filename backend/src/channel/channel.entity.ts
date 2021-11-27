@@ -28,6 +28,9 @@ export class Channel {
   @RelationId((channel: Channel) => channel.owner)
   ownerId: number;
 
+  @RelationId((channel: Channel) => channel.server)
+  serverId: number;
+
   static newInstance(
     name: string,
     description: string,

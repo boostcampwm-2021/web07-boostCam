@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult } from 'typeorm';
 
+import { ChannelRepository } from '../channel/channel.repository';
 import { UserChannelRepository } from './user-channel.repository';
 import { UserChannel } from './user-channel.entity';
 import { Channel } from '../channel/channel.entity';
@@ -10,6 +11,8 @@ import { UserRepository } from '../user/user.repository';
 @Injectable()
 export class UserChannelService {
   constructor(
+    @InjectRepository(ChannelRepository)
+    private channelRepository: ChannelRepository,
     @InjectRepository(UserChannelRepository)
     private userChannelRepository: UserChannelRepository,
     @InjectRepository(UserRepository) private userRepository: UserRepository,
@@ -44,8 +47,9 @@ export class UserChannelService {
   async getNotJoinedChannelListByUserId(
     serverId: number,
     userId: number,
-  ): Promise<UserChannel[]> {
-    const allList = await this.userChannelRepository.getAllList(serverId);
+  ): Promise<Channel[]> {
+    const allChannelList =
+      await this.channelRepository.getChannelListByServerId(serverId);
     const joinedList =
       await this.userChannelRepository.getJoinedChannelListByUserId(
         userId,
@@ -55,10 +59,9 @@ export class UserChannelService {
       (userChannel) => userChannel.channel.id,
     );
 
-    const notJoinedList = allList.filter(
-      (userChannel) => !joinedChannelList.includes(userChannel.channel.id),
+    const notJoinedList = allChannelList.filter(
+      (channel) => !joinedChannelList.includes(channel.id),
     );
-
     return notJoinedList;
   }
 
