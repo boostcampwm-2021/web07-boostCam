@@ -107,13 +107,13 @@ const ServerName = styled.div`
   margin-right: 10px;
   font-size: 30px;
   font-weight: bold;
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 5px;
   text-align: center;
 `;
 
-const InfoParagraph = styled.pre`
-  background-color: #cbc4b9;
+const InfoParagraph = styled.div`
+  background-color: #eeeeee;
   border-radius: 10px;
   color: black;
   padding: 0px 10px;
@@ -134,8 +134,49 @@ const InfoParagraph = styled.pre`
   }
 `;
 
+const InfoDiv = styled.div`
+  background-color: #eeeeee;
+  border-radius: 10px;
+  color: black;
+  min-height: 80px;
+  max-height: 150px;
+  overflow-y: auto;
+  margin: 0px;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #999999;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #cccccc;
+    border-radius: 10px;
+  }
+`;
+
+const ServerParticipant = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ParticipantIcon = styled.div<{ imgUrl: string }>`
+  width: 36px;
+  height: 36px;
+  margin: 5px;
+  background-image: url(${(props) => props.imgUrl});
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+`;
+
+const ParticipantNickname = styled.div`
+  height: 36px;
+`;
+
 const InfoSpan = styled.span`
-  background-color: #cbc4b9;
+  background-color: #eeeeee;
   border-radius: 10px;
   padding: 0px 10px;
   height: 40px;
@@ -150,6 +191,7 @@ const InfoSpan = styled.span`
   }
 `;
 type UserInfo = {
+  id: number;
   nickname: string;
   profile: string;
 };
@@ -200,14 +242,17 @@ function ServerInfoModal(): JSX.Element {
         </InformationBox>
         <InformationBox>
           <SubTitle>서버 사용자 리스트</SubTitle>
-          <InfoParagraph>
-            {joinedUserList
-              ?.map((joinedUser) => {
-                const { nickname } = joinedUser;
-                return nickname;
-              })
-              .join('\n')}
-          </InfoParagraph>
+          <InfoDiv>
+            {joinedUserList?.map((joinedUser) => {
+              const { nickname, profile, id } = joinedUser;
+              return (
+                <ServerParticipant key={id}>
+                  <ParticipantIcon imgUrl={profile} />
+                  <ParticipantNickname>{nickname}</ParticipantNickname>
+                </ServerParticipant>
+              );
+            })}
+          </InfoDiv>
         </InformationBox>
       </ModalInnerBox>
     </Container>

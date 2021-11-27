@@ -9,7 +9,6 @@ const { Close } = BoostCamMainIcons;
 const Container = styled.div`
   width: 35%;
   min-width: 400px;
-  height: 50%;
 
   background-color: #222322;
 
@@ -60,7 +59,7 @@ const ModalDescription = styled.span`
 
 const Form = styled.form`
   width: 90%;
-  height: 70%;
+  height: 40%;
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
 
