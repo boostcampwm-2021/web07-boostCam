@@ -75,10 +75,8 @@ export class UserChannelService {
   }
 
   async findChannelsByUserId(userId: number) {
-    const userChannels = await this.userChannelRepository
-      .createQueryBuilder('user_channel')
-      .where('user_channel.user = :userId', { userId: userId })
-      .getMany();
+    const userChannels =
+      await this.userChannelRepository.getUserChannelListByUserId(userId);
     return userChannels.map((uc) => uc.channelId.toString());
   }
 }

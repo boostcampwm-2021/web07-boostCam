@@ -61,8 +61,6 @@ export class ChannelService {
       id: userId,
     });
 
-    console.log(userId, user);
-
     if (!server) throw new BadRequestException();
 
     channelEntity.name = channel.name;
