@@ -48,14 +48,13 @@ type DropdownProps = {
   setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactChild[] | React.ReactChild;
 };
-function Dropdown2(props: DropdownProps): JSX.Element {
+function RightClickDropdown(props: DropdownProps): JSX.Element {
   const { isDropdownActivated, setIsDropdownActivated, children, pos } = props;
 
   const onClickDropdownBackground = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsDropdownActivated(false);
   };
-  console.log(pos);
 
   return (
     <Container activated={isDropdownActivated}>
@@ -67,4 +66,4 @@ function Dropdown2(props: DropdownProps): JSX.Element {
   );
 }
 
-export default Dropdown2;
+export default RightClickDropdown;

@@ -1,13 +1,10 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import ServerListTab from './ServerListTab';
-import MainSection from './MainSection';
 import { MainStoreContext } from './MainStore';
-import MainModal from './MainModal';
 
 import DropdownMenu from '../core/DropdownMenu';
-import Dropdown2 from '../core/Dropdown2';
+import RightClickDropdown from '../core/RightClickDropdown';
 import { ComponentInfo } from '../../types/dropdown';
 
 const Container = styled.div``;
@@ -23,9 +20,13 @@ function MainDropdown(): JSX.Element {
 
   return (
     <Container>
-      <Dropdown2 isDropdownActivated={isDropdownOpen} setIsDropdownActivated={setIsDropdownOpen} pos={position}>
+      <RightClickDropdown
+        isDropdownActivated={isDropdownOpen}
+        setIsDropdownActivated={setIsDropdownOpen}
+        pos={position}
+      >
         {dropdownMenuList}
-      </Dropdown2>
+      </RightClickDropdown>
     </Container>
   );
 }
