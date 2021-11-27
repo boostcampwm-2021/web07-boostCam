@@ -9,12 +9,14 @@ import { UserChannelService } from '../user-channel/user-channel.service';
 import { UserChannelRepository } from '../user-channel/user-channel.repository';
 import { UserRepository } from '../user/user.repository';
 import { ChannelRepository } from './channel.repository';
+import { User } from '../user/user.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Channel,
       Server,
+      User,
       UserChannelRepository,
       UserRepository,
       ChannelRepository,
