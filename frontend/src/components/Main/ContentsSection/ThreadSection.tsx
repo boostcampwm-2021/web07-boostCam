@@ -101,6 +101,25 @@ const MessageItemBlock = styled.div<{ isComment: boolean }>`
 `}
 `;
 
+const NoCommentDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NoCommentTitle = styled.span`
+  font-size: 25px;
+  font-weight: 400;
+`;
+
+const NoCommentDescription = styled.span`
+  margin-top: 15px;
+  font-size: 15px;
+`;
+
 const CloseIcon = styled(Close)`
   width: 30px;
   height: 30px;
@@ -196,6 +215,14 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
   };
 
   const buildCommentItemList = () => {
+    if (!commentsList.length) {
+      return (
+        <NoCommentDiv>
+          <NoCommentTitle>아직 댓글이 없습니다</NoCommentTitle>
+          <NoCommentDescription>첫 번째 댓글을 달아보세요!</NoCommentDescription>
+        </NoCommentDiv>
+      );
+    }
     return commentsList.map((data) => buildCommentElement(data, true));
   };
 
