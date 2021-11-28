@@ -17,4 +17,9 @@ type MessageData = {
   sender: MessageSender;
 };
 
-export type { MessageRequestBody, MessageSender, MessageData };
+type MessageListInfo = {
+  messageData: MessageData[];
+  isLoading: boolean;
+};
+
+export type { MessageRequestBody, MessageSender, MessageData, MessageListInfo };

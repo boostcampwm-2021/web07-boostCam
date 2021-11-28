@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MessageData } from '../../../types/message';
+import { MessageData, MessageListInfo } from '../../../types/message';
 import MessageSection from './MessageSection';
 import ThreadSection from './ThreadSection';
 
@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 type ContentsSectionProps = {
-  messageList: MessageData[];
+  messageList: MessageListInfo;
 };
 
 function ContentsSection(props: ContentsSectionProps): JSX.Element {

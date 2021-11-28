@@ -1,8 +1,8 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { MessageData, MessageRequestBody } from '../../../types/message';
+import { MessageData, MessageListInfo, MessageRequestBody } from '../../../types/message';
 
 import {
   MessageItemIcon,
@@ -14,6 +14,7 @@ import {
   TextareaDiv,
   MessageTextarea,
 } from './ContentsSectionStyle';
+import Loading from '../../core/Loading';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -100,7 +101,7 @@ const MessageItemBlock = styled.div`
 `;
 
 type MessageSectionProps = {
-  messageList: MessageData[];
+  messageList: MessageListInfo;
   setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -147,22 +148,28 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     setIsThreadOpen(true);
   };
 
-  const MessageItemList = messageList.map((val: MessageData): JSX.Element => {
-    const { id, contents, createdAt, sender } = val;
-    const { nickname, profile } = sender;
-    return (
-      <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
-        <MessageItemIcon imgUrl={profile} />
-        <MessageItem>
-          <MessageItemHeader>
-            <MessageSender> {nickname} </MessageSender>
-            <MessageTimelog>{createdAt}</MessageTimelog>
-          </MessageItemHeader>
-          <MessageContents>{contents}</MessageContents>
-        </MessageItem>
-      </MessageItemBlock>
-    );
-  });
+  const buildMessageItemList = () => {
+    const { messageData, isLoading } = messageList;
+    if (isLoading) return <Loading />;
+    return messageData.map((val: MessageData): JSX.Element => {
+      const { id, contents, createdAt, sender } = val;
+      const { nickname, profile } = sender;
+      return (
+        <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
+          <MessageItemIcon imgUrl={profile} />
+          <MessageItem>
+            <MessageItemHeader>
+              <MessageSender> {nickname} </MessageSender>
+              <MessageTimelog>{createdAt}</MessageTimelog>
+            </MessageItemHeader>
+            <MessageContents>{contents}</MessageContents>
+          </MessageItem>
+        </MessageItemBlock>
+      );
+    });
+  };
+
+  const MessageItemList = buildMessageItemList();
 
   return (
     <Container>
