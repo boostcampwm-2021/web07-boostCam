@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MessageData } from '../../../types/message';
 import MessageSection from './MessageSection';
@@ -19,11 +19,12 @@ type ContentsSectionProps = {
 };
 
 function ContentsSection(props: ContentsSectionProps): JSX.Element {
+  const [isThreadOpen, setIsThreadOpen] = useState(false);
   const { messageList } = props;
   return (
     <Container>
-      <MessageSection messageList={messageList} />
-      <ThreadSection />
+      <MessageSection messageList={messageList} setIsThreadOpen={setIsThreadOpen} />
+      {isThreadOpen && <ThreadSection setIsThreadOpen={setIsThreadOpen} />}
     </Container>
   );
 }

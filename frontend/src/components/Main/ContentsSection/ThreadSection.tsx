@@ -21,7 +21,7 @@ import {
 const { Close } = BoostCamMainIcons;
 
 const Container = styled.div`
-  flex: 1 0 0;
+  flex: 0 0 400px;
   height: 100%;
   background-color: white;
 
@@ -105,10 +105,16 @@ const CloseIcon = styled(Close)`
   height: 30px;
   fill: #a69c96;
   margin-right: 15px;
+  cursor: pointer;
 `;
 
-function ThreadSection(): JSX.Element {
+type ThreadSectionProps = {
+  setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function ThreadSection(props: ThreadSectionProps): JSX.Element {
   const { selectedMessageData, selectedChannel } = useContext(MainStoreContext);
+  const { setIsThreadOpen } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const [commentsList, setCommentsList] = useState<CommentData[]>([]);
 
@@ -182,6 +188,10 @@ function ThreadSection(): JSX.Element {
     }
   };
 
+  const onClickCloseIcon = () => {
+    setIsThreadOpen(false);
+  };
+
   useEffect(() => {
     getMessageList();
   }, [selectedMessageData]);
@@ -196,7 +206,7 @@ function ThreadSection(): JSX.Element {
           <ThreadSpan>쓰레드</ThreadSpan>
           <ChannelNameSpan>ChannelName</ChannelNameSpan>
         </ChannelName>
-        <CloseIcon />
+        <CloseIcon onClick={onClickCloseIcon} />
       </ThreadSectionHeader>
       <ThreadSectionBody>
         {mainMessage}

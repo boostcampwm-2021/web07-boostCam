@@ -16,7 +16,7 @@ import {
 } from './ContentsSectionStyle';
 
 const Container = styled.div`
-  width: 50%;
+  flex: 5 0 0;
   height: 100%;
 
   background-color: white;
@@ -101,11 +101,12 @@ const MessageItemBlock = styled.div`
 
 type MessageSectionProps = {
   messageList: MessageData[];
+  setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
   const { selectedChannel, setSelectedMessageData, socket } = useContext(MainStoreContext);
-  const { messageList } = props;
+  const { messageList, setIsThreadOpen } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const tmpChannelName = '# ChannelName';
 
@@ -143,6 +144,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
 
   const onClickMessageItemBlock = (data: MessageData) => {
     setSelectedMessageData(data);
+    setIsThreadOpen(true);
   };
 
   const MessageItemList = messageList.map((val: MessageData): JSX.Element => {
