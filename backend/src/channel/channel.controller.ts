@@ -38,6 +38,7 @@ export class ChannelController {
     const foundServer = await this.channelService.findOne(id);
     return ResponseEntity.ok<Channel>(foundServer);
   }
+
   @Post() async saveChannel(
     @Body() channel: ChannelFormDto,
     @Session() session: ExpressSession,
@@ -49,7 +50,7 @@ export class ChannelController {
     await this.userChannelService.addNewChannel(savedChannel, session.user.id);
     return ResponseEntity.ok<Channel>(savedChannel);
   }
-  @Patch(':id') async updateUser(
+  @Patch(':id') async updateChannel(
     @Param('id') id: number,
     @Body() channel: ChannelFormDto,
     @Session() session: ExpressSession,

@@ -22,7 +22,7 @@ export class ChannelService {
   findOne(id: number): Promise<Channel> {
     return this.channelRepository.findOne(
       { id: id },
-      { relations: ['server'] },
+      { relations: ['server', 'owner'] },
     );
   }
   async createChannel(

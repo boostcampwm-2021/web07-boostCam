@@ -9,6 +9,7 @@ import {
   Body,
   HttpStatus,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
@@ -17,6 +18,7 @@ import { UserChannelService } from './user-channel.service';
 import { ChannelService } from '../channel/channel.service';
 import { UserChannel } from './user-channel.entity';
 import { Channel } from '../channel/channel.entity';
+import { User } from '../user/user.entity';
 
 @Controller('/api/user/servers')
 @UseGuards(LoginGuard)
@@ -55,6 +57,19 @@ export class UserChannelController {
         session.user.id,
       );
     return ResponseEntity.ok<Channel[]>(response);
+  }
+
+  @Get('/:id/channels/users')
+  async getJoinedUserList(
+    @Param('id') serverId: number,
+    @Query('channelId') channelId: number,
+  ) {
+    const response =
+      await this.userChannelService.findJoinedUserListByChannelId(
+        serverId,
+        channelId,
+      );
+    return ResponseEntity.ok<User[]>(response);
   }
 
   @Post()

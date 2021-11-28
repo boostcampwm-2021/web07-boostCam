@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -14,7 +14,8 @@ import {
   TextareaDiv,
   MessageTextarea,
 } from './ContentsSectionStyle';
-import Loading from '../../core/Loading';
+import { User } from '../../../types/user';
+import ChannelEntity from '../../../types/channel';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -103,13 +104,15 @@ const MessageItemBlock = styled.div`
 type MessageSectionProps = {
   messageList: MessageListInfo;
   setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userList: User[];
+  channelInfo: ChannelEntity | undefined;
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
   const { selectedChannel, setSelectedMessageData, socket } = useContext(MainStoreContext);
-  const { messageList, setIsThreadOpen } = props;
+  const { messageList, setIsThreadOpen, userList, channelInfo } = props;
+  const { messageData } = messageList;
   const textDivRef = useRef<HTMLDivElement>(null);
-  const tmpChannelName = '# ChannelName';
 
   const sendMessage = async (contents: string) => {
     const requestBody: MessageRequestBody = {
@@ -148,9 +151,9 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     setIsThreadOpen(true);
   };
 
+  useEffect(() => {}, [selectedChannel]);
+
   const buildMessageItemList = () => {
-    const { messageData, isLoading } = messageList;
-    if (isLoading) return <Loading />;
     return messageData.map((val: MessageData): JSX.Element => {
       const { id, contents, createdAt, sender } = val;
       const { nickname, profile } = sender;
@@ -174,13 +177,13 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
   return (
     <Container>
       <MessageSectionHeader>
-        <ChannelName>{tmpChannelName}</ChannelName>
-        <ChannelUserButton>Users 5</ChannelUserButton>
+        <ChannelName># {channelInfo && channelInfo.name}</ChannelName>
+        <ChannelUserButton>Users {userList && userList.length}</ChannelUserButton>
       </MessageSectionHeader>
       <MessageSectionBody>{MessageItemList}</MessageSectionBody>
       <TextareaDiv ref={textDivRef}>
         <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
-      </TextareaDiv>
+      </TextareaDiv>{' '}
     </Container>
   );
 }

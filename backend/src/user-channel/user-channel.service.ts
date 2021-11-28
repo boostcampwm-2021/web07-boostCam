@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult } from 'typeorm';
 
@@ -78,5 +78,17 @@ export class UserChannelService {
     const userChannels =
       await this.userChannelRepository.getUserChannelListByUserId(userId);
     return userChannels.map((uc) => uc.channelId.toString());
+  }
+
+  async findJoinedUserListByChannelId(serverId: number, channelId: number) {
+    const joinedUserList =
+      await this.userChannelRepository.getJoinedUserListByChannelId(
+        serverId,
+        channelId,
+      );
+    if (!joinedUserList)
+      throw new NotFoundException('채널에 사용자가 존재하지 않습니다!');
+    const userList = joinedUserList.map((data) => data.user);
+    return userList;
   }
 }

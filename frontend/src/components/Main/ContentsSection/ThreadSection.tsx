@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import ChannelEntity from '../../../types/channel';
 import { CommentData, CommentRequestBody } from '../../../types/comment';
 import { MessageData } from '../../../types/message';
 import fetchData from '../../../utils/fetchMethods';
@@ -57,8 +58,9 @@ const ThreadSpan = styled.span`
 `;
 
 const ChannelNameSpan = styled.span`
-  margin-left: 5px;
-  font-size: 15px;
+  margin-left: 10px;
+  font-size: 12px;
+  color: gray;
 `;
 
 const ThreadSectionBody = styled.div`
@@ -157,11 +159,12 @@ const buildCommentElement = (data: MessageData | undefined, isComment: boolean) 
 
 type ThreadSectionProps = {
   setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  channelInfo: ChannelEntity | undefined;
 };
 
 function ThreadSection(props: ThreadSectionProps): JSX.Element {
   const { selectedMessageData, selectedChannel } = useContext(MainStoreContext);
-  const { setIsThreadOpen } = props;
+  const { setIsThreadOpen, channelInfo } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const [commentsList, setCommentsList] = useState<CommentData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -239,7 +242,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
       <ThreadSectionHeader>
         <ChannelName>
           <ThreadSpan>쓰레드</ThreadSpan>
-          <ChannelNameSpan>ChannelName</ChannelNameSpan>
+          <ChannelNameSpan># {channelInfo && channelInfo.name}</ChannelNameSpan>
         </ChannelName>
         <CloseIcon onClick={onClickCloseIcon} />
       </ThreadSectionHeader>

@@ -24,6 +24,14 @@ export class UserChannelRepository extends Repository<UserChannel> {
       .getMany();
   }
 
+  getJoinedUserListByChannelId(serverId: number, channelId: number) {
+    return this.createQueryBuilder('user_channel')
+      .leftJoinAndSelect('user_channel.user', 'user')
+      .where('user_channel.channelId = :channelId', { channelId: channelId })
+      .andWhere('user_channel.server = :serverId', { serverId: serverId })
+      .getMany();
+  }
+
   getUserChannelByUserIdAndChannelId(userId: number, channelId: number) {
     return this.createQueryBuilder('user_channel')
       .where('user_channel.user = :userId', { userId: userId })
