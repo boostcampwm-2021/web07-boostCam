@@ -17,6 +17,8 @@ import { ReactComponent as ListArrow } from '../assets/icons/listarrow.svg';
 import { ReactComponent as Close } from '../assets/icons/close.svg';
 import { ReactComponent as Github } from '../assets/icons/github.svg';
 
+import { ReactComponent as loading } from '../assets/loading.svg';
+
 export const ButtonBarIcons = {
   MicIcon,
   MicDisabledIcon,
@@ -39,4 +41,5 @@ export const BoostCamMainIcons = {
   ListArrow,
   Close,
   Github,
+  loading,
 };

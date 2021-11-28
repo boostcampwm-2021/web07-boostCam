@@ -5,6 +5,7 @@ import { MessageData } from '../../../types/message';
 import fetchData from '../../../utils/fetchMethods';
 
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 
 import {
@@ -108,6 +109,33 @@ const CloseIcon = styled(Close)`
   cursor: pointer;
 `;
 
+const commentInnerElement = (data: MessageData) => {
+  const { contents, createdAt, sender } = data;
+  const { nickname, profile } = sender;
+  return (
+    <>
+      <MessageItemIcon imgUrl={profile} />
+      <MessageItem>
+        <MessageItemHeader>
+          <MessageSender> {nickname} </MessageSender>
+          <MessageTimelog>{createdAt}</MessageTimelog>
+        </MessageItemHeader>
+        <MessageContents>{contents}</MessageContents>
+      </MessageItem>
+    </>
+  );
+};
+
+const buildCommentElement = (data: MessageData | undefined, isComment: boolean) => {
+  if (!data) return <></>;
+  const { id } = data;
+  return (
+    <MessageItemBlock isComment={isComment} key={id}>
+      {commentInnerElement(data)}
+    </MessageItemBlock>
+  );
+};
+
 type ThreadSectionProps = {
   setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -117,33 +145,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
   const { setIsThreadOpen } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
   const [commentsList, setCommentsList] = useState<CommentData[]>([]);
-
-  const commentInnerElement = (data: MessageData) => {
-    const { contents, createdAt, sender } = data;
-    const { nickname, profile } = sender;
-    return (
-      <>
-        <MessageItemIcon imgUrl={profile} />
-        <MessageItem>
-          <MessageItemHeader>
-            <MessageSender> {nickname} </MessageSender>
-            <MessageTimelog>{createdAt}</MessageTimelog>
-          </MessageItemHeader>
-          <MessageContents>{contents}</MessageContents>
-        </MessageItem>
-      </>
-    );
-  };
-
-  const buildCommentElement = (data: MessageData | undefined, isComment: boolean) => {
-    if (!data) return <></>;
-    const { id } = data;
-    return (
-      <MessageItemBlock isComment={isComment} key={id}>
-        {commentInnerElement(data)}
-      </MessageItemBlock>
-    );
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   const getMessageList = async () => {
     if (!selectedMessageData) return;
@@ -151,6 +153,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
     if (data) {
       data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
       setCommentsList(data);
+      setIsLoading(false);
     }
   };
 
@@ -192,12 +195,17 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
     setIsThreadOpen(false);
   };
 
+  const buildCommentItemList = () => {
+    return commentsList.map((data) => buildCommentElement(data, true));
+  };
+
   useEffect(() => {
+    setIsLoading(true);
     getMessageList();
   }, [selectedMessageData]);
 
   const mainMessage = buildCommentElement(selectedMessageData, false);
-  const CommentItemList = commentsList.map((data) => buildCommentElement(data, true));
+  const CommentItemList = buildCommentItemList();
 
   return (
     <Container>
@@ -210,7 +218,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
       </ThreadSectionHeader>
       <ThreadSectionBody>
         {mainMessage}
-        {CommentItemList}
+        {isLoading ? <Loading /> : CommentItemList}
       </ThreadSectionBody>
       <TextareaDiv ref={textDivRef}>
         <MessageTextarea onKeyDown={onKeyDownCommentTextarea} />
