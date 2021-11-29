@@ -7,6 +7,7 @@ import MainHeader from './MainHeader';
 import { MessageData, MessageListInfo } from '../../types/message';
 import fetchData from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
+import ServerJoinSection from './ServerJoinSection';
 
 const Container = styled.div`
   width: 100%;
@@ -33,6 +34,7 @@ function MainSection(): JSX.Element {
     messageData: [],
     isLoading: true,
   });
+  const isJoinedServerExists = false;
 
   const getMessageList = async () => {
     const { data } = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
@@ -78,8 +80,9 @@ function MainSection(): JSX.Element {
     <Container>
       <MainHeader />
       <MainBody>
-        <RoomListSection />
-        <ContentsSection messageList={messageList} />
+        {isJoinedServerExists && <RoomListSection />}
+        {isJoinedServerExists && <ContentsSection messageList={messageList} />}
+        {!isJoinedServerExists && <ServerJoinSection />}
       </MainBody>
     </Container>
   );
