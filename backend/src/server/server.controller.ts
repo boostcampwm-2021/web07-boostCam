@@ -8,7 +8,6 @@ import {
   Patch,
   UseGuards,
   Session,
-  HttpException,
   UseInterceptors,
   UploadedFile,
   HttpCode,
@@ -74,30 +73,24 @@ export class ServerController {
     @Body() requestServerDto: RequestServerDto,
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<number>> {
-    try {
-      requestServerDto = new RequestServerDto(
-        requestServerDto.name,
-        requestServerDto.description,
-      );
-      let imgUrl: string;
+    requestServerDto = new RequestServerDto(
+      requestServerDto.name,
+      requestServerDto.description,
+    );
+    let imgUrl: string;
 
-      if (icon && icon.mimetype.substring(0, 5) === 'image') {
-        const uploadedFile = await this.imageService.uploadFile(icon);
-        imgUrl = uploadedFile.Location;
-      }
-      const user = session.user;
-      const newServer = await this.serverService.create(
-        user,
-        requestServerDto,
-        imgUrl,
-      );
-      return ResponseEntity.created(newServer.id);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    if (icon && icon.mimetype.substring(0, 5) === 'image') {
+      const uploadedFile = await this.imageService.uploadFile(icon);
+      imgUrl = uploadedFile.Location;
     }
+    const user = session.user;
+    const newServer = await this.serverService.create(
+      user,
+      requestServerDto,
+      imgUrl,
+    );
+
+    return ResponseEntity.created(newServer.id);
   }
 
   @Patch('/:id')
@@ -110,28 +103,20 @@ export class ServerController {
     @Body() requestServerDto: RequestServerDto,
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<string>> {
-    try {
-      requestServerDto = new RequestServerDto(
-        requestServerDto.name,
-        requestServerDto.description,
-      );
-      let imgUrl: string;
+    requestServerDto = new RequestServerDto(
+      requestServerDto.name,
+      requestServerDto.description,
+    );
+    let imgUrl: string;
 
-      if (icon && icon.mimetype.substring(0, 5) === 'image') {
-        const uploadedFile = await this.imageService.uploadFile(icon);
-        imgUrl = uploadedFile.Location;
-      }
-      const user = session.user;
-
-      await this.serverService.updateServer(id, requestServerDto, user, imgUrl);
-
-      return ResponseEntity.noContent();
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    if (icon && icon.mimetype.substring(0, 5) === 'image') {
+      const uploadedFile = await this.imageService.uploadFile(icon);
+      imgUrl = uploadedFile.Location;
     }
+    const user = session.user;
+    await this.serverService.updateServer(id, requestServerDto, user, imgUrl);
+
+    return ResponseEntity.noContent();
   }
 
   @Delete('/:id')
@@ -141,15 +126,9 @@ export class ServerController {
     session: ExpressSession,
     @Param('id') id: number,
   ): Promise<ResponseEntity<string>> {
-    try {
-      const user = session.user;
-      await this.serverService.deleteServer(id, user);
-      return ResponseEntity.noContent();
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    const user = session.user;
+    await this.serverService.deleteServer(id, user);
+
+    return ResponseEntity.noContent();
   }
 }

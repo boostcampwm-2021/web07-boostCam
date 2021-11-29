@@ -6,7 +6,6 @@ import {
   Param,
   Session,
   UseGuards,
-  HttpException,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -26,16 +25,9 @@ export class UserServerController {
     session: ExpressSession,
     @Body() { code },
   ) {
-    try {
-      const user = session.user;
-      const newUserServer = await this.userServerService.create(user, code);
-      return ResponseEntity.created(newUserServer.id);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    const user = session.user;
+    const newUserServer = await this.userServerService.create(user, code);
+    return ResponseEntity.created(newUserServer.id);
   }
 
   @Delete('/:id')
@@ -45,15 +37,8 @@ export class UserServerController {
     session: ExpressSession,
     @Param('id') id: number,
   ) {
-    try {
-      const userId = session.user.id;
-      await this.userServerService.deleteById(id, userId);
-      return ResponseEntity.noContent();
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    const userId = session.user.id;
+    await this.userServerService.deleteById(id, userId);
+    return ResponseEntity.noContent();
   }
 }
