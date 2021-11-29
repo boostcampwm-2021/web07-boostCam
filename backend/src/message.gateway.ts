@@ -4,7 +4,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { CommentDto } from './comment/comment.dto';
 import { CommentService } from './comment/comment.service';
 import { MessageDto } from './message/message.dto';
 import { MessageService } from './message/message.service';

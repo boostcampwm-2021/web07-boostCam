@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components';
 import ChannelEntity from '../../../types/channel';
-import { CommentData, CommentRequestBody } from '../../../types/comment';
+import { CommentListInfo, CommentRequestBody } from '../../../types/comment';
 import { MessageData } from '../../../types/message';
-import fetchData from '../../../utils/fetchMethods';
 
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import Loading from '../../core/Loading';
@@ -160,24 +159,13 @@ const buildCommentElement = (data: MessageData | undefined, isComment: boolean) 
 type ThreadSectionProps = {
   setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
   channelInfo: ChannelEntity | undefined;
+  commentList: CommentListInfo;
 };
 
 function ThreadSection(props: ThreadSectionProps): JSX.Element {
-  const { selectedMessageData, selectedChannel } = useContext(MainStoreContext);
-  const { setIsThreadOpen, channelInfo } = props;
+  const { selectedMessageData, selectedChannel, socket } = useContext(MainStoreContext);
+  const { setIsThreadOpen, channelInfo, commentList } = props;
   const textDivRef = useRef<HTMLDivElement>(null);
-  const [commentsList, setCommentsList] = useState<CommentData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const getMessageList = async () => {
-    if (!selectedMessageData) return;
-    const { data } = await fetchData<null, CommentData[]>('GET', `/api/comments?messageId=${selectedMessageData.id}`);
-    if (data) {
-      data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
-      setCommentsList(data);
-      setIsLoading(false);
-    }
-  };
 
   const sendComment = async (contents: string) => {
     const requestBody: CommentRequestBody = {
@@ -185,8 +173,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
       messageId: parseInt(selectedMessageData.id, 10),
       contents,
     };
-    await fetchData<CommentRequestBody, CommentData>('POST', '/api/comments', requestBody);
-    getMessageList();
+    socket.emit('sendComment', requestBody);
   };
 
   const onKeyDownCommentTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -218,7 +205,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
   };
 
   const buildCommentItemList = () => {
-    if (!commentsList.length) {
+    if (!commentList.commentData.length) {
       return (
         <NoCommentDiv>
           <NoCommentTitle>아직 댓글이 없습니다</NoCommentTitle>
@@ -226,13 +213,8 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
         </NoCommentDiv>
       );
     }
-    return commentsList.map((data) => buildCommentElement(data, true));
+    return commentList.commentData.map((data) => buildCommentElement(data, true));
   };
-
-  useEffect(() => {
-    setIsLoading(true);
-    getMessageList();
-  }, [selectedMessageData]);
 
   const mainMessage = buildCommentElement(selectedMessageData, false);
   const CommentItemList = buildCommentItemList();
@@ -248,7 +230,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
       </ThreadSectionHeader>
       <ThreadSectionBody>
         {mainMessage}
-        {isLoading ? <Loading /> : CommentItemList}
+        {commentList.isLoading ? <Loading /> : CommentItemList}
       </ThreadSectionBody>
       <TextareaDiv ref={textDivRef}>
         <MessageTextarea onKeyDown={onKeyDownCommentTextarea} />

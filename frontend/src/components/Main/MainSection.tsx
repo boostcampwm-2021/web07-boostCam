@@ -7,6 +7,7 @@ import MainHeader from './MainHeader';
 import { MessageData, MessageListInfo } from '../../types/message';
 import fetchData from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
+import { CommentData, CommentListInfo } from '../../types/comment';
 
 const Container = styled.div`
   width: 100%;
@@ -28,9 +29,14 @@ const MainBody = styled.div`
 `;
 
 function MainSection(): JSX.Element {
-  const { selectedChannel, socket } = useContext(MainStoreContext);
+  const { selectedChannel, selectedMessageData, socket } = useContext(MainStoreContext);
   const [messageList, setMessageList] = useState<MessageListInfo>({
     messageData: [],
+    isLoading: true,
+  });
+
+  const [commentList, setCommentList] = useState<CommentListInfo>({
+    commentData: [],
     isLoading: true,
   });
 
@@ -41,6 +47,18 @@ function MainSection(): JSX.Element {
       data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
       setMessageList({
         messageData: data,
+        isLoading: false,
+      });
+    }
+  };
+
+  const getCommentList = async () => {
+    if (!selectedMessageData) return;
+    const { data } = await fetchData<null, CommentData[]>('GET', `/api/comments?messageId=${selectedMessageData.id}`);
+    if (data) {
+      data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
+      setCommentList({
+        commentData: data,
         isLoading: false,
       });
     }
@@ -70,12 +88,39 @@ function MainSection(): JSX.Element {
     };
   }, [selectedChannel]);
 
+  useEffect(() => {
+    if (selectedMessageData) {
+      setCommentList({
+        commentData: [],
+        isLoading: true,
+      });
+      getCommentList();
+    }
+
+    const receiveCommentHandler = (comment: CommentData) => {
+      if (selectedMessageData.id === comment.messageId) {
+        setCommentList((list) => {
+          return {
+            commentData: [...list.commentData, comment],
+            isLoading: false,
+          };
+        });
+      }
+    };
+
+    socket.on('receiveComment', receiveCommentHandler);
+
+    return () => {
+      socket.off('receiveComment', receiveCommentHandler);
+    };
+  }, [selectedMessageData]);
+
   return (
     <Container>
       <MainHeader />
       <MainBody>
         <RoomListSection />
-        <ContentsSection messageList={messageList} />
+        <ContentsSection messageList={messageList} commentList={commentList} />
       </MainBody>
     </Container>
   );
