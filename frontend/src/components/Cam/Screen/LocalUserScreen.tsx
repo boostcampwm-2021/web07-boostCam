@@ -5,22 +5,29 @@ import DefaultScreen from './DefaultScreen';
 import { CamStoreContext } from '../CamStore';
 import StreamStatusIndicator from './StreamStatusIndicator';
 
-const Container = styled.div`
+const Container = styled.div<{ numOfScreen: number }>`
   position: relative;
-  width: 100%;
+  width: calc(100% / ${(props) => Math.ceil(props.numOfScreen ** 0.5)});
+  height: calc(100% / ${(props) => Math.floor((props.numOfScreen + 1) ** 0.5)});
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
 `;
 
 const Video = styled.video`
   max-height: 100%;
-  width: 100%;
+  width: 90%;
 `;
 
-function LocalUserScreen(): JSX.Element {
+type LocalUserScreenProps = {
+  numOfScreen: number;
+};
+
+function LocalUserScreen(props: LocalUserScreenProps): JSX.Element {
+  const { numOfScreen } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const { localStream, localStatus, userInfo } = useContext(CamStoreContext);
 
@@ -34,7 +41,7 @@ function LocalUserScreen(): JSX.Element {
   });
 
   return (
-    <Container>
+    <Container numOfScreen={numOfScreen}>
       {localStatus.stream && localStatus.video ? (
         <Video ref={videoRef} playsInline autoPlay muted>
           <track kind="captions" />

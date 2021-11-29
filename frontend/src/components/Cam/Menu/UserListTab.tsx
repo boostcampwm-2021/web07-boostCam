@@ -43,9 +43,9 @@ function UserListTab(): JSX.Element {
       isActive={isUserListTabActive}
     >
       <Container isActive={isUserListTabActive}>
-        <LocalUserScreen />
+        <LocalUserScreen numOfScreen={1} />
         {screenList.map((screen: Screen) => (
-          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
+          <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} numOfScreen={1} />
         ))}
       </Container>
     </Draggable>
