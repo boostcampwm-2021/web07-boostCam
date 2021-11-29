@@ -16,7 +16,7 @@ declare module 'http' {
   }
 }
 
-@WebSocketGateway({ namespace: '/message' })
+@WebSocketGateway()
 export class MessageGateway {
   @WebSocketServer()
   private server: Server;
