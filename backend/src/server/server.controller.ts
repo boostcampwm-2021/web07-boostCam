@@ -26,6 +26,7 @@ import ServerWithUsersDto from './dto/response-server-users.dto';
 import { CamService } from '../cam/cam.service';
 import { ResponseCamDto } from '../cam/cam.dto';
 
+@UseGuards(LoginGuard)
 @Controller('/api/servers')
 export class ServerController {
   constructor(
@@ -56,14 +57,16 @@ export class ServerController {
   }
 
   @Patch('/:id/code') async refreshCode(
+    @Session()
+    session: ExpressSession,
     @Param('id') id: number,
   ): Promise<ResponseEntity<string>> {
-    const code = await this.serverService.refreshCode(id);
+    const user = session.user;
+    const code = await this.serverService.refreshCode(id, user);
     return ResponseEntity.ok(code);
   }
 
   @Post()
-  @UseGuards(LoginGuard)
   @UseInterceptors(FileInterceptor('icon'))
   async createServer(
     @Session()

@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { BoostCamMainIcons, ButtonBarIcons } from '../../../utils/SvgIcons';
 
 const { Close } = BoostCamMainIcons;
+const { CopyIcon } = ButtonBarIcons;
 
 const Container = styled.div`
   width: 35%;
@@ -91,6 +92,7 @@ const Input = styled.input`
   outline: none;
   padding: 15px 10px;
   border-radius: 10px;
+  font-size: 16px;
 `;
 
 const SubmitButton = styled.button<{ isButtonActive: boolean }>`
@@ -100,6 +102,7 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
 
   border: 0;
   outline: 0;
+  font-weight: bold;
 
   text-align: center;
   vertical-align: middle;
@@ -122,8 +125,8 @@ const InputLabel = styled.label`
   width: 220px;
   height: 40px;
   border-radius: 10px;
-  font-weight: 400;
   transition: all 0.3s;
+  font-weight: bold;
 
   display: flex;
   justify-content: center;
@@ -157,10 +160,51 @@ const ModalCloseButton = styled.div`
   margin-right: 25px;
 `;
 
+const CodeDiv = styled.div`
+  width: 220px;
+  height: 24px;
+  padding: 10px 40px 10px 10px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  background-color: white;
+  overflow-x: scroll;
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 const CloseIcon = styled(Close)`
   width: 20px;
   height: 20px;
   fill: #a69c96;
+`;
+
+const ResizedCopyIcon = styled(CopyIcon)`
+  width: 25px;
+  height: 25px;
+  float: left;
+  position: absolute;
+  margin-left: 240px;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const DeleteButton = styled.button`
+  width: 80px;
+  height: 30px;
+  font-weight: bold;
+  border: 0;
+  outline: 0;
+  text-align: center;
+  vertical-align: middle;
+
+  border-radius: 10px;
+  background-color: red;
+  cursor: pointer;
+  transition: all 0.3s;
 `;
 
 function ServerSettingModal(): JSX.Element {
@@ -169,8 +213,8 @@ function ServerSettingModal(): JSX.Element {
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [serverName, setServerName] = useState<string>('');
+  const [serverDescription, setServerDescription] = useState<string>('');
   const [files, setFiles] = useState<FileList>();
   const [code, setCode] = useState<string>();
 
@@ -186,11 +230,15 @@ function ServerSettingModal(): JSX.Element {
   };
 
   const onCliclUpdateServer = async () => {
+    if (!serverName || !serverDescription) {
+      setMessageFailToPost('서버 이름과 설명을 모두 채워주세요.');
+      return;
+    }
     if (serverId) {
       const formData = new FormData();
 
-      formData.append('name', name);
-      formData.append('description', description);
+      formData.append('name', serverName);
+      formData.append('description', serverDescription);
       if (files) formData.append('icon', files[0]);
 
       const response = await fetch(`api/servers/${serverId}`, {
@@ -259,7 +307,27 @@ function ServerSettingModal(): JSX.Element {
     }
   };
 
+  const getServerInfo = async () => {
+    const response = await fetch(`/api/servers/${serverId}/users`);
+    const serverInfo = await response.json();
+
+    if (response.status === 200) {
+      const { name, description, imgUrl } = serverInfo.data;
+
+      setServerDescription(description);
+      setServerName(name);
+      if (imgUrl) {
+        setImagePreview(imgUrl);
+      }
+    }
+  };
+
+  const onClickCopyCodeButton = () => {
+    navigator.clipboard.writeText(`${code}`);
+  };
+
   useEffect(() => {
+    getServerInfo();
     setServerParticipationCode();
   }, []);
 
@@ -274,23 +342,26 @@ function ServerSettingModal(): JSX.Element {
           </ModalCloseButton>
         </ModalHeader>
         <Form>
-          <InputName>서버 이름 변경</InputName>
-          <InputDiv>
-            <Input name="name" placeholder="서버명을 입력해주세요" onChange={(e) => setName(e.target.value)} />
-            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
-              제출
-            </SubmitButton>
-          </InputDiv>
-          <InputName>서버 설명 변경</InputName>
+          <InputName>새 서버 이름</InputName>
           <InputDiv>
             <Input
-              name="description"
-              placeholder="서버 설명을 입력해주세요"
-              onChange={(e) => setDescription(e.target.value)}
+              name="name"
+              placeholder="서버명을 입력해주세요"
+              value={serverName}
+              onChange={(e) => setServerName(e.target.value)}
             />
             <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
               제출
             </SubmitButton>
+          </InputDiv>
+          <InputName>새 서버 설명</InputName>
+          <InputDiv>
+            <Input
+              name="description"
+              placeholder="서버 설명을 입력해주세요"
+              value={serverDescription}
+              onChange={(e) => setServerDescription(e.target.value)}
+            />
           </InputDiv>
           <InputName>서버 아이콘 변경</InputName>
           <InputDiv>
@@ -299,22 +370,20 @@ function ServerSettingModal(): JSX.Element {
               <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
               <InputFile id="file" type="file" onChange={onChangePreviewImage} />
             </ImageInputDiv>
-            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
-              제출
-            </SubmitButton>
           </InputDiv>
           <InputName>서버 참여 코드 재생성</InputName>
           <InputDiv>
-            <Input name="url" value={code} readOnly />
+            <CodeDiv>{code}</CodeDiv>
+            <ResizedCopyIcon onClick={onClickCopyCodeButton} />
             <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onClickRefreshCode}>
               생성
             </SubmitButton>
           </InputDiv>
           <InputDiv>
             <InputName>서버 삭제</InputName>
-            <SubmitButton type="submit" isButtonActive={isButtonActive} onClick={onClickDeleteServer}>
+            <DeleteButton type="submit" onClick={onClickDeleteServer}>
               서버 삭제
-            </SubmitButton>
+            </DeleteButton>
           </InputDiv>
           <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
         </Form>

@@ -10,6 +10,7 @@ type ServerData = {
   id: string;
   name: string;
   imgUrl: string;
+  owner: UserData;
 };
 
 type MyServerData = {

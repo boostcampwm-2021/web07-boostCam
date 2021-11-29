@@ -1,6 +1,7 @@
 import { Server } from '../../server/server.entity';
 
 type UserInfo = {
+  id: number;
   nickname: string;
   profile: string;
 };
@@ -30,6 +31,7 @@ class ServerWithUsersDto {
       server.imgUrl,
       server.userServer.map((userServer) => {
         return {
+          id: userServer.user.id,
           nickname: userServer.user.nickname,
           profile: userServer.user.profile,
         };
