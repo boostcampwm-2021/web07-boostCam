@@ -8,6 +8,7 @@ import fetchData from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 import MessageSection from './MessageSection';
+import NoChannelSection from './NoChannelSection';
 import ThreadSection from './ThreadSection';
 
 const Container = styled.div`
@@ -18,6 +19,7 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  background-color: #ffffff;
 `;
 
 type ContentsSectionProps = {
@@ -58,18 +60,25 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
     getChannelInfo();
   }, [selectedChannel]);
 
+  useEffect(() => {
+    setIsThreadOpen(false);
+  }, [selectedServer]);
+
+  const buildContentsSection = () => {
+    if (!selectedChannel) return <NoChannelSection />;
+    return (
+      <MessageSection
+        messageList={messageList}
+        setIsThreadOpen={setIsThreadOpen}
+        userList={userList}
+        channelInfo={channelInfo}
+      />
+    );
+  };
+
   return (
     <Container>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <MessageSection
-          messageList={messageList}
-          setIsThreadOpen={setIsThreadOpen}
-          userList={userList}
-          channelInfo={channelInfo}
-        />
-      )}
+      {isLoading ? <Loading /> : buildContentsSection()}
       {isThreadOpen && <ThreadSection setIsThreadOpen={setIsThreadOpen} channelInfo={channelInfo} />}
     </Container>
   );
