@@ -19,11 +19,13 @@ export class ChannelService {
   findAll(): Promise<Channel[]> {
     return this.channelRepository.find();
   }
-  findOne(id: number): Promise<Channel> {
-    return this.channelRepository.findOne(
+  async findOne(id: number): Promise<Channel> {
+    const response = await this.channelRepository.findOne(
       { id: id },
       { relations: ['server', 'owner'] },
     );
+    if (!response) throw new NotFoundException('서버가 존재하지 않습니다!');
+    return response;
   }
   async createChannel(
     channel: ChannelFormDto,

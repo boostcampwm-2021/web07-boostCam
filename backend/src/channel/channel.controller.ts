@@ -8,6 +8,8 @@ import {
   Patch,
   Session,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
@@ -35,8 +37,15 @@ export class ChannelController {
   @Get(':id') async findOne(
     @Param('id') id: number,
   ): Promise<ResponseEntity<Channel>> {
-    const foundChannel = await this.channelService.findOne(id);
-    return ResponseEntity.ok<Channel>(foundChannel);
+    try {
+      const foundChannel = await this.channelService.findOne(id);
+      return ResponseEntity.ok<Channel>(foundChannel);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Get(':id/auth') async checkAuthority(
