@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
+import fetchData from '../../utils/fetchMethods';
+import { MainStoreContext } from './MainStore';
 
 const Container = styled.div`
   width: 100%;
@@ -53,20 +55,30 @@ const ErrorMessage = styled.div`
 `;
 
 function ServerJoinSection(): JSX.Element {
+  const { getUserServerList } = useContext(MainStoreContext);
   const [serverCode, setServerCode] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('feaf');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const onclickParticipateToServer = () => {
+  const onclickParticipateToServer = async () => {
+    const url = `/api/users/servers`;
+    const body = { code: serverCode };
+
     if (!serverCode) {
       setErrorMessage('참가 코드를 입력하세요.');
       return;
     }
-    console.log(serverCode);
+
+    const { statusCode, message } = await fetchData('POST', url, body);
+    if (statusCode === 201) {
+      getUserServerList();
+    } else {
+      setErrorMessage(`${message}`);
+    }
   };
 
   return (
     <Container>
-      <Title>참가중인 서버가 없습니다! </Title>
+      <Title>참가중인 서버가 없습니다.</Title>
       <SubTitle>서버 참가 코드를 입력하세요.</SubTitle>
       <CodeBox>
         <ServerCode onChange={(e) => setServerCode(e.target.value)} />

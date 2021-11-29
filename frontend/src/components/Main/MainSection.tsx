@@ -29,12 +29,12 @@ const MainBody = styled.div`
 `;
 
 function MainSection(): JSX.Element {
-  const { selectedChannel, socket } = useContext(MainStoreContext);
+  const { serverList, selectedChannel, socket } = useContext(MainStoreContext);
   const [messageList, setMessageList] = useState<MessageListInfo>({
     messageData: [],
     isLoading: true,
   });
-  const isJoinedServerExists = false;
+  const isJoinedServerExists = !!serverList.length;
 
   const getMessageList = async () => {
     const { data } = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
