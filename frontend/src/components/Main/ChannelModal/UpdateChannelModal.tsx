@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import fetchData from '../../../utils/fetchMethods';
+import Loading from '../../core/Loading';
 
 const { Close } = BoostCamMainIcons;
 
@@ -178,7 +180,14 @@ function UpdateChannelModal(): JSX.Element {
     formState: { errors },
   } = useForm<UpdateModalForm>();
   const { selectedServer, rightClickedChannelId, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
-  const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
+  const [isButtonActive, setIsButtonActive] = useState(false);
+  const [isChannelOwner, setIsChannelOwner] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const checkAuthority = async () => {
+    const { data } = await fetchData<null, boolean>('GET', `api/channel/${rightClickedChannelId}/auth`);
+    setIsChannelOwner(data);
+  };
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
@@ -203,22 +212,33 @@ function UpdateChannelModal(): JSX.Element {
     const channelData = responseObj.data;
     setValue('name', channelData.name);
     setValue('description', channelData.description);
+    setIsLoading(false);
+  };
+
+  const checkFormValidation = () => {
+    const { name, description } = watch();
+    if (!name || !description) return;
+    const isActive = name.trim().length > 2 && description.trim().length > 0;
+    setIsButtonActive(isActive);
   };
 
   useEffect(() => {
-    setSelectedChannelData();
+    checkAuthority();
   }, []);
 
   useEffect(() => {
-    const { name, description } = watch();
-    const isActive = name.trim().length > 2 && description.trim().length > 0;
-    setIsButtonActive(isActive);
+    setSelectedChannelData();
+  }, [isChannelOwner]);
+
+  useEffect(() => {
+    checkFormValidation();
   }, [watch()]);
 
-  /* eslint-disable react/jsx-props-no-spreading */
-  return (
-    <Container>
-      <ModalInnerBox>
+  const modalContents = () => {
+    if (!isChannelOwner) return <div>No Authority</div>;
+    return (
+      /* eslint-disable react/jsx-props-no-spreading */
+      <>
         <ModalHeader>
           <ModalTitle>채널 수정</ModalTitle>
           <ModalCloseButton onClick={() => setIsModalOpen(false)}>
@@ -256,8 +276,14 @@ function UpdateChannelModal(): JSX.Element {
           <InputDiv>
             <DeleteButton> 채널 삭제 </DeleteButton>
           </InputDiv>
-        </DeleteChannelDiv>
-      </ModalInnerBox>
+        </DeleteChannelDiv>{' '}
+      </>
+    );
+  };
+
+  return (
+    <Container>
+      <ModalInnerBox>{isLoading ? <Loading /> : modalContents()}</ModalInnerBox>
     </Container>
   );
 }

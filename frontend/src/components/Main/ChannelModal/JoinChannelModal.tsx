@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-import { ChannelData } from '../../../types/main';
+import { ChannelListData } from '../../../types/main';
 
 const { Close } = BoostCamMainIcons;
 
@@ -171,7 +171,7 @@ const CloseIcon = styled(Close)`
 
 function JoinChannelModal(): JSX.Element {
   const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
-  const [channelList, setChannelList] = useState<ChannelData[]>([]);
+  const [channelList, setChannelList] = useState<ChannelListData[]>([]);
 
   const getNotJoinedChannelList = async () => {
     const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/notjoined/`);
@@ -179,7 +179,7 @@ function JoinChannelModal(): JSX.Element {
     setChannelList(list.data);
   };
 
-  const onClickChannelListButton = async (id: string) => {
+  const onClickChannelListButton = async (id: number) => {
     await fetch('/api/user/servers', {
       method: 'POST',
       headers: {
@@ -191,7 +191,7 @@ function JoinChannelModal(): JSX.Element {
       }),
     });
     getServerChannelList();
-    socket.emit('joinChannel', { channelId: parseInt(id, 10) });
+    socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);
   };
 

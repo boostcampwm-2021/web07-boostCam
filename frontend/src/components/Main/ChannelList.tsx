@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { ChannelData } from '../../types/main';
+import { ChannelListData } from '../../types/main';
 import { MainStoreContext } from './MainStore';
 import ChannelListHeader from './ChannelListHeader';
 import ChannelListItem from './ChannelListItem';
@@ -44,9 +44,9 @@ function ChannelList(): JSX.Element {
     });
   }, [selectedChannel]);
 
-  const listElements = serverChannelList.map((val: ChannelData): JSX.Element => {
+  const listElements = serverChannelList.map((val: ChannelListData): JSX.Element => {
     const selected = val.id === selectedChannel;
-    return <ChannelListItem key={val.id} dataId={val.id} selected={selected} name={val.name} />;
+    return <ChannelListItem key={val.id} dataId={val.id} selected={selected} name={val.name} ownerId={val.ownerId} />;
   });
 
   return (

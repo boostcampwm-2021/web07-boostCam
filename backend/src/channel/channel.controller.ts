@@ -35,8 +35,16 @@ export class ChannelController {
   @Get(':id') async findOne(
     @Param('id') id: number,
   ): Promise<ResponseEntity<Channel>> {
-    const foundServer = await this.channelService.findOne(id);
-    return ResponseEntity.ok<Channel>(foundServer);
+    const foundChannel = await this.channelService.findOne(id);
+    return ResponseEntity.ok<Channel>(foundChannel);
+  }
+
+  @Get(':id/auth') async checkAuthority(
+    @Param('id') id: number,
+    @Session() session: ExpressSession,
+  ): Promise<ResponseEntity<boolean>> {
+    const foundChannel = await this.channelService.findOne(id);
+    return ResponseEntity.ok<boolean>(foundChannel.ownerId === session.user.id);
   }
 
   @Post() async saveChannel(

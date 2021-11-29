@@ -18,10 +18,12 @@ type MyServerData = {
   server: ServerData;
 };
 
-type ChannelData = {
+type ChannelListData = {
   description: string;
-  id: string;
+  id: number;
   name: string;
+  ownerId: number;
+  serverId: number;
 };
 
 type CamData = {
@@ -29,4 +31,4 @@ type CamData = {
   url: string;
 };
 
-export type { UserData, ServerData, MyServerData, ChannelData, CamData };
+export type { UserData, ServerData, MyServerData, ChannelListData, CamData };
