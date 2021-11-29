@@ -40,7 +40,7 @@ const MenuList = styled.ul`
 type DropdownProps = {
   isDropdownActivated: boolean;
   setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
-  children: React.ReactChild[] | React.ReactChild;
+  children: Array<boolean | React.ReactChild> | React.ReactChild;
 };
 function Dropdown(props: DropdownProps): JSX.Element {
   const { isDropdownActivated, setIsDropdownActivated, children } = props;

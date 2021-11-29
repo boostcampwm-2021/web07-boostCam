@@ -57,23 +57,19 @@ function MainHeader(): JSX.Element {
           {selectedServer !== undefined ? selectedServer.server.name : '새로운 서버에 참여하세요.'}
         </CurrentServerName>
         <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-          {isOwnerOfServer ? (
+          {isOwnerOfServer && (
             <DropdownMenu
               name="서버 설정"
               setIsDropdownActivated={setIsDropdownActivated}
               modalContents={<ServerSettingModal />}
             />
-          ) : (
-            <></>
           )}
           <DropdownMenu
             name="서버 정보"
             setIsDropdownActivated={setIsDropdownActivated}
             modalContents={<ServerInfoModal />}
           />
-          {isOwnerOfServer ? (
-            <></>
-          ) : (
+          {!isOwnerOfServer && (
             <DropdownMenu
               name="서버 나가기"
               setIsDropdownActivated={setIsDropdownActivated}
