@@ -10,8 +10,8 @@ const { Close } = BoostCamMainIcons;
 const Container = styled.div`
   width: 35%;
   min-width: 400px;
-  height: 50%;
-  min-height: 450px;
+  height: 70%;
+  min-height: 550px;
 
   background-color: #222322;
 
@@ -61,28 +61,28 @@ const ModalDescription = styled.span`
 `;
 
 const Form = styled.form`
+  flex: 3 1 0;
   width: 90%;
-  height: 70%;
   border-radius: 20px;
-  margin: 30px 0px 0px 25px;
+  margin: 20px 0px 0px 25px;
 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: flex-end;
 `;
 
 const InputDiv = styled.div`
   width: 100%;
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
 `;
 
-const InputName = styled.span`
-  color: #cbc4b9;
+const InputName = styled.span<{ color: string }>`
+  color: ${(props) => `${props.color}`};
   font-size: 20px;
   font-weight: 500;
 `;
@@ -105,20 +105,16 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   width: 100px;
   height: 50px;
   background: none;
-
   padding: 15px 10px;
-
   border: 0;
   outline: 0;
-
+  margin-right: 15px;
   text-align: center;
   vertical-align: middle;
-
   border-radius: 10px;
   background-color: ${(props) => (props.isButtonActive ? '#26a9ca' : 'gray')};
   cursor: pointer;
   transition: all 0.3s;
-
   &:hover {
     background-color: ${(props) => (props.isButtonActive ? '#2dc2e6' : 'gray')};
     transition: all 0.3s;
@@ -140,6 +136,32 @@ const CloseIcon = styled(Close)`
   width: 20px;
   height: 20px;
   fill: #a69c96;
+`;
+
+const DeleteChannelDiv = styled.div`
+  flex: 1 1 0;
+  margin: 10px 0px 0px 25px;
+  width: 90%;
+`;
+
+const DeleteButton = styled.button`
+  width: 250px;
+  height: 50px;
+  background: none;
+  padding: 15px 10px;
+  margin: 15px 0px 0px 50px;
+  border: 0;
+  outline: 0;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 10px;
+  background-color: #ec5d5d;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:hover {
+    background-color: red;
+    transition: all 0.3s;
+  }
 `;
 
 type UpdateModalForm = {
@@ -206,7 +228,7 @@ function UpdateChannelModal(): JSX.Element {
         <ModalDescription>선택한 채널에 대한 내용을 변경할 수 있습니다.</ModalDescription>
         <Form onSubmit={handleSubmit(onSubmitUpdateChannelModal)}>
           <InputDiv>
-            <InputName>이름</InputName>
+            <InputName color="#cbc4b9">이름</InputName>
             <Input
               {...register('name', {
                 validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
@@ -216,7 +238,7 @@ function UpdateChannelModal(): JSX.Element {
             {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
           </InputDiv>
           <InputDiv>
-            <InputName>설명</InputName>
+            <InputName color="#cbc4b9">설명</InputName>
             <Input
               {...register('description', {
                 validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
@@ -229,6 +251,12 @@ function UpdateChannelModal(): JSX.Element {
             수정
           </SubmitButton>
         </Form>
+        <DeleteChannelDiv>
+          <InputName color="#ff0000">채널 삭제</InputName>
+          <InputDiv>
+            <DeleteButton> 채널 삭제 </DeleteButton>
+          </InputDiv>
+        </DeleteChannelDiv>
       </ModalInnerBox>
     </Container>
   );
