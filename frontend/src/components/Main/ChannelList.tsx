@@ -46,7 +46,7 @@ function ChannelList(): JSX.Element {
 
   const listElements = serverChannelList.map((val: ChannelListData): JSX.Element => {
     const selected = val.id === selectedChannel;
-    return <ChannelListItem key={val.id} dataId={val.id} selected={selected} name={val.name} ownerId={val.ownerId} />;
+    return <ChannelListItem key={val.id} dataId={val.id} selected={selected} name={val.name} />;
   });
 
   return (

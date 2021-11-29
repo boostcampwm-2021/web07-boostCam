@@ -46,7 +46,6 @@ type ChannelListItemProps = {
   dataId: number;
   selected: boolean;
   name: string;
-  ownerId: number;
 };
 
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
@@ -57,7 +56,7 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     setIsDropdownOpen,
     setDropdownInfo,
   } = useContext(MainStoreContext);
-  const { dataId, selected, name, ownerId } = props;
+  const { dataId, selected, name } = props;
 
   const onClickChannelBlock = ({ currentTarget }: React.MouseEvent<HTMLDivElement>) => {
     const channelId = currentTarget.dataset.id;
