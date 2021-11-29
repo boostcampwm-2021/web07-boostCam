@@ -6,6 +6,7 @@ import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import fetchData from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
+import noAuthImg from '../../../assets/hmm.gif';
 
 const { Close } = BoostCamMainIcons;
 
@@ -54,8 +55,16 @@ const ModalTitle = styled.span`
   font-weight: 600;
 `;
 
+const ModalDescriptionDiv = styled.div`
+  width: 90%;
+  margin: 120px 0px 0px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ModalDescription = styled.span`
-  margin-left: 25px;
   padding: 10px 5px;
 
   color: #cbc4b9;
@@ -166,6 +175,12 @@ const DeleteButton = styled.button`
   }
 `;
 
+const NoAuthImg = styled.img`
+  width: 150px;
+  height: 150px;
+  margin-bottom: 25px;
+`;
+
 type UpdateModalForm = {
   name: string;
   description: string;
@@ -235,7 +250,21 @@ function UpdateChannelModal(): JSX.Element {
   }, [watch()]);
 
   const modalContents = () => {
-    if (!isChannelOwner) return <div>No Authority</div>;
+    if (!isChannelOwner)
+      return (
+        <>
+          <ModalHeader>
+            <ModalTitle>채널 수정</ModalTitle>
+            <ModalCloseButton onClick={() => setIsModalOpen(false)}>
+              <CloseIcon />
+            </ModalCloseButton>
+          </ModalHeader>
+          <ModalDescriptionDiv>
+            <NoAuthImg src={noAuthImg} />
+            <ModalDescription>이 채널에 대한 수정 권한이 없습니다!</ModalDescription>
+          </ModalDescriptionDiv>
+        </>
+      );
     return (
       /* eslint-disable react/jsx-props-no-spreading */
       <>
