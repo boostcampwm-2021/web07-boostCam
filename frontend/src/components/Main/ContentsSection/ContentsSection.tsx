@@ -29,7 +29,7 @@ type ContentsSectionProps = {
 const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: string) => {
   const response = await fetchData<null, User[]>(
     'GET',
-    `/api/user/servers/${selectedServer?.id}/channels/users?channelId=${selectedChannel}`,
+    `/api/user/servers/${selectedServer?.server.id}/channels/users?channelId=${selectedChannel}`,
   );
   return response.data;
 };
@@ -50,6 +50,7 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
   const getChannelInfo = async () => {
     const joinedUserList = await getJoinedUserList(selectedServer, selectedChannel);
     const selectedChannelInfo = await getSelectedChannelInfo(selectedChannel);
+    console.log(selectedServer, selectedChannel, joinedUserList);
     setUserList(joinedUserList);
     setChannelInfo(selectedChannelInfo);
     setIsLoading(false);
