@@ -1,4 +1,6 @@
-const fetchData = async <T, R>(method: string, url: string, requestBody?: T): Promise<R> => {
+import FetchResponseObject from '../types/fetch';
+
+const fetchData = async <T, R>(method: string, url: string, requestBody?: T): Promise<FetchResponseObject<R>> => {
   const response = await fetch(url, {
     method,
     credentials: 'include',
@@ -8,7 +10,8 @@ const fetchData = async <T, R>(method: string, url: string, requestBody?: T): Pr
     body: JSON.stringify(requestBody),
   });
   const responseObject = await response.json();
-  return responseObject.data;
+  const { statusCode, data } = responseObject;
+  return { statusCode, data };
 };
 
 export default fetchData;

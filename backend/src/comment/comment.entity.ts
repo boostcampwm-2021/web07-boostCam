@@ -26,7 +26,7 @@ export class Comment {
   @RelationId((comment: Comment) => comment.sender)
   senderId: number;
 
-  @ManyToOne(() => Message)
+  @ManyToOne(() => Message, { onDelete: 'CASCADE' })
   message: Message;
 
   @RelationId((comment: Comment) => comment.message)

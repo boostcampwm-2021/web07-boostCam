@@ -10,6 +10,12 @@ export class UserChannelRepository extends Repository<UserChannel> {
       .getMany();
   }
 
+  getUserChannelListByUserId(userId: number) {
+    return this.createQueryBuilder('user_channel')
+      .where('user_channel.user = :userId', { userId: userId })
+      .getMany();
+  }
+
   getJoinedChannelListByUserId(userId: number, serverId: number) {
     return this.createQueryBuilder('user_channel')
       .leftJoinAndSelect('user_channel.channel', 'channel')
@@ -18,19 +24,20 @@ export class UserChannelRepository extends Repository<UserChannel> {
       .getMany();
   }
 
-  getNotJoinedChannelListByUserId(userId: number, serverId: number) {
+  getJoinedUserListByChannelId(serverId: number, channelId: number) {
     return this.createQueryBuilder('user_channel')
-      .leftJoinAndSelect('user_channel.channel', 'channel')
-      .where('user_channel.channel IN (:id)', {
-        id: this.getJoinedChannelListByUserId(userId, serverId),
-      })
+      .innerJoinAndSelect('user_channel.user', 'user')
+      .where('user_channel.channelId = :channelId', { channelId: channelId })
+      .andWhere('user_channel.server = :serverId', { serverId: serverId })
       .getMany();
   }
 
-  deleteByUserIdAndChannelId(userId: number, channelId: number) {
+  getUserChannelByUserIdAndChannelId(userId: number, channelId: number) {
     return this.createQueryBuilder('user_channel')
       .where('user_channel.user = :userId', { userId: userId })
-      .andWhere('user_channel.channelId = :channelId', { channelId: channelId })
-      .delete();
+      .andWhere('user_channel.channelId = :channelId', {
+        channelId: channelId,
+      })
+      .getOne();
   }
 }

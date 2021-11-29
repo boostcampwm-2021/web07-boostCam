@@ -1,39 +1,46 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/index';
 
-import { ChannelFormDto } from './channe.dto';
+import { ChannelFormDto } from './channel.dto';
 import { Channel } from './channel.entity';
 import { Server } from '../server/server.entity';
 import { ChannelRepository } from './channel.repository';
+import { UserRepository } from '../user/user.repository';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class ChannelService {
   /** * 생성자 */ constructor(
     @InjectRepository(Channel) private channelRepository: ChannelRepository,
+    @InjectRepository(User) private userRepository: UserRepository,
     @InjectRepository(Server) private serverRepository: Repository<Server>,
-  ) {
-    this.channelRepository = channelRepository;
-    this.serverRepository = serverRepository;
-  }
+  ) {}
   findAll(): Promise<Channel[]> {
     return this.channelRepository.find();
   }
   findOne(id: number): Promise<Channel> {
     return this.channelRepository.findOne(
       { id: id },
-      { relations: ['server'] },
+      { relations: ['server', 'owner'] },
     );
   }
-  async createChannel(channel: ChannelFormDto): Promise<Channel> {
-    const channelEntity = await this.createChannelEntity(channel);
+  async createChannel(
+    channel: ChannelFormDto,
+    userId: number,
+  ): Promise<Channel> {
+    const channelEntity = await this.createChannelEntity(channel, userId);
     const savedChannel = await this.channelRepository.save(channelEntity);
 
     return savedChannel;
   }
 
-  async updateChannel(id: number, channel: ChannelFormDto): Promise<Channel> {
-    const channelEntity = await this.createChannelEntity(channel);
+  async updateChannel(
+    id: number,
+    channel: ChannelFormDto,
+    userId: number,
+  ): Promise<Channel> {
+    const channelEntity = await this.createChannelEntity(channel, userId);
     await this.channelRepository.update(id, channelEntity);
     return channelEntity;
   }
@@ -42,17 +49,22 @@ export class ChannelService {
     await this.channelRepository.delete({ id: id });
   }
 
-  async createChannelEntity(channel: ChannelFormDto): Promise<Channel> {
-    const channelEntity = this.channelRepository.create();
+  async createChannelEntity(
+    channel: ChannelFormDto,
+    userId: number,
+  ): Promise<Channel> {
+    const { name, description, serverId } = channel;
     const server = await this.serverRepository.findOne({
-      id: channel.serverId,
+      id: serverId,
+    });
+    const user = await this.userRepository.findOne({
+      id: userId,
     });
 
-    if (!server) throw new BadRequestException();
+    if (!server) throw new NotFoundException('서버가 존재하지 않습니다!');
+    if (!user) throw new NotFoundException('사용자가 존재하지 않습니다!');
 
-    channelEntity.name = channel.name;
-    channelEntity.description = channel.description;
-    channelEntity.server = server;
-    return channelEntity;
+    const newChannel = Channel.newInstance(name, description, server, user);
+    return newChannel;
   }
 }

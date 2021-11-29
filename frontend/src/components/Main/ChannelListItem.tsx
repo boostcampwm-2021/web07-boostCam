@@ -1,10 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../utils/SvgIcons';
 import { MainStoreContext } from './MainStore';
-import Dropdown from '../core/Dropdown';
-import DropdownMenu from '../core/DropdownMenu';
 import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
 import QuitChannelModal from './ChannelModal/QuitChannelModal ';
 
@@ -44,14 +42,6 @@ const HashIcon = styled(Hash)`
   fill: #a69c96;
 `;
 
-const DropdownContainer = styled.div`
-  margin-left: 25px;
-`;
-
-const QuitDropdownMenu = styled.div`
-  color: red;
-`;
-
 type ChannelListItemProps = {
   dataId: string;
   selected: boolean;
@@ -59,8 +49,13 @@ type ChannelListItemProps = {
 };
 
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
-  const { setSelectedChannel, setRightClickedChannelId, setRightClickedChannelName } = useContext(MainStoreContext);
-  const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
+  const {
+    setSelectedChannel,
+    setRightClickedChannelId,
+    setRightClickedChannelName,
+    setIsDropdownOpen,
+    setDropdownInfo,
+  } = useContext(MainStoreContext);
   const { dataId, selected, name } = props;
 
   const onClickChannelBlock = ({ currentTarget }: React.MouseEvent<HTMLDivElement>) => {
@@ -69,11 +64,19 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
   };
 
   const onRightClickChannelItem = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
+    const dropdownInfo = {
+      position: [e.pageX, e.pageY],
+      components: [
+        { name: '수정', component: <UpdateChannelModal key={1} /> },
+        { name: '나가기', component: <QuitChannelModal key={2} /> },
+      ],
+    };
     const channelId = e.currentTarget.dataset.id;
+    e.preventDefault();
+    setDropdownInfo(dropdownInfo);
+    setIsDropdownOpen(true);
     setRightClickedChannelId(channelId);
     setRightClickedChannelName(name);
-    setIsDropdownActivated(!isDropdownActivated);
   };
 
   return (
@@ -85,22 +88,6 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     >
       <HashIcon />
       <ChannelNameSpan>{name}</ChannelNameSpan>
-      <DropdownContainer>
-        <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-          <DropdownMenu
-            name="수정"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<UpdateChannelModal />}
-          />
-          <QuitDropdownMenu>
-            <DropdownMenu
-              name="나가기"
-              setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<QuitChannelModal />}
-            />
-          </QuitDropdownMenu>
-        </Dropdown>
-      </DropdownContainer>
     </Container>
   );
 }

@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import userState from '../../atoms/user';
 
-import User from '../../types/user';
+import { User } from '../../types/user';
 
 const Container = styled.div`
   width: 100vw;

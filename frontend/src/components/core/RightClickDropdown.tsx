@@ -3,11 +3,13 @@ import styled from 'styled-components';
 
 const Container = styled.div<{ activated: boolean }>`
   position: absolute;
+  margin-top: -50vh;
   opacity: ${(props) => (props.activated ? 1 : 0)};
   visibility: ${(props) => (props.activated ? 'visible' : 'hidden')};
   transform: translateY(${(props) => (props.activated ? '0' : '-20')}px);
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
   z-index: 10;
+  background-color: red;
 `;
 
 const DropdownBackground = styled.div`
@@ -22,10 +24,12 @@ const DropdownBackground = styled.div`
   z-index: 3;
 `;
 
-const InnerContainer = styled.div`
+const InnerContainer = styled.div<{ pos: [number, number] }>`
+  left: ${({ pos }) => `${pos[0]}px`};
+  top: ${({ pos }) => `${pos[1]}px`};
   background-color: white;
   border-radius: 8px;
-  position: relative;
+  position: fixed;
   width: 100px;
   text-align: center;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
@@ -39,12 +43,13 @@ const MenuList = styled.ul`
 `;
 
 type DropdownProps = {
+  pos: [number, number];
   isDropdownActivated: boolean;
   setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactChild[] | React.ReactChild;
 };
-function Dropdown(props: DropdownProps): JSX.Element {
-  const { isDropdownActivated, setIsDropdownActivated, children } = props;
+function RightClickDropdown(props: DropdownProps): JSX.Element {
+  const { isDropdownActivated, setIsDropdownActivated, children, pos } = props;
 
   const onClickDropdownBackground = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -53,7 +58,7 @@ function Dropdown(props: DropdownProps): JSX.Element {
 
   return (
     <Container activated={isDropdownActivated}>
-      <InnerContainer>
+      <InnerContainer pos={pos}>
         <MenuList>{children}</MenuList>
       </InnerContainer>
       <DropdownBackground onClick={onClickDropdownBackground} />
@@ -61,4 +66,4 @@ function Dropdown(props: DropdownProps): JSX.Element {
   );
 }
 
-export default Dropdown;
+export default RightClickDropdown;

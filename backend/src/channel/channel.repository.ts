@@ -6,4 +6,10 @@ export class ChannelRepository extends Repository<Channel> {
   getAllList() {
     return this.createQueryBuilder('channel').getMany();
   }
+
+  getChannelListByServerId(serverId: number) {
+    return this.createQueryBuilder('channel')
+      .where('channel.serverId = :serverId', { serverId })
+      .getMany();
+  }
 }

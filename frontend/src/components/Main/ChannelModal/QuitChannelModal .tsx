@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
+import fetchData from '../../../utils/fetchMethods';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 
 const { Close } = BoostCamMainIcons;
@@ -148,9 +149,7 @@ function QuitChannelModal(): JSX.Element {
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
   const onClickSubmitButton = async () => {
-    await fetch(`api/channel/${rightClickedChannelId}`, {
-      method: 'DELETE',
-    });
+    await fetchData<null, null>('DELETE', `/api/user/servers/${rightClickedChannelId}/channels`);
     getServerChannelList();
     setIsModalOpen(false);
   };

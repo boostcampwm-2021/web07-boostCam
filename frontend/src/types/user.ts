@@ -5,4 +5,11 @@ type User = {
   profile: string;
 };
 
-export default User;
+type UserEntity = {
+  githubId: number;
+  id: number;
+  nickname: string;
+  profile: string;
+};
+
+export type { User, UserEntity };

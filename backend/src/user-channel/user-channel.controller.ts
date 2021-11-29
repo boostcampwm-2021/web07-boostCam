@@ -7,6 +7,9 @@ import {
   UseGuards,
   Post,
   Body,
+  HttpStatus,
+  HttpException,
+  Query,
 } from '@nestjs/common';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
@@ -15,6 +18,7 @@ import { UserChannelService } from './user-channel.service';
 import { ChannelService } from '../channel/channel.service';
 import { UserChannel } from './user-channel.entity';
 import { Channel } from '../channel/channel.entity';
+import { User } from '../user/user.entity';
 
 @Controller('/api/user/servers')
 @UseGuards(LoginGuard)
@@ -52,10 +56,20 @@ export class UserChannelController {
         serverId,
         session.user.id,
       );
-    const notJoinedChannelList = response.map(
-      (userChannel) => userChannel.channel,
-    );
-    return ResponseEntity.ok<Channel[]>(notJoinedChannelList);
+    return ResponseEntity.ok<Channel[]>(response);
+  }
+
+  @Get('/:id/channels/users')
+  async getJoinedUserList(
+    @Param('id') serverId: number,
+    @Query('channelId') channelId: number,
+  ) {
+    const response =
+      await this.userChannelService.findJoinedUserListByChannelId(
+        serverId,
+        channelId,
+      );
+    return ResponseEntity.ok<User[]>(response);
   }
 
   @Post()
@@ -72,8 +86,22 @@ export class UserChannelController {
     return ResponseEntity.ok<UserChannel>(savedChannel);
   }
 
-  @Delete('/:id')
-  delete(@Param('id') id: number) {
-    return this.userChannelService.deleteById(id);
+  @Delete('/:id/channels')
+  async delete(
+    @Param('id') channeld: number,
+    @Session() session: ExpressSession,
+  ) {
+    try {
+      this.userChannelService.deleteByUserIdAndChannelId(
+        session.user.id,
+        channeld,
+      );
+      return ResponseEntity.noContent();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
