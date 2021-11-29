@@ -26,6 +26,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContents, setModalContents] = useState<JSX.Element>(<></>);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [alertModalContents, setAlertModalContents] = useState<JSX.Element>(<></>);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownInfo, setDropdownInfo] = useState<DropdownInfo>({ position: [0, 0], components: [] });
@@ -111,6 +113,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsDropdownOpen,
         dropdownInfo,
         setDropdownInfo,
+        isAlertModalOpen,
+        setIsAlertModalOpen,
+        alertModalContents,
+        setAlertModalContents,
       }}
     >
       {children}

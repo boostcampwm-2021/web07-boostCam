@@ -7,6 +7,7 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import fetchData from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import noAuthImg from '../../../assets/hmm.gif';
+import AlertDeleteChannel from './AlertDeleteChannel';
 
 const { Close } = BoostCamMainIcons;
 
@@ -194,7 +195,14 @@ function UpdateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<UpdateModalForm>();
-  const { selectedServer, rightClickedChannelId, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const {
+    selectedServer,
+    rightClickedChannelId,
+    setIsModalOpen,
+    setIsAlertModalOpen,
+    setAlertModalContents,
+    getServerChannelList,
+  } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isChannelOwner, setIsChannelOwner] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -219,6 +227,11 @@ function UpdateChannelModal(): JSX.Element {
     });
     getServerChannelList();
     setIsModalOpen(false);
+  };
+
+  const onClickDeleteChannelButton = async () => {
+    setIsAlertModalOpen(true);
+    setAlertModalContents(<AlertDeleteChannel />);
   };
 
   const setSelectedChannelData = async () => {
@@ -303,9 +316,9 @@ function UpdateChannelModal(): JSX.Element {
         <DeleteChannelDiv>
           <InputName color="#ff0000">채널 삭제</InputName>
           <InputDiv>
-            <DeleteButton> 채널 삭제 </DeleteButton>
+            <DeleteButton onClick={onClickDeleteChannelButton}> 채널 삭제 </DeleteButton>
           </InputDiv>
-        </DeleteChannelDiv>{' '}
+        </DeleteChannelDiv>
       </>
     );
   };

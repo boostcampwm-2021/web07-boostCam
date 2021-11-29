@@ -7,6 +7,7 @@ import { MainStoreContext } from './MainStore';
 import MainModal from './MainModal';
 
 import MainDropdown from './MainDropdown';
+import AlertModal from './AlertModal';
 
 const Container = styled.div`
   width: 100vw;
@@ -19,12 +20,13 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const { isModalOpen } = useContext(MainStoreContext);
+  const { isModalOpen, isAlertModalOpen } = useContext(MainStoreContext);
 
   return (
     <Container>
       <MainDropdown />
       {isModalOpen && <MainModal />}
+      {isAlertModalOpen && <AlertModal />}
       <ServerListTab />
       <MainSection />
     </Container>
