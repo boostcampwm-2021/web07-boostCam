@@ -66,7 +66,7 @@ const ModalDescriptionDiv = styled.div`
 
 const ModalDescription = styled.span`
   padding: 10px 5px;
-
+  margin-left: 25px;
   color: #cbc4b9;
   font-size: 15px;
 `;
