@@ -4,6 +4,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { CommentDto } from './comment/comment.dto';
+import { CommentService } from './comment/comment.service';
 import { MessageDto } from './message/message.dto';
 import { MessageService } from './message/message.service';
 import { ExpressSession } from './types/session';
@@ -23,6 +25,7 @@ export class MessageGateway {
   constructor(
     private userChannelService: UserChannelService,
     private messageService: MessageService,
+    private commentService: CommentService,
   ) {}
 
   @SubscribeMessage('joinChannels')
@@ -64,6 +67,25 @@ export class MessageGateway {
       contents,
     );
     this.emitMessage(channelId, newMessage);
+  }
+
+  @SubscribeMessage('sendComment')
+  async handleSendComment(
+    client: Socket,
+    payload: { channelId: number; messageId: number; contents: string },
+  ) {
+    if (!this.checkLoginSession(client)) {
+      return;
+    }
+    const { channelId, messageId, contents } = payload;
+    const sender = client.request.session.user;
+    const newComment = await this.commentService.sendComment(
+      sender.id,
+      channelId,
+      messageId,
+      contents,
+    );
+    this.server.to(`${channelId}`).emit('receiveComment', newComment);
   }
 
   private checkLoginSession(client: Socket): boolean {
