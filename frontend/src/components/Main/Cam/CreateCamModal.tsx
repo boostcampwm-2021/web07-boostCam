@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import fetchData from '../../../utils/fetchMethods';
 
 const { Close } = BoostCamMainIcons;
 
@@ -147,6 +148,11 @@ type CreateModalForm = {
   description: string;
 };
 
+type PostCamData = {
+  name: string;
+  serverId: string;
+};
+
 function CreateCamModal(): JSX.Element {
   const {
     register,
@@ -159,16 +165,8 @@ function CreateCamModal(): JSX.Element {
 
   const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
     const { name } = data;
-    await fetch('api/cam', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name.trim(),
-        serverId: selectedServer.server.id,
-      }),
-    });
+    const requestBody: PostCamData = { name, serverId: selectedServer.server.id };
+    await fetchData<PostCamData, null>('POST', '/api/cam', requestBody);
     setIsModalOpen(false);
     getServerCamList();
   };

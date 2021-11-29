@@ -9,10 +9,19 @@ import { Cam } from './cam.entity';
 import { ServerRepository } from '../server/server.repository';
 import { CamRepository } from './cam.repository';
 import { Server } from '../server/server.entity';
+import { UserRepository } from '../user/user.repository';
+import { User } from '../user/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Cam, Server, CamRepository, ServerRepository]),
+    TypeOrmModule.forFeature([
+      Cam,
+      Server,
+      CamRepository,
+      ServerRepository,
+      User,
+      UserRepository,
+    ]),
   ],
   providers: [CamGateway, CamInnerService, CamService],
   controllers: [CamController],
