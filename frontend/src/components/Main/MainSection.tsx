@@ -52,7 +52,6 @@ function MainSection(): JSX.Element {
 
   useEffect(() => {
     const receiveMessageHandler = (message: MessageData) => {
-      // if (selectedChannel === message.channelId) setMessageList((list) => [...list, message]);
       if (selectedChannel === message.channelId)
         setMessageList((list) => {
           return {
