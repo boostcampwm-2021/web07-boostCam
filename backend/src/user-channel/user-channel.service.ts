@@ -30,8 +30,8 @@ export class UserChannelService {
     return await this.userChannelRepository.save(userChannel);
   }
 
-  deleteById(id: number): Promise<DeleteResult> {
-    return this.userChannelRepository.delete({ channelId: id });
+  deleteByChannelId(channelId: number): Promise<DeleteResult> {
+    return this.userChannelRepository.delete({ channelId });
   }
 
   getJoinedChannelListByUserId(

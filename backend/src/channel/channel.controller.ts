@@ -65,7 +65,7 @@ export class ChannelController {
 
   @Delete(':id') async deleteChannel(
     @Param('id') id: number,
-  ): Promise<ResponseEntity<number>> {
+  ): Promise<ResponseEntity<null>> {
     await this.channelService.deleteChannel(id);
     return ResponseEntity.noContent();
   }

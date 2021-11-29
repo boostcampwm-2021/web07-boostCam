@@ -151,8 +151,6 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     setIsThreadOpen(true);
   };
 
-  useEffect(() => {}, [selectedChannel]);
-
   const buildMessageItemList = () => {
     return messageData.map((val: MessageData): JSX.Element => {
       const { id, contents, createdAt, sender } = val;
@@ -183,7 +181,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
       <MessageSectionBody>{MessageItemList}</MessageSectionBody>
       <TextareaDiv ref={textDivRef}>
         <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
-      </TextareaDiv>{' '}
+      </TextareaDiv>
     </Container>
   );
 }
