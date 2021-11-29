@@ -14,6 +14,10 @@ const socket = io('/message', {
   withCredentials: true,
 });
 
+socket.on('connect', () => {
+  socket.emit('joinChannels');
+});
+
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();

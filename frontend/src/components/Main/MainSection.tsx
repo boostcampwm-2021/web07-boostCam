@@ -47,10 +47,6 @@ function MainSection(): JSX.Element {
   };
 
   useEffect(() => {
-    socket.emit('joinChannels');
-  }, []);
-
-  useEffect(() => {
     const receiveMessageHandler = (message: MessageData) => {
       if (selectedChannel === message.channelId)
         setMessageList((list) => {
