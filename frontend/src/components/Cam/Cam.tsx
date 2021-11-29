@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 
 import ButtonBar from './Menu/ButtonBar';
 import ChattingTab from './Menu/ChattingTab';
@@ -15,6 +16,7 @@ import CamNotFoundPage from './Page/CamNotFoundPage';
 import CamLoadingPage from './Page/CamLoadingPage';
 import CamNotAvailablePage from './Page/CamNotAvailablePage';
 import CamErrorPage from './Page/CamErrorPage';
+import userState from '../../atoms/user';
 
 const Container = styled.div`
   width: 100vw;
@@ -39,7 +41,8 @@ const UpperTab = styled.div`
 `;
 
 function Cam(): JSX.Element {
-  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: null });
+  const user = useRecoilValue(userState);
+  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: user?.nickname || null });
   const [statusCode, setStatusCode] = useState(0);
 
   const camRef = useRef<HTMLDivElement>(null);
