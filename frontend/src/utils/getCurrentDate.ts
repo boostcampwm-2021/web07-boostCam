@@ -1,7 +1,6 @@
 import CurrentDate from '../types/date';
 
-const getCurrentDate = (): CurrentDate => {
-  const today: Date = new Date();
+const getCurrentDate = (today: Date): CurrentDate => {
   return {
     year: today.getFullYear(),
     month: today.getMonth() + 1,

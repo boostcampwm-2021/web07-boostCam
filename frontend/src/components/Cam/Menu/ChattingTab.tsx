@@ -135,7 +135,8 @@ function ChattingTab(): JSX.Element {
   const chatLogsRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = (msg: string) => {
-    const currentDate = getCurrentDate();
+    const today = new Date();
+    const currentDate = getCurrentDate(today);
     const msgInfo: CamMessageInfo = { msg, room, user: socket.id, date: currentDate };
 
     socket.emit('sendMessage', msgInfo);
