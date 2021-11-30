@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { deleteApi } from '../../../utils/fetchMethods';
 
 const { Close } = BoostCamMainIcons;
 
@@ -123,19 +124,13 @@ function QuitServerModal(): JSX.Element {
 
   const onClickQuitServer = async () => {
     const userServerId = selectedServer.id;
-    const response = await fetch(`api/users/servers/${userServerId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.status === 204) {
+    const { statusCode, message } = await deleteApi(`api/users/servers/${userServerId}`);
+    if (statusCode === 204) {
       const calledStatus = 'deleted';
       getUserServerList(calledStatus);
       setIsModalOpen(false);
     } else {
-      const body = await response.json();
-      setMessageFailToPost(body.message);
+      setMessageFailToPost(`${message}`);
     }
   };
 
