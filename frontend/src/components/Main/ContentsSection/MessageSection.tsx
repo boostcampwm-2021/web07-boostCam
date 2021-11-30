@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
@@ -153,7 +153,8 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
   const { selectedChannel, setSelectedMessageData, getServerChannelList, socket } = useContext(MainStoreContext);
   const { messageList, setIsThreadOpen, userList, channelInfo } = props;
   const { messageData } = messageList;
-  const textDivRef = useRef<HTMLDivElement>(null);
+  const textareaDivRef = useRef<HTMLDivElement>(null);
+  const messageSectionBodyRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = async (contents: string) => {
     const requestBody: MessageRequestBody = {
@@ -166,7 +167,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
   const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const { key, currentTarget, shiftKey } = e;
     const msg = currentTarget.value.trim();
-    const divRef = textDivRef.current;
+    const divRef = textareaDivRef.current;
 
     currentTarget.style.height = '15px';
     currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
@@ -215,6 +216,12 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     });
   };
 
+  useEffect(() => {
+    if (messageSectionBodyRef.current) {
+      messageSectionBodyRef.current.scroll({ top: messageSectionBodyRef.current.scrollHeight, behavior: 'smooth' });
+    }
+  });
+
   const MessageItemList = buildMessageItemList();
 
   return (
@@ -231,8 +238,8 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
             <ChannelName># {channelInfo && channelInfo.name}</ChannelName>
             <ChannelUserButton>Users {userList && userList.length}</ChannelUserButton>
           </MessageSectionHeader>
-          <MessageSectionBody>{MessageItemList}</MessageSectionBody>
-          <TextareaDiv ref={textDivRef}>
+          <MessageSectionBody ref={messageSectionBodyRef}>{MessageItemList}</MessageSectionBody>
+          <TextareaDiv ref={textareaDivRef}>
             <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
           </TextareaDiv>
         </>
