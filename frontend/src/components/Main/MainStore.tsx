@@ -1,8 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { DropdownInfo } from '../../types/dropdown';
-import { CamData, ChannelData, MyServerData } from '../../types/main';
+import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
+import fetchData from '../../utils/fetchMethods';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -22,14 +23,16 @@ socket.on('connect', () => {
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
-  const [selectedChannel, setSelectedChannel] = useState<string>('');
+  const [selectedChannel, setSelectedChannel] = useState<number>(0);
   const [selectedMessageData, setSelectedMessageData] = useState<MessageData>();
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
-  const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
+  const [serverChannelList, setServerChannelList] = useState<ChannelListData[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContents, setModalContents] = useState<JSX.Element>(<></>);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [alertModalContents, setAlertModalContents] = useState<JSX.Element>(<></>);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownInfo, setDropdownInfo] = useState<DropdownInfo>({ position: [0, 0], components: [] });
@@ -39,13 +42,15 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [serverCamList, setServerCamList] = useState<CamData[]>([]);
 
   const getServerChannelList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
-    const list = await response.json();
-    const channelList = list.data;
+    const { data } = await fetchData<null, ChannelListData[]>(
+      'GET',
+      `/api/user/servers/${selectedServer?.server.id}/channels/joined/`,
+    );
+    const channelList = data;
     if (channelList.length) {
       setSelectedChannel(channelList[0].id);
     } else {
-      setSelectedChannel('');
+      setSelectedChannel(0);
     }
     setServerChannelList(channelList);
   };
@@ -122,6 +127,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setIsDropdownOpen,
         dropdownInfo,
         setDropdownInfo,
+        isAlertModalOpen,
+        setIsAlertModalOpen,
+        alertModalContents,
+        setAlertModalContents,
       }}
     >
       {children}

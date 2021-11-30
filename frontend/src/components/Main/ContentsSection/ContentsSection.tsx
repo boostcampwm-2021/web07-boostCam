@@ -9,6 +9,7 @@ import fetchData from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 import MessageSection from './MessageSection';
+import NoChannelSection from './NoChannelSection';
 import ThreadSection from './ThreadSection';
 
 const Container = styled.div`
@@ -19,6 +20,7 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  background-color: #ffffff;
 `;
 
 type ContentsSectionProps = {
@@ -29,14 +31,14 @@ type ContentsSectionProps = {
 const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: string) => {
   const response = await fetchData<null, User[]>(
     'GET',
-    `/api/user/servers/${selectedServer?.id}/channels/users?channelId=${selectedChannel}`,
+    `/api/user/servers/${selectedServer?.server.id}/channels/users?channelId=${selectedChannel}`,
   );
-  return response.data;
+  return response;
 };
 
 const getSelectedChannelInfo = async (selectedChannel: string) => {
   const response = await fetchData<null, ChannelEntity>('GET', `/api/channel/${selectedChannel}`);
-  return response.data;
+  return response;
 };
 
 function ContentsSection(props: ContentsSectionProps): JSX.Element {
@@ -48,11 +50,17 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
   const { messageList, commentList } = props;
 
   const getChannelInfo = async () => {
-    const joinedUserList = await getJoinedUserList(selectedServer, selectedChannel);
     const selectedChannelInfo = await getSelectedChannelInfo(selectedChannel);
-    setUserList(joinedUserList);
-    setChannelInfo(selectedChannelInfo);
+    if (selectedChannelInfo.statusCode > 300) {
+      setUserList([]);
+      setChannelInfo(undefined);
+      setIsLoading(false);
+      return;
+    }
+    const joinedUserList = await getJoinedUserList(selectedServer, selectedChannel);
     setIsLoading(false);
+    setUserList(joinedUserList.data);
+    setChannelInfo(selectedChannelInfo.data);
   };
 
   useEffect(() => {
@@ -60,18 +68,25 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
     getChannelInfo();
   }, [selectedChannel]);
 
+  useEffect(() => {
+    setIsThreadOpen(false);
+  }, [selectedServer]);
+
+  const buildContentsSection = () => {
+    if (!selectedChannel) return <NoChannelSection />;
+    return (
+      <MessageSection
+        messageList={messageList}
+        setIsThreadOpen={setIsThreadOpen}
+        userList={userList}
+        channelInfo={channelInfo}
+      />
+    );
+  };
+
   return (
     <Container>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <MessageSection
-          messageList={messageList}
-          setIsThreadOpen={setIsThreadOpen}
-          userList={userList}
-          channelInfo={channelInfo}
-        />
-      )}
+      {isLoading ? <Loading /> : buildContentsSection()}
       {isThreadOpen && (
         <ThreadSection setIsThreadOpen={setIsThreadOpen} channelInfo={channelInfo} commentList={commentList} />
       )}

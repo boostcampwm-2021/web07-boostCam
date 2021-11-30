@@ -43,7 +43,7 @@ const HashIcon = styled(Hash)`
 `;
 
 type ChannelListItemProps = {
-  dataId: string;
+  dataId: number;
   selected: boolean;
   name: string;
 };

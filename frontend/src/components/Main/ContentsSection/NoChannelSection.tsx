@@ -2,10 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { ChannelListData } from '../../../types/main';
-
-const { Close } = BoostCamMainIcons;
+import fetchData from '../../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 50%;
@@ -13,7 +11,8 @@ const Container = styled.div`
   height: 70%;
   min-height: 500px;
 
-  background-color: #222322;
+  border: 5px solid #222322;
+  background-color: #dfdbdb;
 
   display: flex;
   flex-direction: column;
@@ -21,8 +20,6 @@ const Container = styled.div`
   align-items: center;
 
   border-radius: 20px;
-
-  z-index: 3;
 `;
 
 const ModalInnerBox = styled.div`
@@ -49,7 +46,6 @@ const ModalTitle = styled.span`
   margin-left: 25px;
   padding: 10px 5px;
 
-  color: #cbc4b9;
   font-size: 32px;
   font-weight: 600;
 `;
@@ -59,19 +55,7 @@ const ModalDescription = styled.span`
   margin-left: 25px;
   padding: 10px 5px;
 
-  color: #cbc4b9;
   font-size: 15px;
-`;
-
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
 `;
 
 const ModalChannelList = styled.div`
@@ -85,11 +69,14 @@ const ModalChannelList = styled.div`
   justify-content: flex-start;
   align-items: center;
 
-  color: #e5e0d8;
+  border: 2px solid black;
+  border-radius: 5px;
 
   flex: 4;
 
   overflow-y: auto;
+
+  background-color: #b9b5b5;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -126,7 +113,7 @@ const ModalChannelListItem = styled.div`
     button {
       visibility: visible;
     }
-    background-color: #282929;
+    background-color: #dad6d6;
   }
 
   button {
@@ -159,37 +146,33 @@ const ItemButton = styled.button`
   flex: 0.5;
   padding: 4px 12px 4px;
   text-align: center;
-  background-color: #236b56;
+  background-color: #38ad3e;
   cursor: pointer;
 `;
 
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-`;
+type JoinChannelRequest = {
+  channelId: number;
+  serverId: number;
+};
 
-function JoinChannelModal(): JSX.Element {
+function NoChannelSection(): JSX.Element {
   const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [channelList, setChannelList] = useState<ChannelListData[]>([]);
 
   const getNotJoinedChannelList = async () => {
-    const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/notjoined/`);
-    const list = await response.json();
-    setChannelList(list.data);
+    const { data } = await fetchData<null, ChannelListData[]>(
+      'GET',
+      `/api/user/servers/${selectedServer?.server.id}/channels/notjoined/`,
+    );
+    setChannelList(data);
   };
 
   const onClickChannelListButton = async (id: number) => {
-    await fetch('/api/user/servers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        channelId: id,
-        serverId: selectedServer,
-      }),
-    });
+    const resquestBody = {
+      channelId: id,
+      serverId: selectedServer,
+    };
+    await fetchData<JoinChannelRequest, null>('POST', '/api/user/servers', resquestBody);
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);
@@ -214,15 +197,14 @@ function JoinChannelModal(): JSX.Element {
       <ModalInnerBox>
         <ModalHeader>
           <ModalTitle>채널 참가</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
         </ModalHeader>
-        <ModalDescription>참가할 채널을 선택해주세요</ModalDescription>
+        <ModalDescription>현재 참가하고 있는 채널이 없습니다!</ModalDescription>
+        <ModalDescription>아래 목록에서 참가할 채널을 선택해주세요</ModalDescription>
+        <ModalDescription>혹은 왼쪽의 채널 리스트에서 새로운 채널을 생성해주세요</ModalDescription>
         <ModalChannelList>{notJoinedChannelList}</ModalChannelList>
       </ModalInnerBox>
     </Container>
   );
 }
 
-export default JoinChannelModal;
+export default NoChannelSection;

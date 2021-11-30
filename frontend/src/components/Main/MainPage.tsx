@@ -7,6 +7,7 @@ import { MainStoreContext } from './MainStore';
 import MainModal from './MainModal';
 
 import MainDropdown from './MainDropdown';
+import AlertModal from './AlertModal';
 import Loading from '../core/Loading';
 
 const Container = styled.div`
@@ -20,7 +21,7 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const { isModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { isModalOpen, isAlertModalOpen, getUserServerList } = useContext(MainStoreContext);
   const [loading, setLoading] = useState<boolean>(true);
 
   const setUserServerList = async () => {
@@ -40,6 +41,7 @@ function MainPage(): JSX.Element {
     <Container>
       <MainDropdown />
       {isModalOpen && <MainModal />}
+      {isAlertModalOpen && <AlertModal />}
       <ServerListTab />
       <MainSection />
     </Container>
