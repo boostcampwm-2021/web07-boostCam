@@ -98,7 +98,8 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
               contents: <CreateChannelModal />,
               title: '채널 생성',
               description: '생성할 채널의 이름과 설명을 입력해주세요.',
-              height: 60,
+              height: '60%',
+              minHeight: '450px',
             }}
           />
           <DropdownMenu
@@ -108,7 +109,8 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
               contents: <JoinChannelModal />,
               title: '채널 참가',
               description: '참가할 채널을 선택해주세요.',
-              height: 60,
+              height: '60%',
+              minHeight: '450px',
             }}
           />
         </Dropdown>

@@ -35,7 +35,8 @@ function MainStore(props: MainStoreProps): JSX.Element {
     contents: <></>,
     title: '',
     description: '',
-    height: 70,
+    height: '70%',
+    minHeight: '450px',
   });
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertModalContents, setAlertModalContents] = useState<JSX.Element>(<></>);

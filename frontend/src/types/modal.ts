@@ -2,7 +2,8 @@ type ModalContents = {
   contents: JSX.Element;
   title: string;
   description: string;
-  height: number;
+  height: string;
+  minHeight: string;
 };
 
 export default ModalContents;

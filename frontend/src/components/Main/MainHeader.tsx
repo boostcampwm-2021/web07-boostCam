@@ -65,7 +65,8 @@ function MainHeader(): JSX.Element {
                 contents: <ServerSettingModal />,
                 title: '서버 설정',
                 description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-                height: 60,
+                height: '60%',
+                minHeight: '450px',
               }}
             />
           )}
@@ -76,7 +77,8 @@ function MainHeader(): JSX.Element {
               contents: <ServerInfoModal />,
               title: '서버 정보',
               description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-              height: 60,
+              height: '60%',
+              minHeight: '450px',
             }}
           />
           {!isOwnerOfServer && (
@@ -87,7 +89,8 @@ function MainHeader(): JSX.Element {
                 contents: <QuitServerModal />,
                 title: '서버 나가기',
                 description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-                height: 40,
+                height: '40%',
+                minHeight: '250px',
               }}
             />
           )}

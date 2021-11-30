@@ -27,11 +27,11 @@ const ModalBackground = styled.div`
   background-color: rgb(0, 0, 0, 0.5);
 `;
 
-const Modal = styled.div<{ height: number }>`
+const Modal = styled.div<{ height: string; minHeight: string }>`
   width: 35%;
   min-width: 400px;
-  height: ${(props) => `${props.height}%`};
-  min-height: 450px;
+  height: ${(props) => `${props.height}`};
+  min-height: ${(props) => `${props.minHeight}`};
 
   background-color: #222322;
 
@@ -102,11 +102,11 @@ const CloseIcon = styled(Close)`
 
 function MainModal(): JSX.Element {
   const { setIsModalOpen, modalContents } = useContext(MainStoreContext);
-  const { contents, title, description, height } = modalContents;
+  const { contents, title, description, height, minHeight } = modalContents;
   return (
     <Container>
       <ModalBackground onClick={() => setIsModalOpen(false)} />
-      <Modal height={height}>
+      <Modal height={height} minHeight={minHeight}>
         <ModalInnerBox>
           <ModalHeader>
             <ModalTitle>{title}</ModalTitle>

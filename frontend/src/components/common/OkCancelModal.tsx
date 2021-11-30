@@ -45,6 +45,7 @@ const ModalDescription = styled.div`
 
 const ModalButtonContainer = styled.div`
   width: 100%;
+  margin-top: 15px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -56,7 +57,7 @@ const Button = styled.button`
   background: none;
 
   padding: 10px;
-  margin-left: 20px;
+  margin-right: 20px;
 
   border: 0;
   outline: 0;
@@ -95,16 +96,10 @@ function OkCancelModal(props: OkCancelModalProps): JSX.Element {
   const { handleClickOk, handleClickCancel, title, description } = props;
 
   return (
-    <Container>
-      <ModalHeader>
-        <ModalTitle>{title}</ModalTitle>
-      </ModalHeader>
-      <ModalDescription>{description}</ModalDescription>
-      <ModalButtonContainer>
-        <OkButton onClick={handleClickOk}>확인</OkButton>
-        <CancelButton onClick={handleClickCancel}>취소</CancelButton>
-      </ModalButtonContainer>
-    </Container>
+    <ModalButtonContainer>
+      <OkButton onClick={handleClickOk}>확인</OkButton>
+      <CancelButton onClick={handleClickCancel}>취소</CancelButton>
+    </ModalButtonContainer>
   );
 }
 
