@@ -91,7 +91,7 @@ const DropDownWrapper = styled.div`
 
 function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
-  const { selectedServer, setSelectedServer, serverList, getUserServerList } = useContext(MainStoreContext);
+  const { selectedServer, setSelectedServer, serverList } = useContext(MainStoreContext);
 
   const initChannel = '1';
   const navigate = useNavigate();
@@ -119,11 +119,6 @@ function ServerListTab(): JSX.Element {
       </ServerIconBox>
     );
   });
-
-  useEffect(() => {
-    const isServerOrUserServerCreated = false;
-    getUserServerList(isServerOrUserServerCreated);
-  }, []);
 
   useEffect(() => {
     const serverId = selectedServer !== undefined ? selectedServer.server.id : 'none';

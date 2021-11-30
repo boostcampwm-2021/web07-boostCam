@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChannelEntity from '../../../types/channel';
+import { CommentListInfo } from '../../../types/comment';
 import { MyServerData } from '../../../types/main';
 import { MessageListInfo } from '../../../types/message';
 import { User } from '../../../types/user';
@@ -24,6 +25,7 @@ const Container = styled.div`
 
 type ContentsSectionProps = {
   messageList: MessageListInfo;
+  commentList: CommentListInfo;
 };
 
 const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: string) => {
@@ -45,7 +47,7 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [userList, setUserList] = useState<User[]>([]);
   const [channelInfo, setChannelInfo] = useState<ChannelEntity | undefined>();
-  const { messageList } = props;
+  const { messageList, commentList } = props;
 
   const getChannelInfo = async () => {
     const selectedChannelInfo = await getSelectedChannelInfo(selectedChannel);
@@ -85,7 +87,9 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
   return (
     <Container>
       {isLoading ? <Loading /> : buildContentsSection()}
-      {isThreadOpen && <ThreadSection setIsThreadOpen={setIsThreadOpen} channelInfo={channelInfo} />}
+      {isThreadOpen && (
+        <ThreadSection setIsThreadOpen={setIsThreadOpen} channelInfo={channelInfo} commentList={commentList} />
+      )}
     </Container>
   );
 }

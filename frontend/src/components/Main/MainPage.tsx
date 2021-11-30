@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import ServerListTab from './ServerListTab';
@@ -8,6 +8,7 @@ import MainModal from './MainModal';
 
 import MainDropdown from './MainDropdown';
 import AlertModal from './AlertModal';
+import Loading from '../core/Loading';
 
 const Container = styled.div`
   width: 100vw;
@@ -20,7 +21,21 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const { isModalOpen, isAlertModalOpen } = useContext(MainStoreContext);
+  const { isModalOpen, isAlertModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const setUserServerList = async () => {
+    await getUserServerList();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    setUserServerList();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Container>

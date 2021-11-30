@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons, ButtonBarIcons } from '../../../utils/SvgIcons';
+import ServerDeleteCheckModal from './ServerDeleteCheckModal';
 
 const { Close } = BoostCamMainIcons;
 const { CopyIcon } = ButtonBarIcons;
@@ -212,6 +213,7 @@ function ServerSettingModal(): JSX.Element {
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const [serverName, setServerName] = useState<string>('');
   const [serverDescription, setServerDescription] = useState<string>('');
@@ -247,24 +249,6 @@ function ServerSettingModal(): JSX.Element {
       });
       if (response.status === 204) {
         getUserServerList('updated');
-        setIsModalOpen(false);
-      } else {
-        const body = await response.json();
-        setMessageFailToPost(body.message);
-      }
-    } else {
-      setMessageFailToPost('선택된 서버가 없습니다.');
-    }
-  };
-
-  const onClickDeleteServer = async () => {
-    if (serverId) {
-      const response = await fetch(`api/servers/${serverId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.status === 204) {
-        getUserServerList();
         setIsModalOpen(false);
       } else {
         const body = await response.json();
@@ -334,6 +318,7 @@ function ServerSettingModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Container>
+      {isDeleteModalOpen && <ServerDeleteCheckModal serverId={serverId} setIsDeleteModalOpen={setIsDeleteModalOpen} />}
       <ModalInnerBox>
         <ModalHeader>
           <ModalTitle>서버 설정</ModalTitle>
@@ -381,7 +366,7 @@ function ServerSettingModal(): JSX.Element {
           </InputDiv>
           <InputDiv>
             <InputName>서버 삭제</InputName>
-            <DeleteButton type="submit" onClick={onClickDeleteServer}>
+            <DeleteButton type="submit" onClick={() => setIsDeleteModalOpen(true)}>
               서버 삭제
             </DeleteButton>
           </InputDiv>

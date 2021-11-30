@@ -19,7 +19,7 @@ export class Channel {
   @Column()
   description: string;
 
-  @ManyToOne(() => Server)
+  @ManyToOne(() => Server, { onDelete: 'CASCADE' })
   server: Server;
 
   @ManyToOne(() => User)

@@ -11,8 +11,13 @@ type MainStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
 };
 
-const socket = io('/message', {
+const socket = io({
   withCredentials: true,
+  autoConnect: false,
+});
+
+socket.on('connect', () => {
+  socket.emit('joinChannels');
 });
 
 function MainStore(props: MainStoreProps): JSX.Element {
@@ -54,14 +59,19 @@ function MainStore(props: MainStoreProps): JSX.Element {
     const response = await fetch(`/api/user/servers`);
     const list = await response.json();
 
-    if (response.status === 200 && list.data.length !== 0) {
+    if (response.status === 200) {
       setServerList(list.data);
       if (calledStatus === 'updated') {
         const updatedServerId = selectedServer?.server.id;
         setSelectedServer(list.data.filter((userServer: MyServerData) => userServer.server.id === updatedServerId)[0]);
-      } else {
-        const selectedServerIndex = calledStatus === 'created' ? list.data.length - 1 : 0;
+      } else if (calledStatus === 'created') {
+        const selectedServerIndex = list.data.length - 1;
         setSelectedServer(list.data[selectedServerIndex]);
+      } else if (calledStatus === 'deleted') {
+        if (!serverList.length) setSelectedServer(undefined);
+        else setSelectedServer(list.data[0]);
+      } else {
+        setSelectedServer(list.data[0]);
       }
     }
   };
@@ -82,6 +92,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
       getServerCamList();
     }
   }, [selectedServer]);
+
+  useEffect(() => {
+    socket.connect();
+  }, []);
 
   return (
     <MainStoreContext.Provider

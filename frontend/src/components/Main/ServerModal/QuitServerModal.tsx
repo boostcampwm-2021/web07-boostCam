@@ -130,8 +130,8 @@ function QuitServerModal(): JSX.Element {
       },
     });
     if (response.status === 204) {
-      const isServerOrUserServerCreated = false;
-      getUserServerList(isServerOrUserServerCreated);
+      const calledStatus = 'deleted';
+      getUserServerList(calledStatus);
       setIsModalOpen(false);
     } else {
       const body = await response.json();
