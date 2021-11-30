@@ -17,6 +17,7 @@ import {
 } from './ContentsSectionStyle';
 import { User } from '../../../types/user';
 import ChannelEntity from '../../../types/channel';
+import UserListModal from './UserListModal';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -150,7 +151,8 @@ type MessageSectionProps = {
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
-  const { selectedChannel, setSelectedMessageData, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { selectedChannel, setSelectedMessageData, getServerChannelList, setIsModalOpen, setModalContents, socket } =
+    useContext(MainStoreContext);
   const { messageList, setIsThreadOpen, userList, channelInfo } = props;
   const { messageData } = messageList;
   const textareaDivRef = useRef<HTMLDivElement>(null);
@@ -191,6 +193,11 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
   const onClickMessageItemBlock = (data: MessageData) => {
     setSelectedMessageData(data);
     setIsThreadOpen(true);
+  };
+
+  const onClickChannelUserButton = () => {
+    setModalContents(<UserListModal userList={userList} />);
+    setIsModalOpen(true);
   };
 
   const onClickChannelListResetButton = () => {
@@ -236,7 +243,9 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
         <>
           <MessageSectionHeader>
             <ChannelName># {channelInfo && channelInfo.name}</ChannelName>
-            <ChannelUserButton>Users {userList && userList.length}</ChannelUserButton>
+            <ChannelUserButton onClick={onClickChannelUserButton}>
+              Users {userList && userList.length}
+            </ChannelUserButton>
           </MessageSectionHeader>
           <MessageSectionBody ref={messageSectionBodyRef}>{MessageItemList}</MessageSectionBody>
           <TextareaDiv ref={textareaDivRef}>
