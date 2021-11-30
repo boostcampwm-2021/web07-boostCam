@@ -10,8 +10,13 @@ type MainStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
 };
 
-const socket = io('/message', {
+const socket = io({
   withCredentials: true,
+  autoConnect: false,
+});
+
+socket.on('connect', () => {
+  socket.emit('joinChannels');
 });
 
 function MainStore(props: MainStoreProps): JSX.Element {
@@ -82,6 +87,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
       getServerCamList();
     }
   }, [selectedServer]);
+
+  useEffect(() => {
+    socket.connect();
+  }, []);
 
   return (
     <MainStoreContext.Provider

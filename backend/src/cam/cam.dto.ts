@@ -1,8 +1,9 @@
 import { Cam } from './cam.entity';
 
-export type CreateCamDto = {
+export type RequestCamDto = {
   name: string;
   serverId: number;
+  userId: number | null;
 };
 
 export class ResponseCamDto {

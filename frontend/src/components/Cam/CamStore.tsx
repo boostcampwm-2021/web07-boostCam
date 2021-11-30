@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
 import useUserMedia from '../../hooks/useUserMedia';
@@ -10,8 +10,9 @@ type CamStoreProps = {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
+const socket = io({ autoConnect: false });
+
 export const CamStoreContext = createContext<React.ComponentState>(null);
-const socket = io();
 
 function CamStore(props: CamStoreProps): JSX.Element {
   const { children, userInfo, setUserInfo } = props;
@@ -22,6 +23,10 @@ function CamStore(props: CamStoreProps): JSX.Element {
     roomId,
     userInfo,
   });
+
+  useEffect(() => {
+    socket.connect();
+  }, []);
 
   return (
     <CamStoreContext.Provider
