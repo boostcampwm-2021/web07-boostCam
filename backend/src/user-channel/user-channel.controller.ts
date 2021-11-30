@@ -26,10 +26,7 @@ export class UserChannelController {
   constructor(
     private userChannelService: UserChannelService,
     private channelService: ChannelService,
-  ) {
-    this.userChannelService = userChannelService;
-    this.channelService = channelService;
-  }
+  ) {}
 
   @Get('/:id/channels/joined/')
   async getJoinedChannelList(
@@ -72,10 +69,10 @@ export class UserChannelController {
     return ResponseEntity.ok<User[]>(response);
   }
 
-  @Post()
+  @Post('/:id')
   async joinNewChannel(
     @Body('channelId') channelId: number,
-    @Body('serverId') serverId: number,
+    @Param('id') serverId: number,
     @Session() session: ExpressSession,
   ) {
     const selectedChannel = await this.channelService.findOne(channelId);

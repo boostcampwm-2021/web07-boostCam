@@ -180,7 +180,7 @@ function JoinChannelModal(): JSX.Element {
   };
 
   const onClickChannelListButton = async (id: number) => {
-    await fetch('/api/user/servers', {
+    await fetch(`/api/user/servers/${selectedServer}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
