@@ -208,13 +208,13 @@ function UpdateChannelModal(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuthority = async () => {
-    const { data } = await fetchData<null, boolean>('GET', `api/channel/${rightClickedChannelId}/auth`);
+    const { data } = await fetchData<null, boolean>('GET', `/api/channel/${rightClickedChannelId}/auth`);
     setIsChannelOwner(data);
   };
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch(`api/channel/${rightClickedChannelId}`, {
+    await fetch(`/api/channel/${rightClickedChannelId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

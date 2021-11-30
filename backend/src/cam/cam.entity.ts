@@ -24,11 +24,11 @@ export class Cam {
   server: Server;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  user: User;
+  owner: User;
 
   @RelationId((cam: Cam) => cam.server)
   serverId: number;
 
-  @RelationId((cam: Cam) => cam.user)
+  @RelationId((cam: Cam) => cam.owner)
   ownerId: number;
 }
