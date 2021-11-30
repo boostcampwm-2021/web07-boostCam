@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { ChannelListData } from '../../../types/main';
+import fetchData from '../../../utils/fetchMethods';
+import { JoinChannelRequest } from '../../../types/join-channel-request';
 
 const { Close } = BoostCamMainIcons;
 
@@ -180,16 +182,16 @@ function JoinChannelModal(): JSX.Element {
   };
 
   const onClickChannelListButton = async (id: number) => {
-    await fetch('/api/user/servers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        channelId: id,
-        serverId: selectedServer,
-      }),
-    });
+    const resquestBody = {
+      channelId: id,
+    };
+
+    await fetchData<JoinChannelRequest, null>(
+      'POST',
+      `/api/user/servers/${selectedServer.server.id}/channels`,
+      resquestBody,
+    );
+
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);

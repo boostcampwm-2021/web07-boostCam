@@ -1,7 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Server } from '../server.entity';
 
 class RequestServerDto {
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   description: string;
 
   constructor(name: string, description: string) {

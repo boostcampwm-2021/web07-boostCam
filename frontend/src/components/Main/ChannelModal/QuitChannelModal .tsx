@@ -144,12 +144,15 @@ const CloseIcon = styled(Close)`
 `;
 
 function QuitChannelModal(): JSX.Element {
-  const { rightClickedChannelId, rightClickedChannelName, setIsModalOpen, getServerChannelList } =
+  const { selectedServer, rightClickedChannelId, rightClickedChannelName, setIsModalOpen, getServerChannelList } =
     useContext(MainStoreContext);
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
   const onClickSubmitButton = async () => {
-    await fetchData<null, null>('DELETE', `/api/user/servers/${rightClickedChannelId}/channels`);
+    await fetchData<null, null>(
+      'DELETE',
+      `/api/user/servers/${selectedServer.server.id}/channels/${rightClickedChannelId}`,
+    );
     getServerChannelList();
     setIsModalOpen(false);
   };
