@@ -20,24 +20,12 @@ import userState from '../../atoms/user';
 import fetchData from '../../utils/fetchMethods';
 
 const Container = styled.div`
+  background-color: black;
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  background-color: black;
-`;
-
-const UpperTab = styled.div`
-  margin-top: 5px;
-  width: 98vw;
-  display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   position: relative;
 `;
 
@@ -80,11 +68,9 @@ function CamMain(): JSX.Element {
             <ToggleStore>
               <STTStore>
                 <SharedScreenStore>
-                  <UpperTab>
-                    <MainScreen />
-                    <UserListTab />
-                    <ChattingTab />
-                  </UpperTab>
+                  <MainScreen />
+                  <UserListTab />
+                  <ChattingTab />
                   <ButtonBar camRef={camRef} />
                 </SharedScreenStore>
               </STTStore>
