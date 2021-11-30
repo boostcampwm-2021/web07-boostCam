@@ -1,4 +1,4 @@
-import { FetchResponseObject, DeleteResponseObject } from '../types/fetch';
+import { FetchResponseObject, NoContentsResponse, CreatedResponse } from '../types/fetch';
 
 const fetchData = async <T, R>(method: string, url: string, requestBody?: T): Promise<FetchResponseObject<R>> => {
   const response = await fetch(url, {
@@ -14,7 +14,7 @@ const fetchData = async <T, R>(method: string, url: string, requestBody?: T): Pr
   return { statusCode, message, data };
 };
 
-const deleteApi = async (url: string): Promise<DeleteResponseObject> => {
+const deleteApi = async (url: string): Promise<NoContentsResponse> => {
   const response = await fetch(url, {
     method: 'DELETE',
   });
@@ -27,4 +27,22 @@ const deleteApi = async (url: string): Promise<DeleteResponseObject> => {
   return { statusCode, message };
 };
 
-export { fetchData, deleteApi };
+const sendFormData = async (
+  method: string,
+  url: string,
+  requestBody: FormData,
+): Promise<CreatedResponse | NoContentsResponse> => {
+  const response = await fetch(url, {
+    method,
+    body: requestBody,
+  });
+  const headerStatusCode = response.status;
+  if (headerStatusCode === 204) {
+    return { statusCode: headerStatusCode, message: null };
+  }
+  const responseObject = await response.json();
+  const { statusCode, message, data } = responseObject;
+  return { statusCode, message, data };
+};
+
+export { fetchData, deleteApi, sendFormData };

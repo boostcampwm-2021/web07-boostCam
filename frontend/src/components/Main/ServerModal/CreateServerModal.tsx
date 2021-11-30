@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { sendFormData } from '../../../utils/fetchMethods';
 
 const { Close } = BoostCamMainIcons;
 
@@ -211,17 +212,13 @@ function CreateServerModal(): JSX.Element {
     formData.append('description', description);
     formData.append('icon', file[0]);
 
-    const response = await fetch('api/servers', {
-      method: 'POST',
-      body: formData,
-    });
+    const { statusCode, message } = await sendFormData('POST', 'api/servers', formData);
 
-    if (response.status === 201) {
+    if (statusCode === 201) {
       getUserServerList('created');
       setIsModalOpen(false);
     } else {
-      const body = await response.json();
-      setMessageFailToPost(body.message);
+      setMessageFailToPost(`${message}`);
     }
   };
 

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons, ButtonBarIcons } from '../../../utils/SvgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
-import { fetchData } from '../../../utils/fetchMethods';
+import { fetchData, sendFormData } from '../../../utils/fetchMethods';
 import { ServerEntity } from '../../../types/server';
 
 const { Close } = BoostCamMainIcons;
@@ -245,16 +245,12 @@ function ServerSettingModal(): JSX.Element {
       formData.append('description', serverDescription);
       if (files) formData.append('icon', files[0]);
 
-      const response = await fetch(`api/servers/${serverId}`, {
-        method: 'PATCH',
-        body: formData,
-      });
-      if (response.status === 204) {
+      const { statusCode, message } = await sendFormData('PATCH', `api/servers/${serverId}`, formData);
+      if (statusCode === 204) {
         getUserServerList('updated');
         setIsModalOpen(false);
       } else {
-        const body = await response.json();
-        setMessageFailToPost(body.message);
+        setMessageFailToPost(`${message}`);
       }
     } else {
       setMessageFailToPost('선택된 서버가 없습니다.');

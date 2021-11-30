@@ -4,9 +4,15 @@ type FetchResponseObject<T> = {
   data: T;
 };
 
-type DeleteResponseObject = {
+type NoContentsResponse = {
   statusCode: number;
   message: string | null;
 };
 
-export type { FetchResponseObject, DeleteResponseObject };
+type CreatedResponse = {
+  statusCode: number;
+  message: string | null;
+  data: number | null;
+};
+
+export type { FetchResponseObject, NoContentsResponse, CreatedResponse };
