@@ -17,6 +17,7 @@ import CamLoadingPage from './Page/CamLoadingPage';
 import CamNotAvailablePage from './Page/CamNotAvailablePage';
 import CamErrorPage from './Page/CamErrorPage';
 import userState from '../../atoms/user';
+import fetchData from '../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 100vw;
@@ -40,7 +41,7 @@ const UpperTab = styled.div`
   position: relative;
 `;
 
-function Cam(): JSX.Element {
+function CamMain(): JSX.Element {
   const user = useRecoilValue(userState);
   const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: user?.nickname || null });
   const [statusCode, setStatusCode] = useState(0);
@@ -48,20 +49,13 @@ function Cam(): JSX.Element {
   const camRef = useRef<HTMLDivElement>(null);
 
   const checkRoomExist = async (roomId: string) => {
-    const response = await fetch(`/api/cam/${roomId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const json = await response.json();
-
-    setStatusCode(json.statusCode);
+    const { statusCode: newStatusCode } = await fetchData<null, null>('GET', `/api/cam/${roomId}`);
+    setStatusCode(newStatusCode);
   };
 
   useEffect(() => {
     const roomId = new URLSearchParams(new URL(window.location.href).search).get('roomid');
+
     if (roomId) {
       checkRoomExist(roomId);
     }
@@ -103,4 +97,4 @@ function Cam(): JSX.Element {
   }
 }
 
-export default Cam;
+export default CamMain;
