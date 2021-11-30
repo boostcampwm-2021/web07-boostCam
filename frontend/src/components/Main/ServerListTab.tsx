@@ -143,9 +143,9 @@ function ServerListTab(): JSX.Element {
               modalContents={{
                 contents: <CreateServerModal />,
                 title: '서버 생성',
-                description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-                height: '60%',
-                minHeight: '450px',
+                description: '생성할 서버의 이름과 설명을 작성해주세요.',
+                height: '70%',
+                minHeight: '520px',
               }}
             />
             <DropdownMenu
@@ -154,9 +154,9 @@ function ServerListTab(): JSX.Element {
               modalContents={{
                 contents: <JoinServerModal />,
                 title: '서버 참가',
-                description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-                height: '40%',
-                minHeight: '250px',
+                description: '참가 코드를 입력하세요.',
+                height: '45%',
+                minHeight: '340px',
               }}
             />
           </Dropdown>

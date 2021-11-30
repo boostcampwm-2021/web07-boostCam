@@ -2,54 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons, ButtonBarIcons } from '../../../utils/SvgIcons';
+import { ButtonBarIcons } from '../../../utils/SvgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
 
-const { Close } = BoostCamMainIcons;
 const { CopyIcon } = ButtonBarIcons;
-
-const Container = styled.div`
-  width: 35%;
-  min-width: 400px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 20px;
-
-  z-index: 3;
-`;
-
-const ModalInnerBox = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ModalTitle = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 32px;
-  font-weight: 600;
-`;
 
 const Form = styled.div`
   width: 90%;
@@ -150,17 +106,6 @@ const MessageFailToPost = styled.span`
   font-family: Malgun Gothic;
 `;
 
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
-`;
-
 const CodeDiv = styled.div`
   width: 220px;
   height: 24px;
@@ -175,11 +120,6 @@ const CodeDiv = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
 `;
 
 const ResizedCopyIcon = styled(CopyIcon)`
@@ -317,63 +257,55 @@ function ServerSettingModal(): JSX.Element {
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <Container>
+    <>
       {isDeleteModalOpen && <ServerDeleteCheckModal serverId={serverId} setIsDeleteModalOpen={setIsDeleteModalOpen} />}
-      <ModalInnerBox>
-        <ModalHeader>
-          <ModalTitle>서버 설정</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-        <Form>
-          <InputName>새 서버 이름</InputName>
-          <InputDiv>
-            <Input
-              name="name"
-              placeholder="서버명을 입력해주세요"
-              value={serverName}
-              onChange={(e) => setServerName(e.target.value)}
-            />
-            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
-              제출
-            </SubmitButton>
-          </InputDiv>
-          <InputName>새 서버 설명</InputName>
-          <InputDiv>
-            <Input
-              name="description"
-              placeholder="서버 설명을 입력해주세요"
-              value={serverDescription}
-              onChange={(e) => setServerDescription(e.target.value)}
-            />
-          </InputDiv>
-          <InputName>서버 아이콘 변경</InputName>
-          <InputDiv>
-            <ImageInputDiv>
-              <ImagePreview src={imagePreview} />
-              <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
-              <InputFile id="file" type="file" onChange={onChangePreviewImage} />
-            </ImageInputDiv>
-          </InputDiv>
-          <InputName>서버 참여 코드 재생성</InputName>
-          <InputDiv>
-            <CodeDiv>{code}</CodeDiv>
-            <ResizedCopyIcon onClick={onClickCopyCodeButton} />
-            <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onClickRefreshCode}>
-              생성
-            </SubmitButton>
-          </InputDiv>
-          <InputDiv>
-            <InputName>서버 삭제</InputName>
-            <DeleteButton type="submit" onClick={() => setIsDeleteModalOpen(true)}>
-              서버 삭제
-            </DeleteButton>
-          </InputDiv>
-          <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
-        </Form>
-      </ModalInnerBox>
-    </Container>
+      <Form>
+        <InputName>새 서버 이름</InputName>
+        <InputDiv>
+          <Input
+            name="name"
+            placeholder="서버명을 입력해주세요"
+            value={serverName}
+            onChange={(e) => setServerName(e.target.value)}
+          />
+          <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onCliclUpdateServer}>
+            제출
+          </SubmitButton>
+        </InputDiv>
+        <InputName>새 서버 설명</InputName>
+        <InputDiv>
+          <Input
+            name="description"
+            placeholder="서버 설명을 입력해주세요"
+            value={serverDescription}
+            onChange={(e) => setServerDescription(e.target.value)}
+          />
+        </InputDiv>
+        <InputName>서버 아이콘 변경</InputName>
+        <InputDiv>
+          <ImageInputDiv>
+            <ImagePreview src={imagePreview} />
+            <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
+            <InputFile id="file" type="file" onChange={onChangePreviewImage} />
+          </ImageInputDiv>
+        </InputDiv>
+        <InputName>서버 참여 코드 재생성</InputName>
+        <InputDiv>
+          <CodeDiv>{code}</CodeDiv>
+          <ResizedCopyIcon onClick={onClickCopyCodeButton} />
+          <SubmitButton isButtonActive={isButtonActive} type="button" onClick={onClickRefreshCode}>
+            생성
+          </SubmitButton>
+        </InputDiv>
+        <InputDiv>
+          <InputName>서버 삭제</InputName>
+          <DeleteButton type="submit" onClick={() => setIsDeleteModalOpen(true)}>
+            서버 삭제
+          </DeleteButton>
+        </InputDiv>
+        <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
+      </Form>
+    </>
   );
 }
 

@@ -64,9 +64,9 @@ function MainHeader(): JSX.Element {
               modalContents={{
                 contents: <ServerSettingModal />,
                 title: '서버 설정',
-                description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-                height: '60%',
-                minHeight: '450px',
+                description: '선택한 서버에 대한 내용을 변경할 수 있습니다.',
+                height: '70%',
+                minHeight: '570px',
               }}
             />
           )}
@@ -76,7 +76,7 @@ function MainHeader(): JSX.Element {
             modalContents={{
               contents: <ServerInfoModal />,
               title: '서버 정보',
-              description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+              description: '접속하신 서버에 대한 정보입니다.',
               height: '60%',
               minHeight: '450px',
             }}
@@ -88,9 +88,9 @@ function MainHeader(): JSX.Element {
               modalContents={{
                 contents: <QuitServerModal />,
                 title: '서버 나가기',
-                description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
-                height: '40%',
-                minHeight: '250px',
+                description: '서버에서 나가시겠습니까?',
+                height: '30%',
+                minHeight: '150px',
               }}
             />
           )}

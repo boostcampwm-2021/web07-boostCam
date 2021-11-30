@@ -51,6 +51,7 @@ type ChannelListItemProps = {
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
   const { dataId, selected, name } = props;
   const {
+    rightClickedChannelName,
     setSelectedChannel,
     setRightClickedChannelId,
     setRightClickedChannelName,
@@ -82,7 +83,7 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
           component: {
             contents: <QuitChannelModal key={2} />,
             title: '채널 나가기',
-            description: '현재 채널에서 나갑니다',
+            description: `${rightClickedChannelName} 채널에서 나갑니다`,
             height: '30%',
             minHeight: '250px',
           },
