@@ -20,7 +20,7 @@ import { ChannelFormDto } from './channel.dto';
 import { UserChannelService } from '../user-channel/user-channel.service';
 import ResponseEntity from '../common/response-entity';
 
-@Controller('api/channel')
+@Controller('/api/channel')
 @UseGuards(LoginGuard)
 export class ChannelController {
   constructor(
@@ -29,10 +29,6 @@ export class ChannelController {
   ) {
     this.channelService = channelService;
     this.userChannelService = userChannelService;
-  }
-  @Get() async findAll(): Promise<ResponseEntity<Channel[]>> {
-    const channelList = await this.channelService.findAll();
-    return ResponseEntity.ok<Channel[]>(channelList);
   }
   @Get(':id') async findOne(
     @Param('id') id: number,
