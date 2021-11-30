@@ -20,7 +20,7 @@ import { ChannelFormDto } from './channel.dto';
 import { UserChannelService } from '../user-channel/user-channel.service';
 import ResponseEntity from '../common/response-entity';
 
-@Controller('/api/channel')
+@Controller('/api/channels')
 @UseGuards(LoginGuard)
 export class ChannelController {
   constructor(

@@ -153,7 +153,7 @@ function AlertDeleteChannel(): JSX.Element {
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
   const onClickSubmitButton = async () => {
-    await fetchData<null, null>('DELETE', `/api/channel/${rightClickedChannelId}`);
+    await fetchData<null, null>('DELETE', `/api/channels/${rightClickedChannelId}`);
     getServerChannelList();
     setIsAlertModalOpen(false);
     setIsModalOpen(false);

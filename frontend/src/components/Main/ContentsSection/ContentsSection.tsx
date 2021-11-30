@@ -37,7 +37,7 @@ const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: 
 };
 
 const getSelectedChannelInfo = async (selectedChannel: string) => {
-  const response = await fetchData<null, ChannelEntity>('GET', `/api/channel/${selectedChannel}`);
+  const response = await fetchData<null, ChannelEntity>('GET', `/api/channels/${selectedChannel}`);
   return response;
 };
 
