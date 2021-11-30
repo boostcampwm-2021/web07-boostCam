@@ -17,8 +17,8 @@ import { ExpressSession } from '../types/session';
 import { UserChannelService } from './user-channel.service';
 import { ChannelService } from '../channel/channel.service';
 import { UserChannel } from './user-channel.entity';
-import { Channel } from '../channel/channel.entity';
 import { User } from '../user/user.entity';
+import ChannelResponseDto from '../channel/dto/channel-response.dto';
 
 @Controller('/api/user/servers')
 @UseGuards(LoginGuard)
@@ -36,14 +36,12 @@ export class UserChannelController {
     @Param('id') serverId: number,
     @Session() session: ExpressSession,
   ) {
-    const response = await this.userChannelService.getJoinedChannelListByUserId(
-      serverId,
-      session.user.id,
-    );
-    const joinedChannelList = response.map(
-      (userChannel) => userChannel.channel,
-    );
-    return ResponseEntity.ok<Channel[]>(joinedChannelList);
+    const joinedChannelList =
+      await this.userChannelService.getJoinedChannelListByUserId(
+        serverId,
+        session.user.id,
+      );
+    return ResponseEntity.ok<ChannelResponseDto[]>(joinedChannelList);
   }
 
   @Get('/:id/channels/notjoined/')
@@ -56,7 +54,7 @@ export class UserChannelController {
         serverId,
         session.user.id,
       );
-    return ResponseEntity.ok<Channel[]>(response);
+    return ResponseEntity.ok<ChannelResponseDto[]>(response);
   }
 
   @Get('/:id/channels/users')
