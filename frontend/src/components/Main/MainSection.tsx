@@ -7,6 +7,7 @@ import MainHeader from './MainHeader';
 import { MessageData, MessageListInfo } from '../../types/message';
 import fetchData from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
+import ServerJoinSection from './ServerJoinSection';
 import { CommentData, CommentListInfo } from '../../types/comment';
 
 const Container = styled.div`
@@ -29,11 +30,12 @@ const MainBody = styled.div`
 `;
 
 function MainSection(): JSX.Element {
-  const { selectedChannel, selectedMessageData, socket } = useContext(MainStoreContext);
+  const { serverList, selectedChannel, selectedMessageData, socket } = useContext(MainStoreContext);
   const [messageList, setMessageList] = useState<MessageListInfo>({
     messageData: [],
     isLoading: true,
   });
+  const isJoinedServerExists = !!serverList.length;
 
   const [commentList, setCommentList] = useState<CommentListInfo>({
     commentData: [],
@@ -119,8 +121,9 @@ function MainSection(): JSX.Element {
     <Container>
       <MainHeader />
       <MainBody>
-        <RoomListSection />
-        <ContentsSection messageList={messageList} commentList={commentList} />
+        {isJoinedServerExists && <RoomListSection />}
+        {isJoinedServerExists && <ContentsSection messageList={messageList} commentList={commentList} />}
+        {!isJoinedServerExists && <ServerJoinSection />}
       </MainBody>
     </Container>
   );

@@ -10,8 +10,8 @@ const fetchData = async <T, R>(method: string, url: string, requestBody?: T): Pr
     body: JSON.stringify(requestBody),
   });
   const responseObject = await response.json();
-  const { statusCode, data } = responseObject;
-  return { statusCode, data };
+  const { statusCode, message, data } = responseObject;
+  return { statusCode, message, data };
 };
 
 export default fetchData;
