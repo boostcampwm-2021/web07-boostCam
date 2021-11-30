@@ -154,14 +154,18 @@ const DeleteChannelDiv = styled.div`
   flex: 1 1 0;
   margin: 10px 0px 0px 25px;
   width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const DeleteButton = styled.button`
-  width: 250px;
+  width: 150px;
   height: 50px;
   background: none;
   padding: 15px 10px;
-  margin: 15px 0px 0px 50px;
+  margin-right: 15px;
   border: 0;
   outline: 0;
   text-align: center;
@@ -315,9 +319,7 @@ function UpdateChannelModal(): JSX.Element {
         </Form>
         <DeleteChannelDiv>
           <InputName color="#ff0000">채널 삭제</InputName>
-          <InputDiv>
-            <DeleteButton onClick={onClickDeleteChannelButton}> 채널 삭제 </DeleteButton>
-          </InputDiv>
+          <DeleteButton onClick={onClickDeleteChannelButton}> 채널 삭제 </DeleteButton>
         </DeleteChannelDiv>
       </>
     );
