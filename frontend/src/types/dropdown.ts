@@ -1,6 +1,8 @@
+import ModalContents from './modal';
+
 type ComponentInfo = {
   name: string;
-  component: JSX.Element;
+  component: ModalContents;
 };
 
 type DropdownInfo = {

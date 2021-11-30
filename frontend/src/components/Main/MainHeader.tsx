@@ -61,19 +61,31 @@ function MainHeader(): JSX.Element {
             <DropdownMenu
               name="서버 설정"
               setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<ServerSettingModal />}
+              modalContents={{
+                contents: <ServerSettingModal />,
+                title: '서버 설정',
+                description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+              }}
             />
           )}
           <DropdownMenu
             name="서버 정보"
             setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<ServerInfoModal />}
+            modalContents={{
+              contents: <ServerInfoModal />,
+              title: '서버 정보',
+              description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+            }}
           />
           {!isOwnerOfServer && (
             <DropdownMenu
               name="서버 나가기"
               setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<QuitServerModal />}
+              modalContents={{
+                contents: <QuitServerModal />,
+                title: '서버 나가기',
+                description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+              }}
             />
           )}
         </Dropdown>

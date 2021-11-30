@@ -94,12 +94,20 @@ function ChannelListHeader(props: ChannelListHeaderProps): JSX.Element {
           <DropdownMenu
             name="채널 생성"
             setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<CreateChannelModal />}
+            modalContents={{
+              contents: <CreateChannelModal />,
+              title: '채널 생성',
+              description: '생성할 채널의 이름과 설명을 입력해주세요.',
+            }}
           />
           <DropdownMenu
             name="채널 참가"
             setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<JoinChannelModal />}
+            modalContents={{
+              contents: <JoinChannelModal />,
+              title: '채널 참가',
+              description: '참가할 채널을 선택해주세요.',
+            }}
           />
         </Dropdown>
       </ChannelListHeaderButton>

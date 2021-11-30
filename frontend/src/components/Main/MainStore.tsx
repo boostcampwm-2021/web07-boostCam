@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import { DropdownInfo } from '../../types/dropdown';
 import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
+import ModalContents from '../../types/modal';
 import fetchData from '../../utils/fetchMethods';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
@@ -30,7 +31,11 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [serverChannelList, setServerChannelList] = useState<ChannelListData[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContents, setModalContents] = useState<JSX.Element>(<></>);
+  const [modalContents, setModalContents] = useState<ModalContents>({
+    contents: <></>,
+    title: '',
+    description: '',
+  });
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertModalContents, setAlertModalContents] = useState<JSX.Element>(<></>);
 

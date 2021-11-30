@@ -67,8 +67,22 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     const dropdownInfo = {
       position: [e.pageX, e.pageY],
       components: [
-        { name: '수정', component: <UpdateChannelModal key={1} /> },
-        { name: '나가기', component: <QuitChannelModal key={2} /> },
+        {
+          name: '수정',
+          component: {
+            contents: <UpdateChannelModal key={1} />,
+            title: '채널 수정',
+            description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+          },
+        },
+        {
+          name: '나가기',
+          component: {
+            contents: <QuitChannelModal key={2} />,
+            title: '채널 나가기',
+            description: '현재 채널에서 나갑니다',
+          },
+        },
       ],
     };
     const channelId = e.currentTarget.dataset.id;
