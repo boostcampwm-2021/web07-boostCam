@@ -8,10 +8,16 @@ type CommentRequestBody = {
 
 type CommentData = {
   id: string;
+  messageId: string;
   channelId: string;
   contents: string;
   createdAt: string;
   sender: MessageSender;
 };
 
-export type { CommentRequestBody, CommentData };
+type CommentListInfo = {
+  commentData: CommentData[];
+  isLoading: boolean;
+};
+
+export type { CommentRequestBody, CommentData, CommentListInfo };
