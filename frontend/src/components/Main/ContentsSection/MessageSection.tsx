@@ -186,7 +186,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     if (messageSectionBodyRef.current) {
       messageSectionBodyRef.current.scroll({ top: messageSectionBodyRef.current.scrollHeight, behavior: 'smooth' });
     }
-  });
+  }, [messageList]);
 
   const MessageItemList = buildMessageItemList();
 
