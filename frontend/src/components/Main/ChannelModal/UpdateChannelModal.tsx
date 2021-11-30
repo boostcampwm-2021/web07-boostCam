@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import noAuthImg from '../../../assets/hmm.gif';
 import AlertDeleteChannel from './AlertDeleteChannel';

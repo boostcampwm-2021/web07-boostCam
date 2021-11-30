@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { DropdownInfo } from '../../types/dropdown';
 import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
-import fetchData from '../../utils/fetchMethods';
+import { fetchData } from '../../utils/fetchMethods';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 

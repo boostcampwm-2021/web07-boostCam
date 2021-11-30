@@ -4,4 +4,9 @@ type FetchResponseObject<T> = {
   data: T;
 };
 
-export default FetchResponseObject;
+type DeleteResponseObject = {
+  statusCode: number;
+  message: string | null;
+};
+
+export type { FetchResponseObject, DeleteResponseObject };

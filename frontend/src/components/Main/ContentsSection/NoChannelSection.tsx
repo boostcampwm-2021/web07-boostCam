@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { ChannelListData } from '../../../types/main';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 50%;
