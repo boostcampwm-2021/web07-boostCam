@@ -82,6 +82,7 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
               contents: <CreateCamModal />,
               title: 'Cam 생성',
               description: '생성할 Cam의 이름을 작성해주세요',
+              height: 40,
             }}
           />
         </Dropdown>

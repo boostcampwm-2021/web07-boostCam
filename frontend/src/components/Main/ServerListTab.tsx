@@ -144,6 +144,7 @@ function ServerListTab(): JSX.Element {
                 contents: <CreateServerModal />,
                 title: '서버 생성',
                 description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+                height: 60,
               }}
             />
             <DropdownMenu
@@ -153,6 +154,7 @@ function ServerListTab(): JSX.Element {
                 contents: <JoinServerModal />,
                 title: '서버 참가',
                 description: '선택한 채널에 대한 내용을 변경할 수 있습니다.',
+                height: 40,
               }}
             />
           </Dropdown>
