@@ -8,16 +8,7 @@ import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 
-import {
-  MessageItemIcon,
-  MessageItem,
-  MessageItemHeader,
-  MessageSender,
-  MessageTimelog,
-  MessageContents,
-  TextareaDiv,
-  MessageTextarea,
-} from './ContentsSectionStyle';
+import { TextareaDiv, MessageTextarea, messageInnerElement, onKeyDownMessageTextarea } from './ContentsSectionCommon';
 
 const { Close } = BoostCamMainIcons;
 
@@ -129,29 +120,12 @@ const CloseIcon = styled(Close)`
   cursor: pointer;
 `;
 
-const commentInnerElement = (data: MessageData) => {
-  const { contents, createdAt, sender } = data;
-  const { nickname, profile } = sender;
-  return (
-    <>
-      <MessageItemIcon imgUrl={profile} />
-      <MessageItem>
-        <MessageItemHeader>
-          <MessageSender> {nickname} </MessageSender>
-          <MessageTimelog>{createdAt}</MessageTimelog>
-        </MessageItemHeader>
-        <MessageContents>{contents}</MessageContents>
-      </MessageItem>
-    </>
-  );
-};
-
 const buildCommentElement = (data: MessageData | undefined, isComment: boolean) => {
   if (!data) return <></>;
   const { id } = data;
   return (
     <MessageItemBlock isComment={isComment} key={id}>
-      {commentInnerElement(data)}
+      {messageInnerElement(data)}
     </MessageItemBlock>
   );
 };
@@ -174,30 +148,6 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
       contents,
     };
     socket.emit('sendComment', requestBody);
-  };
-
-  const onKeyDownCommentTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { key, currentTarget, shiftKey } = e;
-    const msg = currentTarget.value.trim();
-    const divRef = textDivRef.current;
-
-    currentTarget.style.height = '15px';
-    currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
-    if (divRef) {
-      divRef.style.height = `105px`;
-      divRef.style.height = `${90 + currentTarget.scrollHeight - 27}px`;
-    }
-
-    if (!shiftKey && key === 'Enter') {
-      e.preventDefault();
-      if (!msg.length) currentTarget.value = '';
-      else {
-        sendComment(currentTarget.value);
-        currentTarget.value = '';
-      }
-      currentTarget.style.height = '21px';
-      if (divRef) divRef.style.height = `105px`;
-    }
   };
 
   const onClickCloseIcon = () => {
@@ -233,7 +183,7 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
         {commentList.isLoading ? <Loading /> : CommentItemList}
       </ThreadSectionBody>
       <TextareaDiv ref={textDivRef}>
-        <MessageTextarea onKeyDown={onKeyDownCommentTextarea} />
+        <MessageTextarea onKeyDown={(e) => onKeyDownMessageTextarea(e, textDivRef, sendComment)} />
       </TextareaDiv>
     </Container>
   );

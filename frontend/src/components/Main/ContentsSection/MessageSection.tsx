@@ -5,20 +5,10 @@ import { MainStoreContext } from '../MainStore';
 import { MessageData, MessageListInfo, MessageRequestBody } from '../../../types/message';
 import noInfoImg from '../../../assets/hmm.gif';
 
-import {
-  MessageItemIcon,
-  MessageItem,
-  MessageItemHeader,
-  MessageSender,
-  MessageTimelog,
-  MessageContents,
-  TextareaDiv,
-  MessageTextarea,
-} from './ContentsSectionStyle';
+import { TextareaDiv, MessageTextarea, messageInnerElement, onKeyDownMessageTextarea } from './ContentsSectionCommon';
 import { User } from '../../../types/user';
 import ChannelEntity from '../../../types/channel';
 import UserListModal from './UserListModal';
-import getCurrentDate from '../../../utils/getCurrentDate';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -167,30 +157,6 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     socket.emit('sendMessage', requestBody);
   };
 
-  const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { key, currentTarget, shiftKey } = e;
-    const msg = currentTarget.value.trim();
-    const divRef = textareaDivRef.current;
-
-    currentTarget.style.height = '15px';
-    currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
-    if (divRef) {
-      divRef.style.height = `105px`;
-      divRef.style.height = `${90 + currentTarget.scrollHeight - 27}px`;
-    }
-
-    if (!shiftKey && key === 'Enter') {
-      e.preventDefault();
-      if (!msg.length) currentTarget.value = '';
-      else {
-        sendMessage(currentTarget.value);
-        currentTarget.value = '';
-      }
-      currentTarget.style.height = '21px';
-      if (divRef) divRef.style.height = `105px`;
-    }
-  };
-
   const onClickMessageItemBlock = (data: MessageData) => {
     setSelectedMessageData(data);
     setIsThreadOpen(true);
@@ -207,20 +173,10 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
 
   const buildMessageItemList = () => {
     return messageData.map((val: MessageData): JSX.Element => {
-      const { id, contents, createdAt, sender } = val;
-      const { nickname, profile } = sender;
-      const dateObj = getCurrentDate(new Date(createdAt));
-      const date = `${dateObj.year}-${dateObj.month}-${dateObj.date} ${dateObj.hour}:${dateObj.minutes}`;
+      const { id } = val;
       return (
         <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
-          <MessageItemIcon imgUrl={profile} />
-          <MessageItem>
-            <MessageItemHeader>
-              <MessageSender> {nickname} </MessageSender>
-              <MessageTimelog>{date}</MessageTimelog>
-            </MessageItemHeader>
-            <MessageContents>{contents}</MessageContents>
-          </MessageItem>
+          {messageInnerElement(val)}
         </MessageItemBlock>
       );
     });
@@ -252,7 +208,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
           </MessageSectionHeader>
           <MessageSectionBody ref={messageSectionBodyRef}>{MessageItemList}</MessageSectionBody>
           <TextareaDiv ref={textareaDivRef}>
-            <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
+            <MessageTextarea onKeyDown={(e) => onKeyDownMessageTextarea(e, textareaDivRef, sendMessage)} />
           </TextareaDiv>
         </>
       )}
