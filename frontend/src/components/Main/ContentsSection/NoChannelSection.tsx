@@ -152,7 +152,6 @@ const ItemButton = styled.button`
 
 type JoinChannelRequest = {
   channelId: number;
-  serverId: number;
 };
 
 function NoChannelSection(): JSX.Element {
@@ -170,9 +169,8 @@ function NoChannelSection(): JSX.Element {
   const onClickChannelListButton = async (id: number) => {
     const resquestBody = {
       channelId: id,
-      serverId: selectedServer,
     };
-    await fetchData<JoinChannelRequest, null>('POST', '/api/user/servers', resquestBody);
+    await fetchData<JoinChannelRequest, null>('POST', `/api/user/servers/${selectedServer}`, resquestBody);
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);

@@ -187,7 +187,6 @@ function JoinChannelModal(): JSX.Element {
       },
       body: JSON.stringify({
         channelId: id,
-        serverId: selectedServer,
       }),
     });
     getServerChannelList();
