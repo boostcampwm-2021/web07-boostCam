@@ -208,6 +208,8 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     return messageData.map((val: MessageData): JSX.Element => {
       const { id, contents, createdAt, sender } = val;
       const { nickname, profile } = sender;
+      const date = new Date(createdAt);
+      console.log(date);
       return (
         <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
           <MessageItemIcon imgUrl={profile} />
