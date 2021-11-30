@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
@@ -10,7 +11,7 @@ type CamListItemProps = {
   url: string;
 };
 
-const Container = styled.a`
+const Container = styled.div`
   width: 100%;
   height: 25px;
 
@@ -26,7 +27,6 @@ const Container = styled.a`
   overflow: hidden;
   text-overflow: ellipsis;
   color: inherit;
-  text-decoration: none;
 
   &:hover {
     cursor: pointer;
@@ -47,10 +47,14 @@ const CamNameSpan = styled.span`
 
 function CamListItem(props: CamListItemProps): JSX.Element {
   const { name, url } = props;
-  const camURL = `/cam?roomid=${url}`;
+  const navigate = useNavigate();
+
+  const onClickCam = () => {
+    navigate(`/cam?roomid=${url}`);
+  };
 
   return (
-    <Container href={camURL}>
+    <Container onClick={onClickCam}>
       <HashIcon />
       <CamNameSpan>{name}</CamNameSpan>
     </Container>

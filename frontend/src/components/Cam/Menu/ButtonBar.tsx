@@ -37,6 +37,7 @@ const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   transition: bottom 0.5s ease;
   position: absolute;
   bottom: ${(props) => (props.isMouseOnCamPage ? '0' : '-8vh')};
+  background-color: black;
 `;
 
 const ButtonContainer = styled.div`

@@ -1,15 +1,13 @@
 import {
   BadRequestException,
   ForbiddenException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { v4 } from 'uuid';
 
 import { ServerRepository } from '../server/server.repository';
-import { CreateCamDto, ResponseCamDto } from './cam.dto';
+import { RequestCamDto, ResponseCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
 import { CamRepository } from './cam.repository';
 import { CamInnerService } from './cam-inner.service';
@@ -19,7 +17,6 @@ export class CamService {
   constructor(
     private camRepository: CamRepository,
     private serverRepository: ServerRepository,
-    @Inject(forwardRef(() => CamInnerService))
     private readonly camInnerService: CamInnerService,
   ) {
     this.camRepository.clear();
@@ -41,7 +38,7 @@ export class CamService {
     return cam;
   }
 
-  async createCam(cam: CreateCamDto): Promise<Cam> {
+  async createCam(cam: RequestCamDto): Promise<Cam> {
     const camEntity = this.camRepository.create();
     const server = await this.serverRepository.findOne({
       id: cam.serverId,
@@ -51,9 +48,14 @@ export class CamService {
       throw new BadRequestException();
     }
 
+    if (!cam.userId) {
+      throw new ForbiddenException();
+    }
+
     camEntity.name = cam.name;
     camEntity.server = server;
     camEntity.url = v4();
+    camEntity.ownerId = cam.userId;
 
     const savedCam = await this.camRepository.save(camEntity);
     this.camInnerService.createRoom(camEntity.url);
@@ -61,8 +63,14 @@ export class CamService {
     return savedCam;
   }
 
-  async deleteCam(url: string): Promise<void> {
-    await this.camRepository.delete({ url: url });
+  async deleteCam(cam: RequestCamDto): Promise<void> {
+    const camEntity = await this.camRepository.findOne(cam);
+
+    if (!camEntity) {
+      throw new BadRequestException();
+    }
+
+    await this.camRepository.delete(camEntity);
   }
 
   async getCamList(serverId: number): Promise<ResponseCamDto[]> {
