@@ -18,6 +18,7 @@ import {
 import { User } from '../../../types/user';
 import ChannelEntity from '../../../types/channel';
 import UserListModal from './UserListModal';
+import getCurrentDate from '../../../utils/getCurrentDate';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -208,15 +209,15 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     return messageData.map((val: MessageData): JSX.Element => {
       const { id, contents, createdAt, sender } = val;
       const { nickname, profile } = sender;
-      const date = new Date(createdAt);
-      console.log(date);
+      const dateObj = getCurrentDate(new Date(createdAt));
+      const date = `${dateObj.year}-${dateObj.month}-${dateObj.date} ${dateObj.hour}:${dateObj.minutes}`;
       return (
         <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
           <MessageItemIcon imgUrl={profile} />
           <MessageItem>
             <MessageItemHeader>
               <MessageSender> {nickname} </MessageSender>
-              <MessageTimelog>{createdAt}</MessageTimelog>
+              <MessageTimelog>{date}</MessageTimelog>
             </MessageItemHeader>
             <MessageContents>{contents}</MessageContents>
           </MessageItem>
