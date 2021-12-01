@@ -3,76 +3,12 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { fetchData } from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
-import noAuthImg from '../../../assets/hmm.gif';
 import AlertDeleteChannel from './AlertDeleteChannel';
+import NoAuthModal from './NoAuthModal';
 
-const { Close } = BoostCamMainIcons;
-
-const Container = styled.div`
-  width: 35%;
-  min-width: 400px;
-  height: 70%;
-  min-height: 550px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 20px;
-
-  z-index: 3;
-`;
-
-const ModalInnerBox = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ModalTitle = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 32px;
-  font-weight: 600;
-`;
-
-const ModalDescriptionDiv = styled.div`
-  width: 90%;
-  margin: 120px 0px 0px 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalDescription = styled.span`
-  padding: 10px 5px;
-  margin-left: 25px;
-  color: #cbc4b9;
-  font-size: 15px;
-`;
-
-const Form = styled.form`
+const Container = styled.form`
   flex: 3 1 0;
   width: 90%;
   border-radius: 20px;
@@ -133,35 +69,22 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
-`;
-
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-`;
-
 const DeleteChannelDiv = styled.div`
   flex: 1 1 0;
   margin: 10px 0px 0px 25px;
   width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const DeleteButton = styled.button`
-  width: 250px;
+  width: 150px;
   height: 50px;
   background: none;
   padding: 15px 10px;
-  margin: 15px 0px 0px 50px;
+  margin-right: 15px;
   border: 0;
   outline: 0;
   text-align: center;
@@ -174,12 +97,6 @@ const DeleteButton = styled.button`
     background-color: red;
     transition: all 0.3s;
   }
-`;
-
-const NoAuthImg = styled.img`
-  width: 150px;
-  height: 150px;
-  margin-bottom: 25px;
 `;
 
 type UpdateModalForm = {
@@ -257,32 +174,11 @@ function UpdateChannelModal(): JSX.Element {
   }, [watch()]);
 
   const modalContents = () => {
-    if (!isChannelOwner)
-      return (
-        <>
-          <ModalHeader>
-            <ModalTitle>채널 수정</ModalTitle>
-            <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-              <CloseIcon />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalDescriptionDiv>
-            <NoAuthImg src={noAuthImg} />
-            <ModalDescription>이 채널에 대한 수정 권한이 없습니다!</ModalDescription>
-          </ModalDescriptionDiv>
-        </>
-      );
+    if (!isChannelOwner) return <NoAuthModal />;
     return (
       /* eslint-disable react/jsx-props-no-spreading */
       <>
-        <ModalHeader>
-          <ModalTitle>채널 수정</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-        <ModalDescription>선택한 채널에 대한 내용을 변경할 수 있습니다.</ModalDescription>
-        <Form onSubmit={handleSubmit(onSubmitUpdateChannelModal)}>
+        <Container onSubmit={handleSubmit(onSubmitUpdateChannelModal)}>
           <InputDiv>
             <InputName color="#cbc4b9">이름</InputName>
             <Input
@@ -306,22 +202,16 @@ function UpdateChannelModal(): JSX.Element {
           <SubmitButton type="submit" isButtonActive={isButtonActive}>
             수정
           </SubmitButton>
-        </Form>
+        </Container>
         <DeleteChannelDiv>
           <InputName color="#ff0000">채널 삭제</InputName>
-          <InputDiv>
-            <DeleteButton onClick={onClickDeleteChannelButton}> 채널 삭제 </DeleteButton>
-          </InputDiv>
+          <DeleteButton onClick={onClickDeleteChannelButton}> 채널 삭제 </DeleteButton>
         </DeleteChannelDiv>
       </>
     );
   };
 
-  return (
-    <Container>
-      <ModalInnerBox>{isLoading ? <Loading /> : modalContents()}</ModalInnerBox>
-    </Container>
-  );
+  return <>{isLoading ? <Loading /> : modalContents()}</>;
 }
 
 export default UpdateChannelModal;

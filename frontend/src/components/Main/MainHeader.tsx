@@ -61,19 +61,37 @@ function MainHeader(): JSX.Element {
             <DropdownMenu
               name="서버 설정"
               setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<ServerSettingModal />}
+              modalContents={{
+                contents: <ServerSettingModal />,
+                title: '서버 설정',
+                description: '선택한 서버에 대한 내용을 변경할 수 있습니다.',
+                height: '70%',
+                minHeight: '570px',
+              }}
             />
           )}
           <DropdownMenu
             name="서버 정보"
             setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<ServerInfoModal />}
+            modalContents={{
+              contents: <ServerInfoModal />,
+              title: '서버 정보',
+              description: '접속하신 서버에 대한 정보입니다.',
+              height: '60%',
+              minHeight: '450px',
+            }}
           />
           {!isOwnerOfServer && (
             <DropdownMenu
               name="서버 나가기"
               setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<QuitServerModal />}
+              modalContents={{
+                contents: <QuitServerModal />,
+                title: '서버 나가기',
+                description: '서버에서 나가시겠습니까?',
+                height: '30%',
+                minHeight: '150px',
+              }}
             />
           )}
         </Dropdown>

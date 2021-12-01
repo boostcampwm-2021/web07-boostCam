@@ -3,63 +3,9 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { sendFormData } from '../../../utils/fetchMethods';
 
-const { Close } = BoostCamMainIcons;
-
-const Container = styled.div`
-  width: 35%;
-  min-width: 400px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 20px;
-
-  z-index: 3;
-`;
-
-const ModalInnerBox = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ModalTitle = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 32px;
-  font-weight: 600;
-`;
-
-const ModalDescription = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 15px;
-`;
-
-const Form = styled.form`
+const Container = styled.form`
   width: 90%;
   height: 100%;
   border-radius: 20px;
@@ -169,23 +115,6 @@ const MessageFailToPost = styled.span`
   font-family: Malgun Gothic;
 `;
 
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
-`;
-
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-`;
-
 type CreateModalForm = {
   name: string;
   description: string;
@@ -238,50 +167,39 @@ function CreateServerModal(): JSX.Element {
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <Container>
-      <ModalInnerBox>
-        <ModalHeader>
-          <ModalTitle>서버 생성</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-        <ModalDescription>생성할 서버의 이름과 설명을 작성해주세요</ModalDescription>
-        <Form onSubmit={handleSubmit(onSubmitCreateServerModal)}>
-          <InputDiv>
-            <InputName>이름</InputName>
-            <Input
-              {...register('name', {
-                validate: (value) => value.trim().length > 1 || '"이름" 칸은 2글자 이상 입력되어야합니다!',
-              })}
-              placeholder="서버명을 입력해주세요"
-            />
-            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-          </InputDiv>
-          <InputDiv>
-            <InputName>설명</InputName>
-            <Input
-              {...register('description', {
-                validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
-              })}
-              placeholder="서버 설명을 입력해주세요"
-            />
-            {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
-          </InputDiv>
-          <InputDiv>
-            <InputName>서버 아이콘</InputName>
-            <ImageInputDiv>
-              <ImagePreview src={imagePreview} />
-              <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
-              <InputFile id="file" type="file" {...register('file')} onChange={onChangePreviewImage} />
-            </ImageInputDiv>
-          </InputDiv>
-          <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
-          <SubmitButton type="submit" isButtonActive={isButtonActive}>
-            생성
-          </SubmitButton>
-        </Form>
-      </ModalInnerBox>
+    <Container onSubmit={handleSubmit(onSubmitCreateServerModal)}>
+      <InputDiv>
+        <InputName>이름</InputName>
+        <Input
+          {...register('name', {
+            validate: (value) => value.trim().length > 1 || '"이름" 칸은 2글자 이상 입력되어야합니다!',
+          })}
+          placeholder="서버명을 입력해주세요"
+        />
+        {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+      </InputDiv>
+      <InputDiv>
+        <InputName>설명</InputName>
+        <Input
+          {...register('description', {
+            validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+          })}
+          placeholder="서버 설명을 입력해주세요"
+        />
+        {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
+      </InputDiv>
+      <InputDiv>
+        <InputName>서버 아이콘</InputName>
+        <ImageInputDiv>
+          <ImagePreview src={imagePreview} />
+          <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
+          <InputFile id="file" type="file" {...register('file')} onChange={onChangePreviewImage} />
+        </ImageInputDiv>
+      </InputDiv>
+      <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
+      <SubmitButton type="submit" isButtonActive={isButtonActive}>
+        생성
+      </SubmitButton>
     </Container>
   );
 }

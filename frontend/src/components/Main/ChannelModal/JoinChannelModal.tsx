@@ -2,81 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { ChannelListData } from '../../../types/main';
 import { fetchData } from '../../../utils/fetchMethods';
 import { JoinChannelRequest } from '../../../types/join-channel-request';
 
-const { Close } = BoostCamMainIcons;
-
 const Container = styled.div`
-  width: 50%;
-  min-width: 400px;
-  height: 70%;
-  min-height: 500px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 20px;
-
-  z-index: 3;
-`;
-
-const ModalInnerBox = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  flex: 1;
-`;
-
-const ModalTitle = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 32px;
-  font-weight: 600;
-`;
-
-const ModalDescription = styled.span`
-  flex: 0.3;
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 15px;
-`;
-
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
-`;
-
-const ModalChannelList = styled.div`
   width: 90%;
   height: 70%;
   margin-left: 25px;
@@ -165,12 +95,6 @@ const ItemButton = styled.button`
   cursor: pointer;
 `;
 
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-`;
-
 function JoinChannelModal(): JSX.Element {
   const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [channelList, setChannelList] = useState<ChannelListData[]>([]);
@@ -211,20 +135,7 @@ function JoinChannelModal(): JSX.Element {
     </ModalChannelListItem>
   ));
 
-  return (
-    <Container>
-      <ModalInnerBox>
-        <ModalHeader>
-          <ModalTitle>채널 참가</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-        <ModalDescription>참가할 채널을 선택해주세요</ModalDescription>
-        <ModalChannelList>{notJoinedChannelList}</ModalChannelList>
-      </ModalInnerBox>
-    </Container>
-  );
+  return <Container>{notJoinedChannelList}</Container>;
 }
 
 export default JoinChannelModal;

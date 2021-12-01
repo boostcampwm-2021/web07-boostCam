@@ -26,10 +26,7 @@ export class UserChannelController {
   constructor(
     private userChannelService: UserChannelService,
     private channelService: ChannelService,
-  ) {
-    this.userChannelService = userChannelService;
-    this.channelService = channelService;
-  }
+  ) {}
 
   @Get('/channels/joined/')
   async getJoinedChannelList(

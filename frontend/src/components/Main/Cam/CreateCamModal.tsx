@@ -3,65 +3,9 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { fetchData } from '../../../utils/fetchMethods';
 
-const { Close } = BoostCamMainIcons;
-
-const Container = styled.div`
-  width: 35%;
-  min-width: 400px;
-  height: 50%;
-  min-height: 450px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 20px;
-
-  z-index: 3;
-`;
-
-const ModalInnerBox = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ModalTitle = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 32px;
-  font-weight: 600;
-`;
-
-const ModalDescription = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 15px;
-`;
-
-const Form = styled.form`
+const Container = styled.form`
   width: 90%;
   height: 70%;
   border-radius: 20px;
@@ -126,23 +70,6 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
-`;
-
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-`;
-
 type CreateModalForm = {
   name: string;
   description: string;
@@ -179,31 +106,20 @@ function CreateCamModal(): JSX.Element {
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <Container>
-      <ModalInnerBox>
-        <ModalHeader>
-          <ModalTitle>Cam 생성</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-        <ModalDescription>생성할 Cam의 이름을 작성해주세요</ModalDescription>
-        <Form onSubmit={handleSubmit(onSubmitCreateCamModal)}>
-          <InputDiv>
-            <InputName>이름</InputName>
-            <Input
-              {...register('name', {
-                validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
-              })}
-              placeholder="Cam명을 입력해주세요"
-            />
-            {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
-          </InputDiv>
-          <SubmitButton type="submit" isButtonActive={isButtonActive}>
-            생성
-          </SubmitButton>
-        </Form>
-      </ModalInnerBox>
+    <Container onSubmit={handleSubmit(onSubmitCreateCamModal)}>
+      <InputDiv>
+        <InputName>이름</InputName>
+        <Input
+          {...register('name', {
+            validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
+          })}
+          placeholder="Cam명을 입력해주세요"
+        />
+        {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+      </InputDiv>
+      <SubmitButton type="submit" isButtonActive={isButtonActive}>
+        생성
+      </SubmitButton>
     </Container>
   );
 }

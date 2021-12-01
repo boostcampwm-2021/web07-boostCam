@@ -1,22 +1,14 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { MessageData, MessageListInfo, MessageRequestBody } from '../../../types/message';
-import noInfoImg from '../../../assets/hmm.gif';
 
-import {
-  MessageItemIcon,
-  MessageItem,
-  MessageItemHeader,
-  MessageSender,
-  MessageTimelog,
-  MessageContents,
-  TextareaDiv,
-  MessageTextarea,
-} from './ContentsSectionStyle';
+import { TextareaDiv, MessageTextarea, messageInnerElement, onKeyDownMessageTextarea } from './ContentsSectionCommon';
 import { User } from '../../../types/user';
 import ChannelEntity from '../../../types/channel';
+import UserListModal from './UserListModal';
+import NotFoundChannel from './NotFoundChannel';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -102,46 +94,6 @@ const MessageItemBlock = styled.div`
   }
 `;
 
-const NoChannelInfoDiv = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NoChannelInfoDescription = styled.span`
-  margin-top: 20px;
-  font-size: 25px;
-`;
-
-const NoInfoImg = styled.img`
-  width: 150px;
-  height: 150px;
-  margin-bottom: 25px;
-`;
-
-const ResetButton = styled.button`
-  width: 250px;
-  height: 50px;
-  background: none;
-  padding: 15px 10px;
-  margin: 15px 0px 0px 0px;
-  border: 0;
-  outline: 0;
-  text-align: center;
-  vertical-align: middle;
-  border-radius: 10px;
-  background-color: #26a9ca;
-  cursor: pointer;
-  transition: all 0.3s;
-  &:hover {
-    background-color: #2dc2e6;
-    transition: all 0.3s;
-  }
-`;
-
 type MessageSectionProps = {
   messageList: MessageListInfo;
   setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -150,10 +102,12 @@ type MessageSectionProps = {
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
-  const { selectedChannel, setSelectedMessageData, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { selectedChannel, setSelectedMessageData, setIsModalOpen, setModalContents, socket } =
+    useContext(MainStoreContext);
   const { messageList, setIsThreadOpen, userList, channelInfo } = props;
   const { messageData } = messageList;
-  const textDivRef = useRef<HTMLDivElement>(null);
+  const textareaDivRef = useRef<HTMLDivElement>(null);
+  const messageSectionBodyRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = async (contents: string) => {
     const requestBody: MessageRequestBody = {
@@ -163,77 +117,56 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     socket.emit('sendMessage', requestBody);
   };
 
-  const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { key, currentTarget, shiftKey } = e;
-    const msg = currentTarget.value.trim();
-    const divRef = textDivRef.current;
-
-    currentTarget.style.height = '15px';
-    currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
-    if (divRef) {
-      divRef.style.height = `105px`;
-      divRef.style.height = `${90 + currentTarget.scrollHeight - 27}px`;
-    }
-
-    if (!shiftKey && key === 'Enter') {
-      e.preventDefault();
-      if (!msg.length) currentTarget.value = '';
-      else {
-        sendMessage(currentTarget.value);
-        currentTarget.value = '';
-      }
-      currentTarget.style.height = '21px';
-      if (divRef) divRef.style.height = `105px`;
-    }
-  };
-
   const onClickMessageItemBlock = (data: MessageData) => {
     setSelectedMessageData(data);
     setIsThreadOpen(true);
   };
 
-  const onClickChannelListResetButton = () => {
-    getServerChannelList();
+  const onClickChannelUserButton = () => {
+    setModalContents({
+      contents: <UserListModal userList={userList} />,
+      title: '사용자 목록',
+      description: '채널에 참여한 사용자들의 목록을 확인할 수 있습니다.',
+      height: '60%',
+      minHeight: '450px',
+    });
+    setIsModalOpen(true);
   };
 
   const buildMessageItemList = () => {
     return messageData.map((val: MessageData): JSX.Element => {
-      const { id, contents, createdAt, sender } = val;
-      const { nickname, profile } = sender;
+      const { id } = val;
       return (
         <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
-          <MessageItemIcon imgUrl={profile} />
-          <MessageItem>
-            <MessageItemHeader>
-              <MessageSender> {nickname} </MessageSender>
-              <MessageTimelog>{createdAt}</MessageTimelog>
-            </MessageItemHeader>
-            <MessageContents>{contents}</MessageContents>
-          </MessageItem>
+          {messageInnerElement(val)}
         </MessageItemBlock>
       );
     });
   };
+
+  useEffect(() => {
+    if (messageSectionBodyRef.current) {
+      messageSectionBodyRef.current.scroll({ top: messageSectionBodyRef.current.scrollHeight, behavior: 'smooth' });
+    }
+  }, [messageList]);
 
   const MessageItemList = buildMessageItemList();
 
   return (
     <Container>
       {!channelInfo ? (
-        <NoChannelInfoDiv>
-          <NoInfoImg src={noInfoImg} />
-          <NoChannelInfoDescription>채널이 존재하지 않습니다...</NoChannelInfoDescription>
-          <ResetButton onClick={onClickChannelListResetButton}>새고로침</ResetButton>
-        </NoChannelInfoDiv>
+        <NotFoundChannel />
       ) : (
         <>
           <MessageSectionHeader>
             <ChannelName># {channelInfo && channelInfo.name}</ChannelName>
-            <ChannelUserButton>Users {userList && userList.length}</ChannelUserButton>
+            <ChannelUserButton onClick={onClickChannelUserButton}>
+              Users {userList && userList.length}
+            </ChannelUserButton>
           </MessageSectionHeader>
-          <MessageSectionBody>{MessageItemList}</MessageSectionBody>
-          <TextareaDiv ref={textDivRef}>
-            <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
+          <MessageSectionBody ref={messageSectionBodyRef}>{MessageItemList}</MessageSectionBody>
+          <TextareaDiv ref={textareaDivRef}>
+            <MessageTextarea onKeyDown={(e) => onKeyDownMessageTextarea(e, textareaDivRef, sendMessage)} />
           </TextareaDiv>
         </>
       )}

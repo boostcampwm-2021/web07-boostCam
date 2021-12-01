@@ -1,50 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
-  width: 50%;
-  min-width: 400px;
-  height: 30%;
-  min-height: 250px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-
-  box-sizing: border-box;
-  border-radius: 20px;
-  padding: 30px;
-
-  z-index: 3;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ModalTitle = styled.span`
-  color: #cbc4b9;
-  font-size: 24px;
-  font-weight: 600;
-`;
-
-const ModalDescription = styled.div`
-  width: 100%;
-  display: flex;
-
-  color: #cbc4b9;
-  font-size: 18px;
-`;
-
 const ModalButtonContainer = styled.div`
   width: 100%;
+  margin-top: 15px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -56,7 +15,7 @@ const Button = styled.button`
   background: none;
 
   padding: 10px;
-  margin-left: 20px;
+  margin-right: 20px;
 
   border: 0;
   outline: 0;
@@ -87,24 +46,16 @@ const CancelButton = styled(Button)`
 type OkCancelModalProps = {
   handleClickOk: () => void;
   handleClickCancel: () => void;
-  title: string;
-  description: string;
 };
 
 function OkCancelModal(props: OkCancelModalProps): JSX.Element {
-  const { handleClickOk, handleClickCancel, title, description } = props;
+  const { handleClickOk, handleClickCancel } = props;
 
   return (
-    <Container>
-      <ModalHeader>
-        <ModalTitle>{title}</ModalTitle>
-      </ModalHeader>
-      <ModalDescription>{description}</ModalDescription>
-      <ModalButtonContainer>
-        <OkButton onClick={handleClickOk}>확인</OkButton>
-        <CancelButton onClick={handleClickCancel}>취소</CancelButton>
-      </ModalButtonContainer>
-    </Container>
+    <ModalButtonContainer>
+      <OkButton onClick={handleClickOk}>확인</OkButton>
+      <CancelButton onClick={handleClickCancel}>취소</CancelButton>
+    </ModalButtonContainer>
   );
 }
 

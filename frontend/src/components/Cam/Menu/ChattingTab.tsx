@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import STTScreen from '../STT/STTScreen';
 import { ToggleStoreContext } from '../ToggleStore';
 import { CamStoreContext } from '../CamStore';
+import getCurrentDate from '../../../utils/getCurrentDate';
+import { CamMessageInfo, CamRoomInfo } from '../../../types/cam';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   height: 90vh;
@@ -119,42 +121,11 @@ const TextContainer = styled.div`
   width: -webkit-fill-available;
 `;
 
-type CurrentDate = {
-  year: number;
-  month: number;
-  date: number;
-  hour: number;
-  minutes: number;
-};
-
-type MessageInfo = {
-  msg: string;
-  room: string | null;
-  user: string;
-  date: CurrentDate;
-};
-
-type RoomInfo = {
-  socketId: string;
-  userNickname: string;
-};
-
-const getCurrentDate = (): CurrentDate => {
-  const today: Date = new Date();
-  return {
-    year: today.getFullYear(),
-    month: today.getMonth() + 1,
-    date: today.getDate(),
-    hour: today.getHours(),
-    minutes: today.getMinutes(),
-  };
-};
-
 function ChattingTab(): JSX.Element {
   const { isChattingTabActive, isMouseOnCamPage } = useContext(ToggleStoreContext);
   const { userInfo, setLocalStatus, socket } = useContext(CamStoreContext);
-  const [chatLogs, setChatLogs] = useState<MessageInfo[]>([]);
-  const [nicknameList, setNicknameList] = useState<RoomInfo[]>([
+  const [chatLogs, setChatLogs] = useState<CamMessageInfo[]>([]);
+  const [nicknameList, setNicknameList] = useState<CamRoomInfo[]>([
     {
       socketId: socket.id,
       userNickname: userInfo.nickname,
@@ -164,8 +135,9 @@ function ChattingTab(): JSX.Element {
   const chatLogsRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = (msg: string) => {
-    const currentDate = getCurrentDate();
-    const msgInfo: MessageInfo = { msg, room, user: socket.id, date: currentDate };
+    const today = new Date();
+    const currentDate = getCurrentDate(today);
+    const msgInfo: CamMessageInfo = { msg, room, user: socket.id, date: currentDate };
 
     socket.emit('sendMessage', msgInfo);
     setChatLogs((logs) => [...logs, msgInfo]);
@@ -186,11 +158,14 @@ function ChattingTab(): JSX.Element {
   };
 
   useEffect(() => {
-    socket.on('receiveMessage', ({ payload, nicknameInfo }: { payload: MessageInfo; nicknameInfo: RoomInfo[] }) => {
-      setChatLogs((logs) => [...logs, payload]);
-      setNicknameList(nicknameInfo);
-    });
-    socket.on('getNicknameList', (nicknameInfo: RoomInfo[]) => {
+    socket.on(
+      'receiveMessage',
+      ({ payload, nicknameInfo }: { payload: CamMessageInfo; nicknameInfo: CamRoomInfo[] }) => {
+        setChatLogs((logs) => [...logs, payload]);
+        setNicknameList(nicknameInfo);
+      },
+    );
+    socket.on('getNicknameList', (nicknameInfo: CamRoomInfo[]) => {
       setNicknameList(nicknameInfo);
     });
   }, []);
@@ -201,7 +176,7 @@ function ChattingTab(): JSX.Element {
     }
   });
 
-  const currentChatLogs = chatLogs.map((data: MessageInfo, index: number): JSX.Element => {
+  const currentChatLogs = chatLogs.map((data: CamMessageInfo, index: number): JSX.Element => {
     const { msg, date, user } = data;
     const time = `${date.hour}:${date.minutes < 10 ? `0${date.minutes}` : date.minutes}`;
     const isMe = user === socket.id;

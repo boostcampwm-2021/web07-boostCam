@@ -140,12 +140,24 @@ function ServerListTab(): JSX.Element {
             <DropdownMenu
               name="서버 생성"
               setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<CreateServerModal />}
+              modalContents={{
+                contents: <CreateServerModal />,
+                title: '서버 생성',
+                description: '생성할 서버의 이름과 설명을 작성해주세요.',
+                height: '70%',
+                minHeight: '520px',
+              }}
             />
             <DropdownMenu
               name="서버 참가"
               setIsDropdownActivated={setIsDropdownActivated}
-              modalContents={<JoinServerModal />}
+              modalContents={{
+                contents: <JoinServerModal />,
+                title: '서버 참가',
+                description: '참가 코드를 입력하세요.',
+                height: '45%',
+                minHeight: '340px',
+              }}
             />
           </Dropdown>
         </DropDownWrapper>

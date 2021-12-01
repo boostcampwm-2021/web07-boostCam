@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import ModalContents from '../../types/modal';
 import { MainStoreContext } from '../Main/MainStore';
 
 const Container = styled.li`
@@ -19,7 +20,7 @@ const Container = styled.li`
 type DropdownMenuProps = {
   name: string;
   setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
-  modalContents: JSX.Element;
+  modalContents: ModalContents;
 };
 
 function DropdownMenu(props: DropdownMenuProps): JSX.Element {

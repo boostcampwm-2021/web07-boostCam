@@ -62,7 +62,18 @@ function CamListItem(props: CamListItemProps): JSX.Element {
 
     const dropdownInfo = {
       position: [e.pageX, e.pageY],
-      components: [{ name: '삭제', component: <CamDeleteModal camId={id} name={name} /> }],
+      components: [
+        {
+          name: '삭제',
+          component: {
+            contents: <CamDeleteModal camId={id} />,
+            title: 'cam 삭제',
+            description: `${name} cam을 삭제하시겠습니까?`,
+            height: '30%',
+            minHeight: '250px',
+          },
+        },
+      ],
     };
 
     setDropdownInfo(dropdownInfo);
