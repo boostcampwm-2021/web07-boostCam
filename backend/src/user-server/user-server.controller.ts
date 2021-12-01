@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Get,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
@@ -27,6 +28,7 @@ export class UserServerController {
     session: ExpressSession,
   ): Promise<ResponseEntity<UserServerListDto[]>> {
     const userId = session.user.id;
+    console.log(userId);
     const data = await this.userServerService.getServerListByUserId(userId);
 
     return ResponseEntity.ok(data);
@@ -48,7 +50,7 @@ export class UserServerController {
   async delete(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ) {
     const userId = session.user.id;
     await this.userServerService.deleteById(id, userId);

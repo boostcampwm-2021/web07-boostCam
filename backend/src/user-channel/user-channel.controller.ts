@@ -10,6 +10,7 @@ import {
   HttpStatus,
   HttpException,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
@@ -30,7 +31,7 @@ export class UserChannelController {
 
   @Get('/channels/joined/')
   async getJoinedChannelList(
-    @Param('serverId') serverId: number,
+    @Param('serverId', new ParseIntPipe()) serverId: number,
     @Session() session: ExpressSession,
   ) {
     const joinedChannelList =
@@ -43,7 +44,7 @@ export class UserChannelController {
 
   @Get('/channels/notjoined/')
   async getNotJoinedChannelList(
-    @Param('serverId') serverId: number,
+    @Param('serverId', new ParseIntPipe()) serverId: number,
     @Session() session: ExpressSession,
   ) {
     const response =
@@ -56,8 +57,8 @@ export class UserChannelController {
 
   @Get('/channels/users')
   async getJoinedUserList(
-    @Param('serverId') serverId: number,
-    @Query('channelId') channelId: number,
+    @Param('serverId', new ParseIntPipe()) serverId: number,
+    @Query('channelId', new ParseIntPipe()) channelId: number,
   ) {
     const response =
       await this.userChannelService.findJoinedUserListByChannelId(
@@ -70,7 +71,7 @@ export class UserChannelController {
   @Post('/channels')
   async joinNewChannel(
     @Body('channelId') channelId: number,
-    @Param('serverId') serverId: number,
+    @Param('serverId', new ParseIntPipe()) serverId: number,
     @Session() session: ExpressSession,
   ) {
     const selectedChannel = await this.channelService.findOne(channelId);
@@ -83,7 +84,7 @@ export class UserChannelController {
 
   @Delete('/channels/:channelId')
   async delete(
-    @Param('channelId') channeld: number,
+    @Param('channelId', new ParseIntPipe()) channeld: number,
     @Session() session: ExpressSession,
   ) {
     try {
