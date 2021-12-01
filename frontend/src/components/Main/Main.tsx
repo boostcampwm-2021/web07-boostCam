@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import MainPage from './MainPage';
 import MainStore from './MainStore';
 
-function BoostCamMain(): JSX.Element {
+function Main(): JSX.Element {
   useEffect(() => {}, []);
 
   return (
@@ -12,4 +12,4 @@ function BoostCamMain(): JSX.Element {
   );
 }
 
-export default BoostCamMain;
+export default Main;

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { ButtonBarIcons } from '../../../utils/SvgIcons';
+import { MainStoreContext } from '../../MainStore';
+import { ButtonBarIcons } from '../../../../utils/svgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
-import { fetchData, sendFormData } from '../../../utils/fetchMethods';
-import { ServerEntity } from '../../../types/server';
+import { fetchData, sendFormData } from '../../../../utils/fetchMethods';
+import { ServerEntity } from '../../../../types/server';
 
 const { CopyIcon } = ButtonBarIcons;
 

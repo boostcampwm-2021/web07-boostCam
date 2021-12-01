@@ -20,9 +20,7 @@ export class CamService {
     private serverRepository: ServerRepository,
     private userRepository: UserRepository,
     private readonly camInnerService: CamInnerService,
-  ) {
-    this.camRepository.clear();
-  }
+  ) {}
 
   async findOne(url: string): Promise<Cam> {
     const cam = await this.camRepository.findOne({ url: url });

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import ChannelList from './ChannelList';
-import CamList from './Cam/CamList';
+import ChannelList from './Channel/List/ChannelList';
+import CamList from './Cam/List/CamList';
 
 const Container = styled.div`
   width: 180px;

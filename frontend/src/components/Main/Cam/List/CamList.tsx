@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { MainStoreContext } from '../MainStore';
+import { MainStoreContext } from '../../MainStore';
 
 import CamListHeader from './CamListHeader';
 import CamListItem from './CamListItem';

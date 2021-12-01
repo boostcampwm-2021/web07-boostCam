@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../utils/SvgIcons';
-import { MyServerData } from '../../types/main';
-import { MainStoreContext } from './MainStore';
-import Dropdown from '../core/Dropdown';
-import DropdownMenu from '../core/DropdownMenu';
-import CreateServerModal from './ServerModal/CreateServerModal';
-import JoinServerModal from './ServerModal/JoinServerModal';
+import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import { MyServerData } from '../../../../types/main';
+import { MainStoreContext } from '../../MainStore';
+import Dropdown from '../../../core/Dropdown';
+import DropdownMenu from '../../../core/DropdownMenu';
+import CreateServerModal from '../Modal/CreateServerModal';
+import JoinServerModal from '../Modal/JoinServerModal';
 
 const { Plus } = BoostCamMainIcons;
 

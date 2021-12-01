@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../utils/SvgIcons';
-import { MainStoreContext } from './MainStore';
-import Dropdown from '../core/Dropdown';
-import DropdownMenu from '../core/DropdownMenu';
-import CreateChannelModal from './ChannelModal/CreateChannelModal';
-import JoinChannelModal from './ChannelModal/JoinChannelModal';
+import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import { MainStoreContext } from '../../MainStore';
+import Dropdown from '../../../core/Dropdown';
+import DropdownMenu from '../../../core/DropdownMenu';
+import CreateChannelModal from '../Modal/CreateChannelModal';
+import JoinChannelModal from '../Modal/JoinChannelModal';
 
 const { Plus, ListArrow } = BoostCamMainIcons;
 

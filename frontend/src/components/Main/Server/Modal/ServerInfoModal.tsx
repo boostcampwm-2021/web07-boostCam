@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { fetchData } from '../../../utils/fetchMethods';
+import { MainStoreContext } from '../../MainStore';
+import { fetchData } from '../../../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 100%;

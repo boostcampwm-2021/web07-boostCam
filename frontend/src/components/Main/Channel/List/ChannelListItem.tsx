@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../utils/SvgIcons';
-import { MainStoreContext } from './MainStore';
-import UpdateChannelModal from './ChannelModal/UpdateChannelModal';
-import QuitChannelModal from './ChannelModal/QuitChannelModal ';
+import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import { MainStoreContext } from '../../MainStore';
+import UpdateChannelModal from '../Modal/UpdateChannelModal';
+import QuitChannelModal from '../Modal/QuitChannelModal ';
 
 const { Hash } = BoostCamMainIcons;
 

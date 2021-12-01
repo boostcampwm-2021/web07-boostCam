@@ -5,9 +5,9 @@ import userState from '../../atoms/user';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
 import { MainStoreContext } from './MainStore';
-import QuitServerModal from './ServerModal/QuitServerModal';
-import ServerInfoModal from './ServerModal/ServerInfoModal';
-import ServerSettingModal from './ServerModal/ServerSettingModal';
+import QuitServerModal from './Server/Modal/QuitServerModal';
+import ServerInfoModal from './Server/Modal/ServerInfoModal';
+import ServerSettingModal from './Server/Modal/ServerSettingModal';
 
 const Container = styled.div`
   width: 100%;

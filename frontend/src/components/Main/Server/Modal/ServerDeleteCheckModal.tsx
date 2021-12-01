@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { deleteApi } from '../../../utils/fetchMethods';
-import { MainStoreContext } from '../MainStore';
+import { deleteApi } from '../../../../utils/fetchMethods';
+import { MainStoreContext } from '../../MainStore';
 
 const Container = styled.div`
   position: fixed;

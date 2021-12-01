@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { fetchData } from '../../../utils/fetchMethods';
+import { MainStoreContext } from '../../MainStore';
+import { fetchData } from '../../../../utils/fetchMethods';
 
 const Container = styled.form`
   width: 90%;
@@ -70,61 +70,53 @@ const SubmitButton = styled.button<{ isButtonActive: boolean }>`
   }
 `;
 
-const MessageFailToPost = styled.span`
-  color: red;
-  font-size: 16px;
-  font-family: Malgun Gothic;
-`;
-
-type JoinServerModalForm = {
-  code: string;
+type CreateModalForm = {
+  name: string;
+  description: string;
 };
 
-function JoinServerModal(): JSX.Element {
+type PostCamData = {
+  name: string;
+  serverId: string;
+};
+
+function CreateCamModal(): JSX.Element {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<JoinServerModalForm>();
-  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
+  } = useForm<CreateModalForm>();
+  const { selectedServer, setIsModalOpen, getServerCamList } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
-  const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
-  const onSubmitJoinServerModal = async (datas: { code: string }) => {
-    const { code } = datas;
-    const { statusCode, message } = await fetchData<unknown, number>('POST', '/api/user/servers', {
-      code: code.trim(),
-    });
-
-    if (statusCode === 201) {
-      getUserServerList('created');
-      setIsModalOpen(false);
-    } else {
-      setMessageFailToPost(`${message}`);
-    }
+  const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
+    const { name } = data;
+    const requestBody: PostCamData = { name, serverId: selectedServer.server.id };
+    await fetchData<PostCamData, null>('POST', '/api/cam', requestBody);
+    setIsModalOpen(false);
+    getServerCamList();
   };
 
   useEffect(() => {
-    const { code } = watch();
-    const isActive = code.trim().length > 0;
+    const { name } = watch();
+    const isActive = name.trim().length > 2;
     setIsButtonActive(isActive);
   }, [watch()]);
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <Container onSubmit={handleSubmit(onSubmitJoinServerModal)}>
+    <Container onSubmit={handleSubmit(onSubmitCreateCamModal)}>
       <InputDiv>
-        <InputName>참가 코드</InputName>
+        <InputName>이름</InputName>
         <Input
-          {...register('code', {
-            validate: (value) => value.trim().length > 0 || '"참가코드" 칸을 입력해주세요!',
+          {...register('name', {
+            validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
           })}
-          placeholder="참가코드를 입력해주세요"
+          placeholder="Cam명을 입력해주세요"
         />
-        {errors.code && <InputErrorMessage>{errors.code.message}</InputErrorMessage>}
+        {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
       </InputDiv>
-      <MessageFailToPost>{messageFailToPost}</MessageFailToPost>
       <SubmitButton type="submit" isButtonActive={isButtonActive}>
         생성
       </SubmitButton>
@@ -132,4 +124,4 @@ function JoinServerModal(): JSX.Element {
   );
 }
 
-export default JoinServerModal;
+export default CreateCamModal;

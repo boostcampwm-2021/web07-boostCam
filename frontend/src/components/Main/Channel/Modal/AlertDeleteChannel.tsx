@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { fetchData } from '../../../utils/fetchMethods';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { MainStoreContext } from '../../MainStore';
+import { fetchData } from '../../../../utils/fetchMethods';
+import { BoostCamMainIcons } from '../../../../utils/svgIcons';
 
 const { Close } = BoostCamMainIcons;
 

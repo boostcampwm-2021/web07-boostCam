@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { ChannelListData } from '../../types/main';
-import { MainStoreContext } from './MainStore';
+import { ChannelListData } from '../../../../types/main';
+import { MainStoreContext } from '../../MainStore';
 import ChannelListHeader from './ChannelListHeader';
 import ChannelListItem from './ChannelListItem';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BoostCamMainIcons } from '../../utils/SvgIcons';
+import { BoostCamMainIcons } from '../../utils/svgIcons';
 
 const { loading } = BoostCamMainIcons;
 

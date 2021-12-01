@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-import { MainStoreContext } from '../MainStore';
-import CamDeleteModal from './CamDeleteModal';
+import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import { MainStoreContext } from '../../MainStore';
+import CamDeleteModal from '../Modal/CamDeleteModal';
 
 const { Hash } = BoostCamMainIcons;
 

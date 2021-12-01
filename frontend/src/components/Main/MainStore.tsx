@@ -14,7 +14,6 @@ type MainStoreProps = {
 
 const socket = io({
   withCredentials: true,
-  autoConnect: false,
 });
 
 socket.on('connect', () => {
@@ -98,14 +97,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
       getServerCamList();
     }
   }, [selectedServer]);
-
-  useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.removeAllListeners();
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <MainStoreContext.Provider
