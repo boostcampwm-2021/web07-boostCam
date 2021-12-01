@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-import Dropdown from '../../core/Dropdown';
-import DropdownMenu from '../../core/DropdownMenu';
-import CreateCamModal from './CreateCamModal';
+import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import Dropdown from '../../../core/Dropdown';
+import DropdownMenu from '../../../core/DropdownMenu';
+import CreateCamModal from '../Modal/CreateCamModal';
 
 const { Plus, ListArrow } = BoostCamMainIcons;
 

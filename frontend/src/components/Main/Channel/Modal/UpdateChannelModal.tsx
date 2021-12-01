@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { fetchData } from '../../../utils/fetchMethods';
-import Loading from '../../core/Loading';
+import { MainStoreContext } from '../../MainStore';
+import { fetchData } from '../../../../utils/fetchMethods';
+import Loading from '../../../core/Loading';
 import AlertDeleteChannel from './AlertDeleteChannel';
 import NoAuthModal from './NoAuthModal';
 

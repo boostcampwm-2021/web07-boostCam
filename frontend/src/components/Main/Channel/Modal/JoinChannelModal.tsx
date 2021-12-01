@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { ChannelListData } from '../../../types/main';
-import { fetchData } from '../../../utils/fetchMethods';
-import { JoinChannelRequest } from '../../../types/join-channel-request';
+import { MainStoreContext } from '../../MainStore';
+import { ChannelListData } from '../../../../types/main';
+import { fetchData } from '../../../../utils/fetchMethods';
+import { JoinChannelRequest } from '../../../../types/join-channel-request';
 
 const Container = styled.div`
   width: 90%;

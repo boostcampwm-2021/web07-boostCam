@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import LoginMain from './components/Login/LoginMain';
 import CamMain from './components/Cam/CamMain';
-import BoostCamMain from './components/Main/BoostCamMain';
 import LoginCallback from './components/Login/LoginCallback';
+import Main from './components/Main/Main';
 
 function App(): JSX.Element {
   return (
@@ -13,7 +13,7 @@ function App(): JSX.Element {
       <RecoilRoot>
         <Routes>
           <Route path="/" element={<LoginMain />} />
-          <Route path="/main" element={<BoostCamMain />} />
+          <Route path="/main" element={<Main />} />
           <Route path="/login/github" element={<LoginCallback service="github" />} />
           <Route path="/cam" element={<CamMain />} />
         </Routes>

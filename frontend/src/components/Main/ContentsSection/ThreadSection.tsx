@@ -4,7 +4,7 @@ import ChannelEntity from '../../../types/channel';
 import { CommentListInfo, CommentRequestBody } from '../../../types/comment';
 import { MessageData } from '../../../types/message';
 
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { BoostCamMainIcons } from '../../../utils/svgIcons';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 

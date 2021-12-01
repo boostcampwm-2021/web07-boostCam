@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from './MainStore';
+import { MainStoreContext } from '../Main/MainStore';
 
-import DropdownMenu from '../core/DropdownMenu';
-import RightClickDropdown from '../core/RightClickDropdown';
+import DropdownMenu from './DropdownMenu';
+import RightClickDropdown from './RightClickDropdown';
 import { ComponentInfo } from '../../types/dropdown';
 
 const Container = styled.div``;

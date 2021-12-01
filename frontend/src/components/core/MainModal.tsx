@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from './MainStore';
-import { BoostCamMainIcons } from '../../utils/SvgIcons';
+import { MainStoreContext } from '../Main/MainStore';
+import { BoostCamMainIcons } from '../../utils/svgIcons';
 
 const { Close } = BoostCamMainIcons;
 

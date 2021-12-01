@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { fetchData } from '../../../utils/fetchMethods';
-import OkCancelModal from '../../common/OkCancelModal';
-import { MainStoreContext } from '../MainStore';
+import { fetchData } from '../../../../utils/fetchMethods';
+import OkCancelModal from '../../../core/OkCancelModal';
+import { MainStoreContext } from '../../MainStore';
 
 type CamDeleteModalProps = {
   camId: number;

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import ServerListTab from './ServerListTab';
+import ServerListTab from './Server/List/ServerListTab';
 import MainSection from './MainSection';
-import { MainStoreContext } from './MainStore';
-import MainModal from './MainModal';
+import MainModal from '../core/MainModal';
 
-import MainDropdown from './MainDropdown';
+import MainDropdown from '../core/MainDropdown';
 import AlertModal from './AlertModal';
 import Loading from '../core/Loading';
+import { MainStoreContext } from './MainStore';
 
 const Container = styled.div`
   width: 100vw;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import noAuthImg from '../../../assets/hmm.gif';
+import noAuthImg from '../../../../assets/hmm.gif';
 
 const ModalDescriptionDiv = styled.div`
   flex: 3 1 0;

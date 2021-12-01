@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { fetchData } from '../../../utils/fetchMethods';
+import { MainStoreContext } from '../../MainStore';
 
 const Container = styled.form`
   width: 90%;
@@ -75,47 +74,65 @@ type CreateModalForm = {
   description: string;
 };
 
-type PostCamData = {
-  name: string;
-  serverId: string;
-};
-
-function CreateCamModal(): JSX.Element {
+function CreateChannelModal(): JSX.Element {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsModalOpen, getServerCamList } = useContext(MainStoreContext);
+  const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
-  const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {
-    const { name } = data;
-    const requestBody: PostCamData = { name, serverId: selectedServer.server.id };
-    await fetchData<PostCamData, null>('POST', '/api/cam', requestBody);
+  const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
+    const { name, description } = data;
+    const response = await fetch('/api/channels', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        description: description.trim(),
+        serverId: selectedServer.server.id,
+      }),
+    });
+
+    const createdChannelData = await response.json();
+    const createdChannel = createdChannelData.data;
+    getServerChannelList();
+    socket.emit('joinChannel', { channelId: parseInt(createdChannel.id, 10) });
     setIsModalOpen(false);
-    getServerCamList();
   };
 
   useEffect(() => {
-    const { name } = watch();
-    const isActive = name.trim().length > 2;
+    const { name, description } = watch();
+    const isActive = name.trim().length > 2 && description.trim().length > 0;
     setIsButtonActive(isActive);
   }, [watch()]);
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <Container onSubmit={handleSubmit(onSubmitCreateCamModal)}>
+    <Container onSubmit={handleSubmit(onSubmitCreateChannelModal)}>
       <InputDiv>
         <InputName>이름</InputName>
         <Input
           {...register('name', {
             validate: (value) => value.trim().length > 2 || '"이름" 칸은 3글자 이상 입력되어야합니다!',
           })}
-          placeholder="Cam명을 입력해주세요"
+          placeholder="채널명을 입력해주세요"
         />
         {errors.name && <InputErrorMessage>{errors.name.message}</InputErrorMessage>}
+      </InputDiv>
+      <InputDiv>
+        <InputName>설명</InputName>
+        <Input
+          {...register('description', {
+            validate: (value) => value.trim().length > 0 || '"설명" 칸은 꼭 입력되어야합니다!',
+          })}
+          placeholder="채널 설명을 입력해주세요"
+        />
+        {errors.description && <InputErrorMessage>{errors.description.message}</InputErrorMessage>}
       </InputDiv>
       <SubmitButton type="submit" isButtonActive={isButtonActive}>
         생성
@@ -124,4 +141,4 @@ function CreateCamModal(): JSX.Element {
   );
 }
 
-export default CreateCamModal;
+export default CreateChannelModal;

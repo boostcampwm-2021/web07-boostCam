@@ -7,7 +7,7 @@ import MainHeader from './MainHeader';
 import { MessageData, MessageListInfo } from '../../types/message';
 import { fetchData } from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
-import ServerJoinSection from './ServerJoinSection';
+import ServerJoinSection from './ContentsSection/ServerJoinSection';
 import { CommentData, CommentListInfo } from '../../types/comment';
 
 const Container = styled.div`

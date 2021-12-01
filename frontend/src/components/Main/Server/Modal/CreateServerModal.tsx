@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { sendFormData } from '../../../utils/fetchMethods';
+import { MainStoreContext } from '../../MainStore';
+import { sendFormData } from '../../../../utils/fetchMethods';
 
 const Container = styled.form`
   width: 90%;

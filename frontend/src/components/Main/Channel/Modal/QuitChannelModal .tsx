@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 
-import { MainStoreContext } from '../MainStore';
-import { fetchData } from '../../../utils/fetchMethods';
-import OkCancelModal from '../../common/OkCancelModal';
+import { MainStoreContext } from '../../MainStore';
+import { fetchData } from '../../../../utils/fetchMethods';
+import OkCancelModal from '../../../core/OkCancelModal';
 
 function QuitChannelModal(): JSX.Element {
   const { selectedServer, rightClickedChannelId, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
