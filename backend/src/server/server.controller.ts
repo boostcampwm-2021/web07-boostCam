@@ -98,13 +98,13 @@ export class ServerController {
       imgUrl = uploadedFile.Location;
     }
     const user = session.user;
-    const newServer = await this.serverService.create(
+    const newServerId = await this.serverService.create(
       user,
       requestServerDto,
       imgUrl,
     );
 
-    return ResponseEntity.created(newServer.id);
+    return ResponseEntity.created(newServerId);
   }
 
   @ApiOkResponse(serverCodeSchema)
