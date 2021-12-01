@@ -11,7 +11,7 @@ import { User } from '../user/user.entity';
 
 @Entity()
 export class Cam {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()

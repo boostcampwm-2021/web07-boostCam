@@ -10,7 +10,7 @@ import { User } from '../user/user.entity';
 
 @Entity()
 export class Channel {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
