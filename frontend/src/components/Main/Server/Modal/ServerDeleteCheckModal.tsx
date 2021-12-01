@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { deleteApi } from '../../../../utils/fetchMethods';
 import { MainStoreContext } from '../../MainStore';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.div`
   position: fixed;
@@ -95,7 +96,8 @@ type ServerDeleteCheckModalProps = {
 };
 function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element {
   const { setIsDeleteModalOpen, serverId } = props;
-  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [messageFailToDelete, setMessageFailToDelete] = useState<string>('');
 
   const onClickDeleteServer = async () => {

@@ -5,6 +5,7 @@ import { MainStoreContext } from '../../MainStore';
 import { ChannelListData } from '../../../../types/main';
 import { fetchData } from '../../../../utils/fetchMethods';
 import { JoinChannelRequest } from '../../../../types/join-channel-request';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.div`
   width: 90%;
@@ -96,7 +97,8 @@ const ItemButton = styled.button`
 `;
 
 function JoinChannelModal(): JSX.Element {
-  const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { selectedServer, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [channelList, setChannelList] = useState<ChannelListData[]>([]);
 
   const getNotJoinedChannelList = async () => {

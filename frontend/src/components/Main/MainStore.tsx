@@ -1,9 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { DropdownInfo } from '../../types/dropdown';
 import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
-import ModalContents from '../../types/modal';
 import { fetchData } from '../../utils/fetchMethods';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
@@ -28,20 +26,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
   const [serverChannelList, setServerChannelList] = useState<ChannelListData[]>([]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContents, setModalContents] = useState<ModalContents>({
-    contents: <></>,
-    title: '',
-    description: '',
-    height: '70%',
-    minHeight: '450px',
-  });
-  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-  const [alertModalContents, setAlertModalContents] = useState<JSX.Element>(<></>);
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownInfo, setDropdownInfo] = useState<DropdownInfo>({ position: [0, 0], components: [] });
 
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
@@ -102,8 +86,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
     <MainStoreContext.Provider
       value={{
         socket,
-        isModalOpen,
-        modalContents,
         selectedServer,
         selectedChannel,
         selectedMessageData,
@@ -112,8 +94,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
         serverChannelList,
         serverList,
         serverCamList,
-        setIsModalOpen,
-        setModalContents,
         setSelectedServer,
         setSelectedChannel,
         setSelectedMessageData,
@@ -124,14 +104,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
         setServerList,
         getUserServerList,
         getServerCamList,
-        isDropdownOpen,
-        setIsDropdownOpen,
-        dropdownInfo,
-        setDropdownInfo,
-        isAlertModalOpen,
-        setIsAlertModalOpen,
-        alertModalContents,
-        setAlertModalContents,
       }}
     >
       {children}

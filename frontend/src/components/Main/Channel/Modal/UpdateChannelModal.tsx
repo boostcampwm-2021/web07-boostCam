@@ -7,6 +7,7 @@ import { fetchData } from '../../../../utils/fetchMethods';
 import Loading from '../../../core/Loading';
 import AlertDeleteChannel from './AlertDeleteChannel';
 import NoAuthModal from './NoAuthModal';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.form`
   flex: 3 1 0;
@@ -112,14 +113,8 @@ function UpdateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<UpdateModalForm>();
-  const {
-    selectedServer,
-    rightClickedChannelId,
-    setIsModalOpen,
-    setIsAlertModalOpen,
-    setAlertModalContents,
-    getServerChannelList,
-  } = useContext(MainStoreContext);
+  const { selectedServer, rightClickedChannelId, getServerChannelList } = useContext(MainStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen, setAlertModalContents } = useContext(ToggleStoreContext);
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isChannelOwner, setIsChannelOwner] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
