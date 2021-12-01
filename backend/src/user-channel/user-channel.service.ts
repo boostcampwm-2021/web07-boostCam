@@ -39,37 +39,22 @@ export class UserChannelService {
     serverId: number,
     userId: number,
   ): Promise<ChannelResponseDto[]> {
-    const result =
-      await this.userChannelRepository.getJoinedChannelListByUserId(
-        userId,
-        serverId,
-      );
-    const channelList = result.map((userChannel) =>
-      ChannelResponseDto.fromEntity(userChannel.channel),
+    const joinedChannelList = await this.channelRepository.getJoinedChannelList(
+      userId,
+      serverId,
     );
-    return channelList;
+
+    return joinedChannelList.map(ChannelResponseDto.fromEntity);
   }
 
   async getNotJoinedChannelListByUserId(
     serverId: number,
     userId: number,
   ): Promise<ChannelResponseDto[]> {
-    const allChannelList =
-      await this.channelRepository.getChannelListByServerId(serverId);
-    const joinedList =
-      await this.userChannelRepository.getJoinedChannelListByUserId(
-        userId,
-        serverId,
-      );
-    const joinedChannelList = joinedList.map(
-      (userChannel) => userChannel.channel.id,
-    );
+    const notJoinedChannelList =
+      await this.channelRepository.getNotJoinedChannelList(userId, serverId);
 
-    const notJoinedList = allChannelList
-      .filter((channel) => !joinedChannelList.includes(channel.id))
-      .map(ChannelResponseDto.fromEntity);
-
-    return notJoinedList;
+    return notJoinedChannelList.map(ChannelResponseDto.fromEntity);
   }
 
   async deleteByUserIdAndChannelId(userId: number, channelId: number) {
