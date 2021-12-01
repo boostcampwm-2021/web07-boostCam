@@ -44,6 +44,7 @@ const ServerIcon = styled.img`
   height: 40px;
   margin-right: 10px;
   border-radius: 5px;
+  background-color: white;
 `;
 
 const ServerName = styled.div`
