@@ -123,7 +123,13 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
   };
 
   const onClickChannelUserButton = () => {
-    setModalContents(<UserListModal userList={userList} />);
+    setModalContents({
+      contents: <UserListModal userList={userList} />,
+      title: '사용자 목록',
+      description: '채널에 참여한 사용자들의 목록을 확인할 수 있습니다.',
+      height: '60%',
+      minHeight: '450px',
+    });
     setIsModalOpen(true);
   };
 

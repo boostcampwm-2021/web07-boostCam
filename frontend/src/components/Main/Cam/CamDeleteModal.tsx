@@ -5,11 +5,10 @@ import { MainStoreContext } from '../MainStore';
 
 type CamDeleteModalProps = {
   camId: number;
-  name: string;
 };
 
 function CamDeleteModal(props: CamDeleteModalProps): JSX.Element {
-  const { camId, name } = props;
+  const { camId } = props;
   const { setIsModalOpen, getServerCamList } = useContext(MainStoreContext);
 
   const handleClickOk = async () => {
@@ -23,14 +22,7 @@ function CamDeleteModal(props: CamDeleteModalProps): JSX.Element {
     setIsModalOpen(false);
   };
 
-  return (
-    <OkCancelModal
-      handleClickOk={handleClickOk}
-      handleClickCancel={handleClickCancel}
-      title="Cam 삭제"
-      description={`${name} cam을 삭제하시겠습니까?`}
-    />
-  );
+  return <OkCancelModal handleClickOk={handleClickOk} handleClickCancel={handleClickCancel} />;
 }
 
 export default CamDeleteModal;

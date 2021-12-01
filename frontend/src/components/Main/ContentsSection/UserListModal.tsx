@@ -1,71 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../MainStore';
-import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { User } from '../../../types/user';
 
-const { Close } = BoostCamMainIcons;
-
 const Container = styled.div`
-  width: 50%;
-  min-width: 400px;
-  height: 70%;
-  min-height: 500px;
-
-  background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 20px;
-
-  z-index: 3;
-`;
-
-const ModalInnerBox = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const ModalHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  flex: 1;
-`;
-
-const ModalTitle = styled.span`
-  margin-left: 25px;
-  padding: 10px 5px;
-
-  color: #cbc4b9;
-  font-size: 32px;
-  font-weight: 600;
-`;
-
-const ModalCloseButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
-  cursor: pointer;
-  margin-right: 25px;
-`;
-
-const ModalUserList = styled.div`
   width: 90%;
   height: 70%;
   margin-left: 25px;
@@ -141,18 +79,11 @@ const ItemName = styled.span`
   font-weight: 600;
 `;
 
-const CloseIcon = styled(Close)`
-  width: 20px;
-  height: 20px;
-  fill: #a69c96;
-`;
-
 type UserListModalProps = {
   userList: User[];
 };
 
 function UserListModal(props: UserListModalProps): JSX.Element {
-  const { setIsModalOpen } = useContext(MainStoreContext);
   const { userList } = props;
 
   const userListElements = () => {
@@ -166,19 +97,7 @@ function UserListModal(props: UserListModalProps): JSX.Element {
     });
   };
 
-  return (
-    <Container>
-      <ModalInnerBox>
-        <ModalHeader>
-          <ModalTitle>사용자 목록</ModalTitle>
-          <ModalCloseButton onClick={() => setIsModalOpen(false)}>
-            <CloseIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-        <ModalUserList>{userListElements()}</ModalUserList>
-      </ModalInnerBox>
-    </Container>
-  );
+  return <Container>{userListElements()}</Container>;
 }
 
 export default UserListModal;
