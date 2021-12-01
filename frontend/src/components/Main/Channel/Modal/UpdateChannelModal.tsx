@@ -8,6 +8,7 @@ import Loading from '../../../core/Loading';
 import AlertDeleteChannel from './AlertDeleteChannel';
 import NoAuthModal from './NoAuthModal';
 import { flex } from '../../../../utils/styledComponentFunc';
+import ChannelEntity from '../../../../types/channel';
 
 const Container = styled.form`
   flex: 3 1 0;
@@ -136,9 +137,8 @@ function UpdateChannelModal(): JSX.Element {
   };
 
   const setSelectedChannelData = async () => {
-    const response = await fetch(`/api/channels/${rightClickedChannelId}`);
-    const responseObj = await response.json();
-    const channelData = responseObj.data;
+    const { data } = await fetchData<null, ChannelEntity>('GET', `/api/channels/${rightClickedChannelId}`);
+    const channelData = data;
     setValue('name', channelData.name);
     setValue('description', channelData.description);
     setIsLoading(false);

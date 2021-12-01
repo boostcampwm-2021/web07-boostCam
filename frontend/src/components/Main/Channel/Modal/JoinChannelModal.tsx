@@ -78,9 +78,11 @@ function JoinChannelModal(): JSX.Element {
   const [channelList, setChannelList] = useState<ChannelListData[]>([]);
 
   const getNotJoinedChannelList = async () => {
-    const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/notjoined/`);
-    const list = await response.json();
-    setChannelList(list.data);
+    const { data } = await fetchData<null, ChannelListData[]>(
+      'GET',
+      `/api/user/servers/${selectedServer?.server.id}/channels/notjoined/`,
+    );
+    setChannelList(data);
   };
 
   const onClickChannelListButton = async (id: number) => {

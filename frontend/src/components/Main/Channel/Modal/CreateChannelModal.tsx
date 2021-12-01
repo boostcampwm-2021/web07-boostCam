@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import { fetchData } from '../../../../utils/fetchMethods';
 import { flex } from '../../../../utils/styledComponentFunc';
 
 import { MainStoreContext } from '../../MainStore';
+import ChannelEntity from '../../../../types/channel';
 
 const Container = styled.form`
   width: 90%;
@@ -68,6 +70,12 @@ type CreateModalForm = {
   description: string;
 };
 
+type RequestBody = {
+  name: string;
+  description: string;
+  serverId: number;
+};
+
 function CreateChannelModal(): JSX.Element {
   const {
     register,
@@ -78,24 +86,18 @@ function CreateChannelModal(): JSX.Element {
   const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
-  const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
-    const { name, description } = data;
-    const response = await fetch('/api/channels', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name.trim(),
-        description: description.trim(),
-        serverId: selectedServer.server.id,
-      }),
-    });
+  const onSubmitCreateChannelModal = async (value: { name: string; description: string }) => {
+    const { name, description } = value;
+    const requestBody: RequestBody = {
+      name: name.trim(),
+      description: description.trim(),
+      serverId: selectedServer.server.id,
+    };
+    const { data } = await fetchData<RequestBody, ChannelEntity>('POST', '/api/channels', requestBody);
 
-    const createdChannelData = await response.json();
-    const createdChannel = createdChannelData.data;
+    const createdChannel = data;
     getServerChannelList();
-    socket.emit('joinChannel', { channelId: parseInt(createdChannel.id, 10) });
+    socket.emit('joinChannel', { channelId: createdChannel.id });
     setIsModalOpen(false);
   };
 

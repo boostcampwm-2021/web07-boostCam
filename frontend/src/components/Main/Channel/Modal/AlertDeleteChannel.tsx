@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
-import { fetchData } from '../../../../utils/fetchMethods';
+import { deleteApi } from '../../../../utils/fetchMethods';
 import { BoostCamMainIcons } from '../../../../utils/svgIcons';
 import { flex } from '../../../../utils/styledComponentFunc';
 
@@ -136,7 +136,7 @@ function AlertDeleteChannel(): JSX.Element {
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
   const onClickSubmitButton = async () => {
-    await fetchData<null, null>('DELETE', `/api/channels/${rightClickedChannelId}`);
+    await deleteApi(`/api/channels/${rightClickedChannelId}`);
     getServerChannelList();
     setIsAlertModalOpen(false);
     setIsModalOpen(false);
