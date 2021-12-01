@@ -167,7 +167,11 @@ function NoChannelSection(): JSX.Element {
     const resquestBody = {
       channelId: id,
     };
-    await fetchData<JoinChannelRequest, null>('POST', `/api/user/servers/${selectedServer}/channels`, resquestBody);
+    await fetchData<JoinChannelRequest, null>(
+      'POST',
+      `/api/user/servers/${selectedServer.server.id}/channels`,
+      resquestBody,
+    );
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);
