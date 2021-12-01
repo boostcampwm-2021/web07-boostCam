@@ -77,7 +77,7 @@ type CreateModalForm = {
 
 type PostCamData = {
   name: string;
-  serverId: string;
+  serverId: number;
 };
 
 function CreateCamModal(): JSX.Element {
