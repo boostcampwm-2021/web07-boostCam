@@ -50,11 +50,12 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
   const { messageList, commentList } = props;
 
   const getChannelInfo = async () => {
-    if (!selectedChannel) return;
+    if (!selectedChannel) {
+      setIsLoading(false);
+      return;
+    }
     const selectedChannelInfo = await getSelectedChannelInfo(selectedChannel);
     if (selectedChannelInfo.statusCode > 300) {
-      setUserList([]);
-      setChannelInfo(undefined);
       setIsLoading(false);
       return;
     }

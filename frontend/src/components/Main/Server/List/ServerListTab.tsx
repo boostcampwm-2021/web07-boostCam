@@ -93,7 +93,7 @@ function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { selectedServer, setSelectedServer, serverList } = useContext(MainStoreContext);
 
-  const initChannel = '1';
+  const initChannel = '0';
   const navigate = useNavigate();
 
   const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
