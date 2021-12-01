@@ -1,9 +1,14 @@
-import { atom } from 'recoil';
-import { User } from '../types/user';
+import { selector } from 'recoil';
 
-const userState = atom<User | null>({
+import { User } from '../types/user';
+import { fetchData } from '../utils/fetchMethods';
+
+const userState = selector({
   key: 'user',
-  default: null,
+  get: async () => {
+    const { data } = await fetchData<null, User>('GET', '/api/user');
+    return data;
+  },
 });
 
 export default userState;

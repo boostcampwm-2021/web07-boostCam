@@ -4,21 +4,18 @@ import {
   Body,
   Get,
   Param,
-  UseGuards,
   Session,
   Delete,
   ForbiddenException,
 } from '@nestjs/common';
 
 import ResponseEntity from '../common/response-entity';
-import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { RequestCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
 import { CamService } from './cam.service';
 
 @Controller('/api/cam')
-@UseGuards(LoginGuard)
 export class CamController {
   constructor(private camService: CamService) {}
 
