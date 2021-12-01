@@ -139,7 +139,7 @@ function ChattingTab(): JSX.Element {
     const currentDate = getCurrentDate(today);
     const msgInfo: CamMessageInfo = { msg, room, user: socket.id, date: currentDate };
 
-    socket.emit('sendMessage', msgInfo);
+    socket.emit('sendCamMessage', msgInfo);
     setChatLogs((logs) => [...logs, msgInfo]);
   };
 
@@ -159,7 +159,7 @@ function ChattingTab(): JSX.Element {
 
   useEffect(() => {
     socket.on(
-      'receiveMessage',
+      'receiveCamMessage',
       ({ payload, nicknameInfo }: { payload: CamMessageInfo; nicknameInfo: CamRoomInfo[] }) => {
         setChatLogs((logs) => [...logs, payload]);
         setNicknameList(nicknameInfo);
