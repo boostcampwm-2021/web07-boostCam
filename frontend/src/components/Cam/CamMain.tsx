@@ -17,7 +17,7 @@ import CamLoadingPage from './Page/CamLoadingPage';
 import CamNotAvailablePage from './Page/CamNotAvailablePage';
 import CamErrorPage from './Page/CamErrorPage';
 import userState from '../../atoms/user';
-import fetchData from '../../utils/fetchMethods';
+import { fetchData } from '../../utils/fetchMethods';
 
 const Container = styled.div`
   background-color: black;
