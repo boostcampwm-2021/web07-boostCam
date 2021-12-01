@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
+import { MainStoreContext } from '../MainStore';
+import CamDeleteModal from './CamDeleteModal';
 
 const { Hash } = BoostCamMainIcons;
 
 type CamListItemProps = {
+  id: number;
   name: string;
   url: string;
 };
@@ -46,15 +49,28 @@ const CamNameSpan = styled.span`
 `;
 
 function CamListItem(props: CamListItemProps): JSX.Element {
-  const { name, url } = props;
+  const { id, name, url } = props;
   const navigate = useNavigate();
+  const { setIsDropdownOpen, setDropdownInfo } = useContext(MainStoreContext);
 
   const onClickCam = () => {
     navigate(`/cam?roomid=${url}`);
   };
 
+  const onContextCam = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const dropdownInfo = {
+      position: [e.pageX, e.pageY],
+      components: [{ name: '삭제', component: <CamDeleteModal camId={id} name={name} /> }],
+    };
+
+    setDropdownInfo(dropdownInfo);
+    setIsDropdownOpen(true);
+  };
+
   return (
-    <Container onClick={onClickCam}>
+    <Container onClick={onClickCam} onContextMenu={onContextCam}>
       <HashIcon />
       <CamNameSpan>{name}</CamNameSpan>
     </Container>

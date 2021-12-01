@@ -11,12 +11,14 @@ import { RequestCamDto, ResponseCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
 import { CamRepository } from './cam.repository';
 import { CamInnerService } from './cam-inner.service';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class CamService {
   constructor(
     private camRepository: CamRepository,
     private serverRepository: ServerRepository,
+    private userRepository: UserRepository,
     private readonly camInnerService: CamInnerService,
   ) {
     this.camRepository.clear();
@@ -38,6 +40,16 @@ export class CamService {
     return cam;
   }
 
+  async findOneById(id: number): Promise<Cam> {
+    const cam = await this.camRepository.findOne({ id: id });
+
+    if (!cam) {
+      throw new NotFoundException();
+    }
+
+    return cam;
+  }
+
   async createCam(cam: RequestCamDto): Promise<Cam> {
     const camEntity = this.camRepository.create();
     const server = await this.serverRepository.findOne({
@@ -48,14 +60,16 @@ export class CamService {
       throw new BadRequestException();
     }
 
-    if (!cam.userId) {
+    const user = await this.userRepository.findOne({ id: cam?.userId });
+
+    if (!cam.userId || !user) {
       throw new ForbiddenException();
     }
 
     camEntity.name = cam.name;
     camEntity.server = server;
     camEntity.url = v4();
-    camEntity.ownerId = cam.userId;
+    camEntity.owner = user;
 
     const savedCam = await this.camRepository.save(camEntity);
     this.camInnerService.createRoom(camEntity.url);
@@ -63,14 +77,16 @@ export class CamService {
     return savedCam;
   }
 
-  async deleteCam(cam: RequestCamDto): Promise<void> {
-    const camEntity = await this.camRepository.findOne(cam);
+  async deleteCam(id: number): Promise<void> {
+    const camEntity = await this.camRepository.findOne({ id: id });
 
     if (!camEntity) {
       throw new BadRequestException();
     }
 
-    await this.camRepository.delete(camEntity);
+    this.camInnerService.deleteRoom(camEntity.url);
+
+    await this.camRepository.delete({ id: camEntity.id });
   }
 
   async getCamList(serverId: number): Promise<ResponseCamDto[]> {

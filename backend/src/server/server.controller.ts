@@ -24,9 +24,19 @@ import { ImageService } from '../image/image.service';
 import ServerWithUsersDto from './dto/response-server-users.dto';
 import { CamService } from '../cam/cam.service';
 import { ResponseCamDto } from '../cam/cam.dto';
+import { ApiExtraModels, ApiOkResponse } from '@nestjs/swagger';
+import { UserDto } from '../user/user.dto';
+import {
+  serverWithUserDtoSchema,
+  serverCodeSchema,
+  emptyResponseSchema,
+} from './server.schema';
 
 @UseGuards(LoginGuard)
 @Controller('/api/servers')
+@ApiExtraModels(ResponseEntity)
+@ApiExtraModels(ServerWithUsersDto)
+@ApiExtraModels(UserDto)
 export class ServerController {
   constructor(
     private serverService: ServerService,
@@ -34,7 +44,9 @@ export class ServerController {
     private camService: CamService,
   ) {}
 
-  @Get('/:id/users') async findOneWithUsers(
+  @ApiOkResponse(serverWithUserDtoSchema)
+  @Get('/:id/users')
+  async findOneWithUsers(
     @Param('id') id: number,
   ): Promise<ResponseEntity<ServerWithUsersDto>> {
     const serverWithUsers = await this.serverService.findOneWithUsers(id);
@@ -48,14 +60,16 @@ export class ServerController {
     return ResponseEntity.ok(cam);
   }
 
-  @Get('/:id/code') async findCode(
-    @Param('id') id: number,
-  ): Promise<ResponseEntity<string>> {
+  @ApiOkResponse(serverCodeSchema)
+  @Get('/:id/code')
+  async findCode(@Param('id') id: number): Promise<ResponseEntity<string>> {
     const code = await this.serverService.findCode(id);
     return ResponseEntity.ok(code);
   }
 
-  @Patch('/:id/code') async refreshCode(
+  @ApiOkResponse(serverCodeSchema)
+  @Patch('/:id/code')
+  async refreshCode(
     @Session()
     session: ExpressSession,
     @Param('id') id: number,
@@ -93,6 +107,7 @@ export class ServerController {
     return ResponseEntity.created(newServer.id);
   }
 
+  @ApiOkResponse(serverCodeSchema)
   @Patch('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(FileInterceptor('icon'))
@@ -119,6 +134,7 @@ export class ServerController {
     return ResponseEntity.noContent();
   }
 
+  @ApiOkResponse(emptyResponseSchema)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteServer(

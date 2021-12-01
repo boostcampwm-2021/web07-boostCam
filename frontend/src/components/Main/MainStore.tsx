@@ -94,6 +94,10 @@ function MainStore(props: MainStoreProps): JSX.Element {
 
   useEffect(() => {
     socket.connect();
+    return () => {
+      socket.removeAllListeners();
+      socket.disconnect();
+    };
   }, []);
 
   return (

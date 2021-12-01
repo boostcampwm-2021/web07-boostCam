@@ -165,7 +165,7 @@ function JoinServerModal(): JSX.Element {
 
   const onSubmitJoinServerModal = async (datas: { code: string }) => {
     const { code } = datas;
-    const { statusCode, message } = await fetchData<unknown, number>('POST', 'api/users/servers', {
+    const { statusCode, message } = await fetchData<unknown, number>('POST', '/api/user/servers', {
       code: code.trim(),
     });
 

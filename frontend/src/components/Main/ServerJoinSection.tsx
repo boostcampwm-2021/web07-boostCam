@@ -60,7 +60,7 @@ function ServerJoinSection(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const onclickParticipateToServer = async () => {
-    const url = `/api/users/servers`;
+    const url = `/api/user/servers`;
     const body = { code: serverCode };
 
     if (!serverCode) {

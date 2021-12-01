@@ -51,11 +51,7 @@ export class CamInnerService {
   exitRoom(roomId: string, userId: string) {
     if (!this.map.get(roomId)) return false;
     const room = this.map.get(roomId).filter((user) => user.userId !== userId);
-    if (room.length == 0) {
-      this.map.delete(roomId);
-    } else {
-      this.map.set(roomId, room);
-    }
+    this.map.set(roomId, room);
   }
 
   updateStatus(roomId: string, userId: string, status: Status) {
@@ -102,5 +98,9 @@ export class CamInnerService {
   checkRoomAvailable(roomId: RoomId) {
     const room = this.map.get(roomId);
     return room && room.length < MAX_PEOPLE;
+  }
+
+  deleteRoom(roomId: RoomId) {
+    this.map.delete(roomId);
   }
 }

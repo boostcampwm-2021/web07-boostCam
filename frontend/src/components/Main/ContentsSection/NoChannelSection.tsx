@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../MainStore';
 import { ChannelListData } from '../../../types/main';
 import { fetchData } from '../../../utils/fetchMethods';
+import { JoinChannelRequest } from '../../../types/join-channel-request';
 
 const Container = styled.div`
   width: 50%;
@@ -150,11 +151,6 @@ const ItemButton = styled.button`
   cursor: pointer;
 `;
 
-type JoinChannelRequest = {
-  channelId: number;
-  serverId: number;
-};
-
 function NoChannelSection(): JSX.Element {
   const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
   const [channelList, setChannelList] = useState<ChannelListData[]>([]);
@@ -170,9 +166,8 @@ function NoChannelSection(): JSX.Element {
   const onClickChannelListButton = async (id: number) => {
     const resquestBody = {
       channelId: id,
-      serverId: selectedServer,
     };
-    await fetchData<JoinChannelRequest, null>('POST', '/api/user/servers', resquestBody);
+    await fetchData<JoinChannelRequest, null>('POST', `/api/user/servers/${selectedServer}/channels`, resquestBody);
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);

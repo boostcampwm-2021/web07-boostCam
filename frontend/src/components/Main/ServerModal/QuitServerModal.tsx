@@ -124,7 +124,7 @@ function QuitServerModal(): JSX.Element {
 
   const onClickQuitServer = async () => {
     const userServerId = selectedServer.id;
-    const { statusCode, message } = await deleteApi(`/api/users/servers/${userServerId}`);
+    const { statusCode, message } = await deleteApi(`/api/user/servers/${userServerId}`);
     if (statusCode === 204) {
       const calledStatus = 'deleted';
       getUserServerList(calledStatus);

@@ -20,7 +20,7 @@ import { UserChannel } from './user-channel.entity';
 import { User } from '../user/user.entity';
 import ChannelResponseDto from '../channel/dto/channel-response.dto';
 
-@Controller('/api/user/servers')
+@Controller('/api/user/servers/:serverId')
 @UseGuards(LoginGuard)
 export class UserChannelController {
   constructor(
@@ -31,9 +31,9 @@ export class UserChannelController {
     this.channelService = channelService;
   }
 
-  @Get('/:id/channels/joined/')
+  @Get('/channels/joined/')
   async getJoinedChannelList(
-    @Param('id') serverId: number,
+    @Param('serverId') serverId: number,
     @Session() session: ExpressSession,
   ) {
     const joinedChannelList =
@@ -44,9 +44,9 @@ export class UserChannelController {
     return ResponseEntity.ok<ChannelResponseDto[]>(joinedChannelList);
   }
 
-  @Get('/:id/channels/notjoined/')
+  @Get('/channels/notjoined/')
   async getNotJoinedChannelList(
-    @Param('id') serverId: number,
+    @Param('serverId') serverId: number,
     @Session() session: ExpressSession,
   ) {
     const response =
@@ -57,9 +57,9 @@ export class UserChannelController {
     return ResponseEntity.ok<ChannelResponseDto[]>(response);
   }
 
-  @Get('/:id/channels/users')
+  @Get('/channels/users')
   async getJoinedUserList(
-    @Param('id') serverId: number,
+    @Param('serverId') serverId: number,
     @Query('channelId') channelId: number,
   ) {
     const response =
@@ -70,10 +70,10 @@ export class UserChannelController {
     return ResponseEntity.ok<User[]>(response);
   }
 
-  @Post()
+  @Post('/channels')
   async joinNewChannel(
     @Body('channelId') channelId: number,
-    @Body('serverId') serverId: number,
+    @Param('serverId') serverId: number,
     @Session() session: ExpressSession,
   ) {
     const selectedChannel = await this.channelService.findOne(channelId);
@@ -84,9 +84,9 @@ export class UserChannelController {
     return ResponseEntity.ok<UserChannel>(savedChannel);
   }
 
-  @Delete('/:id/channels')
+  @Delete('/channels/:channelId')
   async delete(
-    @Param('id') channeld: number,
+    @Param('channelId') channeld: number,
     @Session() session: ExpressSession,
   ) {
     try {

@@ -10,7 +10,7 @@ type CamStoreProps = {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 };
 
-const socket = io({ autoConnect: false });
+const socket = io('/cam', { autoConnect: false });
 
 export const CamStoreContext = createContext<React.ComponentState>(null);
 
@@ -26,6 +26,10 @@ function CamStore(props: CamStoreProps): JSX.Element {
 
   useEffect(() => {
     socket.connect();
+    return () => {
+      socket.removeAllListeners();
+      socket.disconnect();
+    };
   }, []);
 
   return (
