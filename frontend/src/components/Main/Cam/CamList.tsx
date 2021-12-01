@@ -33,8 +33,8 @@ function CamList(): JSX.Element {
   const [isListOpen, setIsListOpen] = useState<boolean>(false);
   const { serverCamList } = useContext(MainStoreContext);
 
-  const listElements = serverCamList.map((cam: { name: string; url: string }) => (
-    <CamListItem key={cam.name} name={cam.name} url={cam.url} />
+  const listElements = serverCamList.map((cam: { id: number; name: string; url: string }) => (
+    <CamListItem key={cam.id} id={cam.id} name={cam.name} url={cam.url} />
   ));
 
   return (

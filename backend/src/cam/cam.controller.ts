@@ -7,6 +7,7 @@ import {
   UseGuards,
   Session,
   Delete,
+  ForbiddenException,
 } from '@nestjs/common';
 
 import ResponseEntity from '../common/response-entity';
@@ -39,12 +40,18 @@ export class CamController {
     return ResponseEntity.ok<Cam>(cam);
   }
 
-  @Delete() async deleteCam(
-    @Body() cam: RequestCamDto,
+  @Delete('/:id') async deleteCam(
+    @Param('id') id: number,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<number>> {
-    cam.userId = session.user?.id;
-    await this.camService.deleteCam(cam);
+    const cam = await this.camService.findOneById(id);
+    const isOwner = session.user?.id == cam.ownerId;
+
+    if (!isOwner) {
+      throw new ForbiddenException();
+    }
+
+    await this.camService.deleteCam(id);
 
     return ResponseEntity.noContent();
   }
