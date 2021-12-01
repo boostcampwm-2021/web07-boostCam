@@ -8,16 +8,29 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { UserServerService } from './user-server.service';
 import ResponseEntity from '../common/response-entity';
+import UserServerListDto from './dto/user-server-list.dto';
 
-@Controller('/api/users/servers')
+@Controller('/api/user/servers')
 @UseGuards(LoginGuard)
 export class UserServerController {
   constructor(private userServerService: UserServerService) {}
+
+  @Get()
+  async getServersByUserId(
+    @Session()
+    session: ExpressSession,
+  ): Promise<ResponseEntity<UserServerListDto[]>> {
+    const userId = session.user.id;
+    const data = await this.userServerService.getServerListByUserId(userId);
+
+    return ResponseEntity.ok(data);
+  }
 
   @Post()
   async createUserServer(

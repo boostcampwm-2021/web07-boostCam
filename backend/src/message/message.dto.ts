@@ -1,11 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from '../user/user.dto';
 import { Message } from './message.entity';
 
 export class MessageDto {
+  @ApiProperty()
   id: number;
+  @ApiProperty()
   contents: string;
+  @ApiProperty()
   channelId: number;
+  @ApiProperty()
   createdAt: Date;
+  @ApiProperty()
   sender: UserDto;
 
   static newInstance(

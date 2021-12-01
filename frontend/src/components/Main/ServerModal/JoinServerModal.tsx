@@ -164,7 +164,7 @@ function JoinServerModal(): JSX.Element {
 
   const onSubmitJoinServerModal = async (data: { code: string }) => {
     const { code } = data;
-    const response = await fetch('api/users/servers', {
+    const response = await fetch('/api/user/servers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code: code.trim() }),

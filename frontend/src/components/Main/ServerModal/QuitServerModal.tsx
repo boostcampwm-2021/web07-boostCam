@@ -123,7 +123,7 @@ function QuitServerModal(): JSX.Element {
 
   const onClickQuitServer = async () => {
     const userServerId = selectedServer.id;
-    const response = await fetch(`api/users/servers/${userServerId}`, {
+    const response = await fetch(`/api/user/servers/${userServerId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

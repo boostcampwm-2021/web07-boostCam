@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/index';
 
-import { ChannelFormDto } from './channel.dto';
+import { ChannelFormDto } from './channel-form.dto';
 import { Channel } from './channel.entity';
 import { Server } from '../server/server.entity';
 import { ChannelRepository } from './channel.repository';
@@ -11,14 +11,11 @@ import { User } from '../user/user.entity';
 
 @Injectable()
 export class ChannelService {
-  /** * 생성자 */ constructor(
+  constructor(
     @InjectRepository(Channel) private channelRepository: ChannelRepository,
     @InjectRepository(User) private userRepository: UserRepository,
     @InjectRepository(Server) private serverRepository: Repository<Server>,
   ) {}
-  findAll(): Promise<Channel[]> {
-    return this.channelRepository.find();
-  }
   async findOne(id: number): Promise<Channel> {
     const response = await this.channelRepository.findOne(
       { id: id },

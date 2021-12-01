@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import ormConfig from './config/ormconfig';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CamModule } from './cam/cam.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -39,7 +38,6 @@ import githubConfig from './config/github.config';
     UserChannelModule,
     ImageModule,
   ],
-  controllers: [AppController],
   providers: [AppService, MessageGateway],
 })
 export class AppModule {}
