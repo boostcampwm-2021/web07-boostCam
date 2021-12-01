@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 
 import { MainStoreContext } from '../MainStore';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import OkCancelModal from '../../common/OkCancelModal';
 
 function QuitChannelModal(): JSX.Element {

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import OkCancelModal from '../../common/OkCancelModal';
 import { MainStoreContext } from '../MainStore';
 

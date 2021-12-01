@@ -5,7 +5,7 @@ import { CommentListInfo } from '../../../types/comment';
 import { MyServerData } from '../../../types/main';
 import { MessageListInfo } from '../../../types/message';
 import { User } from '../../../types/user';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 import MessageSection from './MessageSection';

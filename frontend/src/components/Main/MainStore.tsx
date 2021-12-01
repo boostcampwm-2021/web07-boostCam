@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { DropdownInfo } from '../../types/dropdown';
 import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
-import fetchData from '../../utils/fetchMethods';
+import { fetchData } from '../../utils/fetchMethods';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -56,22 +56,21 @@ function MainStore(props: MainStoreProps): JSX.Element {
   };
 
   const getUserServerList = async (calledStatus: string | undefined): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
+    const { statusCode, data } = await fetchData<null, MyServerData[]>('GET', `/api/user/servers`);
 
-    if (response.status === 200) {
-      setServerList(list.data);
+    if (statusCode === 200) {
+      setServerList(data);
       if (calledStatus === 'updated') {
         const updatedServerId = selectedServer?.server.id;
-        setSelectedServer(list.data.filter((userServer: MyServerData) => userServer.server.id === updatedServerId)[0]);
+        setSelectedServer(data.filter((userServer) => userServer.server.id === updatedServerId)[0]);
       } else if (calledStatus === 'created') {
-        const selectedServerIndex = list.data.length - 1;
-        setSelectedServer(list.data[selectedServerIndex]);
+        const selectedServerIndex = data.length - 1;
+        setSelectedServer(data[selectedServerIndex]);
       } else if (calledStatus === 'deleted') {
         if (!serverList.length) setSelectedServer(undefined);
-        else setSelectedServer(list.data[0]);
+        else setSelectedServer(data[0]);
       } else {
-        setSelectedServer(list.data[0]);
+        setSelectedServer(data[0]);
       }
     }
   };

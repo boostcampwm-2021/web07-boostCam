@@ -22,18 +22,18 @@ const Container = styled.div`
 
 function MainPage(): JSX.Element {
   const { isModalOpen, isAlertModalOpen, getUserServerList } = useContext(MainStoreContext);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const setUserServerList = async () => {
     await getUserServerList();
-    setLoading(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     setUserServerList();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 

@@ -7,6 +7,7 @@ import { UserChannelRepository } from './user-channel.repository';
 import { UserChannel } from './user-channel.entity';
 import { Channel } from '../channel/channel.entity';
 import { UserRepository } from '../user/user.repository';
+import ChannelResponseDto from '../channel/dto/channel-response.dto';
 
 @Injectable()
 export class UserChannelService {
@@ -34,20 +35,25 @@ export class UserChannelService {
     return this.userChannelRepository.delete({ channelId });
   }
 
-  getJoinedChannelListByUserId(
+  async getJoinedChannelListByUserId(
     serverId: number,
     userId: number,
-  ): Promise<UserChannel[]> {
-    return this.userChannelRepository.getJoinedChannelListByUserId(
-      userId,
-      serverId,
+  ): Promise<ChannelResponseDto[]> {
+    const result =
+      await this.userChannelRepository.getJoinedChannelListByUserId(
+        userId,
+        serverId,
+      );
+    const channelList = result.map((userChannel) =>
+      ChannelResponseDto.fromEntity(userChannel.channel),
     );
+    return channelList;
   }
 
   async getNotJoinedChannelListByUserId(
     serverId: number,
     userId: number,
-  ): Promise<Channel[]> {
+  ): Promise<ChannelResponseDto[]> {
     const allChannelList =
       await this.channelRepository.getChannelListByServerId(serverId);
     const joinedList =
@@ -59,9 +65,10 @@ export class UserChannelService {
       (userChannel) => userChannel.channel.id,
     );
 
-    const notJoinedList = allChannelList.filter(
-      (channel) => !joinedChannelList.includes(channel.id),
-    );
+    const notJoinedList = allChannelList
+      .filter((channel) => !joinedChannelList.includes(channel.id))
+      .map(ChannelResponseDto.fromEntity);
+
     return notJoinedList;
   }
 

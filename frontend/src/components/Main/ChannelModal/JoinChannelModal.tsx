@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
 import { ChannelListData } from '../../../types/main';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import { JoinChannelRequest } from '../../../types/join-channel-request';
 
 const { Close } = BoostCamMainIcons;

@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons, ButtonBarIcons } from '../../../utils/SvgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
+import { fetchData, sendFormData } from '../../../utils/fetchMethods';
+import { ServerEntity } from '../../../types/server';
 
 const { Close } = BoostCamMainIcons;
 const { CopyIcon } = ButtonBarIcons;
@@ -243,16 +245,12 @@ function ServerSettingModal(): JSX.Element {
       formData.append('description', serverDescription);
       if (files) formData.append('icon', files[0]);
 
-      const response = await fetch(`api/servers/${serverId}`, {
-        method: 'PATCH',
-        body: formData,
-      });
-      if (response.status === 204) {
+      const { statusCode, message } = await sendFormData('PATCH', `/api/servers/${serverId}`, formData);
+      if (statusCode === 204) {
         getUserServerList('updated');
         setIsModalOpen(false);
       } else {
-        const body = await response.json();
-        setMessageFailToPost(body.message);
+        setMessageFailToPost(`${message}`);
       }
     } else {
       setMessageFailToPost('선택된 서버가 없습니다.');
@@ -261,14 +259,12 @@ function ServerSettingModal(): JSX.Element {
 
   const onClickRefreshCode = async () => {
     if (serverId) {
-      const response = await fetch(`api/servers/${serverId}/code`, { method: 'PATCH' });
+      const { statusCode, message, data } = await fetchData<null, string>('PATCH', `/api/servers/${serverId}/code`);
 
-      if (response.status === 200) {
-        const body = await response.json();
-        setCode(body.data);
+      if (statusCode === 200) {
+        setCode(data);
       } else {
-        const body = await response.json();
-        setMessageFailToPost(body.message);
+        setMessageFailToPost(`${message}`);
       }
     } else {
       setMessageFailToPost('선택된 서버가 없습니다.');
@@ -277,14 +273,12 @@ function ServerSettingModal(): JSX.Element {
 
   const setServerParticipationCode = async () => {
     if (serverId) {
-      const response = await fetch(`api/servers/${serverId}/code`);
+      const { statusCode, message, data } = await fetchData<null, string>('GET', `/api/servers/${serverId}/code`);
 
-      if (response.status === 200) {
-        const body = await response.json();
-        setCode(body.data);
+      if (statusCode === 200) {
+        setCode(data);
       } else {
-        const body = await response.json();
-        setMessageFailToPost(body.message);
+        setMessageFailToPost(`${message}`);
       }
     } else {
       setMessageFailToPost('선택된 서버가 없습니다.');
@@ -292,11 +286,9 @@ function ServerSettingModal(): JSX.Element {
   };
 
   const getServerInfo = async () => {
-    const response = await fetch(`/api/servers/${serverId}/users`);
-    const serverInfo = await response.json();
-
-    if (response.status === 200) {
-      const { name, description, imgUrl } = serverInfo.data;
+    const { statusCode, data } = await fetchData<null, ServerEntity>('GET', `/api/servers/${serverId}/users`);
+    if (statusCode === 200) {
+      const { name, description, imgUrl } = data;
 
       setServerDescription(description);
       setServerName(name);

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import fetchData from '../../utils/fetchMethods';
+import { fetchData } from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
 
 const Container = styled.div`

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { BoostCamMainIcons } from '../../../utils/SvgIcons';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import noAuthImg from '../../../assets/hmm.gif';
 import AlertDeleteChannel from './AlertDeleteChannel';
@@ -214,16 +214,10 @@ function UpdateChannelModal(): JSX.Element {
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch(`/api/channels/${rightClickedChannelId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name.trim(),
-        description: description.trim(),
-        serverId: selectedServer.server.id,
-      }),
+    await fetchData('PATCH', `/api/channels/${rightClickedChannelId}`, {
+      name: name.trim(),
+      description: description.trim(),
+      serverId: selectedServer.server.id,
     });
     getServerChannelList();
     setIsModalOpen(false);

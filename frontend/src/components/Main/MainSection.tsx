@@ -5,7 +5,7 @@ import RoomListSection from './RoomListSection';
 import ContentsSection from './ContentsSection/ContentsSection';
 import MainHeader from './MainHeader';
 import { MessageData, MessageListInfo } from '../../types/message';
-import fetchData from '../../utils/fetchMethods';
+import { fetchData } from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
 import ServerJoinSection from './ServerJoinSection';
 import { CommentData, CommentListInfo } from '../../types/comment';
