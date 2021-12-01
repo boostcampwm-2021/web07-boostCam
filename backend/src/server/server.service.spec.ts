@@ -47,6 +47,7 @@ describe('ServerService', () => {
 
   const existsServerId = 1;
   const userId = 1;
+  const newServerId = 2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -169,15 +170,13 @@ describe('ServerService', () => {
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
       userServerRepository.save.mockResolvedValue(newUserServer);
 
-      const createdServer = await serverService.create(
+      const createdServerId = await serverService.create(
         user,
         requestServerDto,
         '',
       );
 
-      expect(createdServer.name).toBe(requestServerDto.name);
-      expect(createdServer.description).toBe(requestServerDto.description);
-      expect(createdServer.owner.id).toBe(user.id);
+      expect(createdServerId).toBe(newServerId);
     });
   });
 
@@ -281,6 +280,7 @@ describe('ServerService', () => {
     user.id = userId;
     requestServerDto = new RequestServerDto(serverName, serverDescription);
     newServer = new Server();
+    newServer.id = newServerId;
     newServer.description = serverDescription;
     newServer.name = serverName;
     newServer.owner = user;
