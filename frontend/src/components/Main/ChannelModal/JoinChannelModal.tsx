@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import { ChannelListData } from '../../../types/main';
+import { fetchData } from '../../../utils/fetchMethods';
+import { JoinChannelRequest } from '../../../types/join-channel-request';
 
 const Container = styled.div`
   width: 90%;
@@ -104,15 +106,16 @@ function JoinChannelModal(): JSX.Element {
   };
 
   const onClickChannelListButton = async (id: number) => {
-    await fetch(`/api/user/servers/${selectedServer}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        channelId: id,
-      }),
-    });
+    const resquestBody = {
+      channelId: id,
+    };
+
+    await fetchData<JoinChannelRequest, null>(
+      'POST',
+      `/api/user/servers/${selectedServer.server.id}/channels`,
+      resquestBody,
+    );
+
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);

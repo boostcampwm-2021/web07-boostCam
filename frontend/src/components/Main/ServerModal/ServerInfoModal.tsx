@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
+import { fetchData } from '../../../utils/fetchMethods';
 
 const Container = styled.div`
   width: 100%;
@@ -137,6 +138,14 @@ const InfoSpan = styled.span`
     display: none;
   }
 `;
+
+type ServerInfo = {
+  name: string;
+  description: string;
+  users: Array<UserInfo>;
+  imgUrl: string;
+};
+
 type UserInfo = {
   id: number;
   nickname: string;
@@ -152,11 +161,9 @@ function ServerInfoModal(): JSX.Element {
 
   const getServerInfo = async () => {
     const serverId = selectedServer.server.id;
-    const response = await fetch(`/api/servers/${serverId}/users`);
-    const serverInfo = await response.json();
-
-    if (response.status === 200) {
-      const { name, description, users, imgUrl } = serverInfo.data;
+    const { statusCode, data } = await fetchData<null, ServerInfo>('GET', `/api/servers/${serverId}/users`);
+    if (statusCode === 200) {
+      const { name, description, users, imgUrl } = data;
 
       setJoinedUserList(users);
       setServerDescription(description);

@@ -5,7 +5,7 @@ import { CommentListInfo } from '../../../types/comment';
 import { MyServerData } from '../../../types/main';
 import { MessageListInfo } from '../../../types/message';
 import { User } from '../../../types/user';
-import fetchData from '../../../utils/fetchMethods';
+import { fetchData } from '../../../utils/fetchMethods';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 import MessageSection from './MessageSection';
@@ -37,7 +37,7 @@ const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: 
 };
 
 const getSelectedChannelInfo = async (selectedChannel: string) => {
-  const response = await fetchData<null, ChannelEntity>('GET', `/api/channel/${selectedChannel}`);
+  const response = await fetchData<null, ChannelEntity>('GET', `/api/channels/${selectedChannel}`);
   return response;
 };
 

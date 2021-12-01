@@ -86,7 +86,7 @@ function CreateChannelModal(): JSX.Element {
 
   const onSubmitCreateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    const response = await fetch('/api/channel', {
+    const response = await fetch('/api/channels', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

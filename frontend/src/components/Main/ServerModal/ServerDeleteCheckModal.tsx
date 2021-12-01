@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
+import { deleteApi } from '../../../utils/fetchMethods';
 import { MainStoreContext } from '../MainStore';
 
 const Container = styled.div`
@@ -99,16 +100,13 @@ function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element
 
   const onClickDeleteServer = async () => {
     if (serverId) {
-      const response = await fetch(`api/servers/${serverId}`, {
-        method: 'DELETE',
-      });
+      const { statusCode, message } = await deleteApi(`/api/servers/${serverId}`);
 
-      if (response.status === 204) {
+      if (statusCode === 204) {
         getUserServerList();
         setIsModalOpen(false);
       } else {
-        const body = await response.json();
-        setMessageFailToDelete(body.message);
+        setMessageFailToDelete(`${message}`);
       }
     }
   };

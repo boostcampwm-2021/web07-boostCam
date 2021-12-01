@@ -99,4 +99,8 @@ export class CamInnerService {
     const room = this.map.get(roomId);
     return room && room.length < MAX_PEOPLE;
   }
+
+  deleteRoom(roomId: RoomId) {
+    this.map.delete(roomId);
+  }
 }

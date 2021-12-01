@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
+import { fetchData } from '../../../utils/fetchMethods';
 
 const Container = styled.form`
   width: 90%;
@@ -90,20 +91,17 @@ function JoinServerModal(): JSX.Element {
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 
-  const onSubmitJoinServerModal = async (data: { code: string }) => {
-    const { code } = data;
-    const response = await fetch('api/users/servers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code.trim() }),
+  const onSubmitJoinServerModal = async (datas: { code: string }) => {
+    const { code } = datas;
+    const { statusCode, message } = await fetchData<unknown, number>('POST', '/api/user/servers', {
+      code: code.trim(),
     });
 
-    if (response.status === 201) {
+    if (statusCode === 201) {
       getUserServerList('created');
       setIsModalOpen(false);
     } else {
-      const body = await response.json();
-      setMessageFailToPost(body.message);
+      setMessageFailToPost(`${message}`);
     }
   };
 
