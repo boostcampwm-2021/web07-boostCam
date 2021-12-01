@@ -175,7 +175,12 @@ function NoChannelSection(): JSX.Element {
 
   useEffect(() => {
     getNotJoinedChannelList();
+    return () => setChannelList([]);
   }, []);
+
+  useEffect(() => {
+    getNotJoinedChannelList();
+  }, [selectedServer]);
 
   const notJoinedChannelList = channelList.map((val) => (
     <ModalChannelListItem key={val.id}>
