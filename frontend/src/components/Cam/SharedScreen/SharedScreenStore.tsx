@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
-import SharedScreenReceiver from './SharedScreenReceiver';
-import SharedScreenSender from './SharedScreenSender';
+import SharedScreenReceiver from '../../../utils/sharedScreenReceiver';
+import SharedScreenSender from '../../../utils/sharedScreenSender';
 import { ToggleStoreContext } from '../ToggleStore';
 import { CamStoreContext } from '../CamStore';
 

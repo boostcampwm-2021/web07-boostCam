@@ -7,14 +7,16 @@ export type RequestCamDto = {
 };
 
 export class ResponseCamDto {
+  id: number;
   name: string;
   url: string;
-  constructor(name: string, url: string) {
+  constructor(id: number, name: string, url: string) {
+    this.id = id;
     this.name = name;
     this.url = url;
   }
 
   static fromEntry(cam: Cam) {
-    return new ResponseCamDto(cam.name, cam.url);
+    return new ResponseCamDto(cam.id, cam.name, cam.url);
   }
 }
