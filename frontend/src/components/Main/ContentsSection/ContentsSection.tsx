@@ -6,6 +6,7 @@ import { MyServerData } from '../../../types/main';
 import { MessageListInfo } from '../../../types/message';
 import { User } from '../../../types/user';
 import { fetchData } from '../../../utils/fetchMethods';
+import { flex } from '../../../utils/styledComponentFunc';
 import Loading from '../../core/Loading';
 import { MainStoreContext } from '../MainStore';
 import MessageSection from './MessageSection';
@@ -16,10 +17,7 @@ const Container = styled.div`
   flex: 1 0 0;
   height: 100%;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('row', 'space-around', 'center')}
   background-color: #ffffff;
 `;
 

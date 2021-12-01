@@ -7,26 +7,19 @@ import { fetchData } from '../../../../utils/fetchMethods';
 import Loading from '../../../core/Loading';
 import AlertDeleteChannel from './AlertDeleteChannel';
 import NoAuthModal from './NoAuthModal';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const Container = styled.form`
   flex: 3 1 0;
   width: 90%;
   border-radius: 20px;
   margin: 20px 0px 0px 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
+  ${flex('column', 'flex-start', 'flex-end')}
 `;
 
 const InputDiv = styled.div`
   width: 100%;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
 `;
 
 const InputName = styled.span<{ color: string }>`
@@ -73,10 +66,7 @@ const DeleteChannelDiv = styled.div`
   flex: 1 1 0;
   margin: 10px 0px 0px 25px;
   width: 90%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
 `;
 
 const DeleteButton = styled.button`

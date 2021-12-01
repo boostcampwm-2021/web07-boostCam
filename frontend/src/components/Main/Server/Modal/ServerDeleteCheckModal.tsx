@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { deleteApi } from '../../../../utils/fetchMethods';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { MainStoreContext } from '../../MainStore';
 
 const MessageFailToPost = styled.span`
@@ -17,9 +18,7 @@ const Container = styled.div`
   background-color: #222322;
   border-radius: 10px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  ${flex('column', 'space-between')}
 `;
 
 const Title = styled.span`

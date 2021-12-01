@@ -5,47 +5,28 @@ import { MainStoreContext } from '../../MainStore';
 import { ChannelListData } from '../../../../types/main';
 import { fetchData } from '../../../../utils/fetchMethods';
 import { JoinChannelRequest } from '../../../../types/join-channel-request';
+import { customScroll, flex } from '../../../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 90%;
   height: 70%;
   margin-left: 25px;
   margin-bottom: 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('column', 'flex-start', 'center')}
 
   color: #e5e0d8;
 
   flex: 4;
 
   overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 const ModalChannelListItem = styled.div`
   width: 90%;
   padding: 15px 10px;
   margin: 3px 0px 0px 0px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-
+  ${flex('row', 'flex-start', 'center')}
   font-size: 18px;
 
   border-top: 1px solid #e5e0d8;
@@ -68,10 +49,7 @@ const ModalChannelListItem = styled.div`
 
 const ItemText = styled.div`
   flex: 4;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: flex-start;
+  ${flex('column', 'space-around', 'flex-start')};
 `;
 
 const ItemTitle = styled.span`

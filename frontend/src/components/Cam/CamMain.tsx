@@ -18,14 +18,13 @@ import CamNotAvailablePage from './Page/CamNotAvailablePage';
 import CamErrorPage from './Page/CamErrorPage';
 import userState from '../../atoms/user';
 import { fetchData } from '../../utils/fetchMethods';
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   background-color: black;
   width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  ${flex('row', 'space-between')};
   position: relative;
 `;
 

@@ -3,14 +3,12 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
 import noInfoImg from '../../../assets/hmm.gif';
+import { flex } from '../../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')}
 `;
 
 const NoChannelInfoDescription = styled.span`

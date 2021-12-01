@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ChannelEntity from '../../../types/channel';
 import { CommentListInfo, CommentRequestBody } from '../../../types/comment';
 import { MessageData } from '../../../types/message';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
 
 import { BoostCamMainIcons } from '../../../utils/svgIcons';
 import Loading from '../../core/Loading';
@@ -16,10 +17,7 @@ const Container = styled.div`
   flex: 0 0 400px;
   height: 100%;
   background-color: white;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  ${flex('column', 'flex-start')}
 `;
 
 const ThreadSectionHeader = styled.div`
@@ -28,12 +26,7 @@ const ThreadSectionHeader = styled.div`
   max-height: 50px;
 
   font-size: 18px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
+  ${flex('row', 'space-between', 'center')};
   border-bottom: 1px solid gray;
 `;
 
@@ -57,30 +50,13 @@ const ThreadSectionBody = styled.div`
   width: 100%;
   flex: 5 0 0;
   overflow-y: auto;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${flex('column', 'flex-start', 'flex-start')};
+  ${customScroll()};
 `;
 
 const MessageItemBlock = styled.div<{ isComment: boolean }>`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  ${flex('row', 'flex-start', 'flex-start')}
 
   ${(props) =>
     props.isComment

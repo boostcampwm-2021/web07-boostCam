@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
 import { sendFormData } from '../../../../utils/fetchMethods';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const Container = styled.form`
   width: 90%;
@@ -11,28 +12,20 @@ const Container = styled.form`
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const InputDiv = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
   margin: 10px 0px;
 `;
 
 const ImageInputDiv = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')};
 `;
 
 const InputName = styled.span`
@@ -98,9 +91,7 @@ const InputLabel = styled.label`
   font-weight: 400;
   transition: all 0.3s;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')};
 
   &:hover {
     background-color: '#2dc2e6';

@@ -8,6 +8,7 @@ import { ToggleStoreContext } from '../ToggleStore';
 import { STTStoreContext } from '../STT/STTStore';
 import { SharedScreenStoreContext } from '../SharedScreen/SharedScreenStore';
 import NicknameModal from './NicknameModal';
+import { flex } from '../../../utils/styledComponentFunc';
 
 const {
   MicIcon,
@@ -28,11 +29,7 @@ const Container = styled.div<{ isMouseOnCamPage: boolean }>`
   height: 8vh;
   box-sizing: border-box;
   padding: 10px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')};
 
   border-radius: 10px;
   transition: bottom 0.5s ease;
@@ -42,18 +39,13 @@ const Container = styled.div<{ isMouseOnCamPage: boolean }>`
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  ${flex('row', 'initial', 'center')};
 `;
 
 const Button = styled.div<{ color?: string }>`
   width: 9vw;
   height: 7vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('column', 'flex-start', 'center')};
   color: ${(props) => (props.color ? props.color : '#bbbbbb')};
 
   border-radius: 10px;

@@ -5,13 +5,14 @@ import styled from 'styled-components';
 import userState from '../../atoms/user';
 
 import { User } from '../../types/user';
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: #492148;
-  display: flex;
-  justify-content: center;
+  ${flex('row', 'center')}
+
   padding-top: 100px;
   font-size: 36px;
   font-weight: bold;

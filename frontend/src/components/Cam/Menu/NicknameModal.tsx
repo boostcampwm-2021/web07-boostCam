@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { UserInfo } from '../../../types/cam';
+import { flex } from '../../../utils/styledComponentFunc';
 import { CamStoreContext } from '../CamStore';
 
 const Container = styled.div`
@@ -10,10 +11,7 @@ const Container = styled.div`
   height: 100vh;
   left: 0px;
   right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('column', 'space-around', 'center')}
   z-index: 2;
 `;
 
@@ -30,10 +28,7 @@ const ModalBox = styled.div`
   width: 30%;
   height: 20%;
   background-color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('column', 'space-around', 'center')}
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0px 5px 22px -2px #000000;
@@ -42,10 +37,7 @@ const ModalBox = styled.div`
 
 const Form = styled.form`
   border-radius: 20px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('row', 'space-around', 'center')}
 `;
 
 const Input = styled.input`

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
 import { fetchData } from '../../../../utils/fetchMethods';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const Container = styled.form`
   width: 90%;
@@ -11,19 +12,13 @@ const Container = styled.form`
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const InputDiv = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const InputName = styled.span`

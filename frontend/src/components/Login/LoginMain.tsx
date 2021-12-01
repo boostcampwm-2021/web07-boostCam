@@ -3,16 +3,13 @@ import styled from 'styled-components';
 
 import OAuthLogin from './OAuthLogin';
 import boostCamIcon from '../../assets/icons/cover_new.png';
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: #492148;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('column', 'space-between', 'center')}
 `;
 
 const LoginBox = styled.div`
@@ -22,11 +19,7 @@ const LoginBox = styled.div`
   border-radius: 20px;
   margin: 30px 0px;
   padding: 30px 0px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('column', 'space-around', 'center')}
 `;
 
 const WelcomeMessage = styled.span`

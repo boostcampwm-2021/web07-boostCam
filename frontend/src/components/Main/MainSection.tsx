@@ -9,24 +9,19 @@ import { fetchData } from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
 import ServerJoinSection from './ContentsSection/ServerJoinSection';
 import { CommentData, CommentListInfo } from '../../types/comment';
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
+  ${flex('column')};
 `;
 
 const MainBody = styled.div`
   width: 100%;
   flex: 1;
   background-color: #222323;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')};
 `;
 
 function MainSection(): JSX.Element {

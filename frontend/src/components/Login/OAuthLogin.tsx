@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import { flex } from '../../utils/styledComponentFunc';
 import { BoostCamMainIcons } from '../../utils/svgIcons';
 
 const { Github } = BoostCamMainIcons;
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  aligh-items: center;
+  ${flex('row', 'center', 'center')}
   width: 100%;
   max-width: 500px;
 `;
@@ -25,9 +24,7 @@ const OAuthLoginButton = styled.div`
   transition: all 0.3s;
   color: white;
 
-  display: flex;
-  justify-content: center;
-  align-items: centerl;
+  ${flex('row', 'center', 'center')};
 `;
 
 const GithubIcon = styled(Github)`

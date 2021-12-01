@@ -6,6 +6,7 @@ import { ButtonBarIcons } from '../../../../utils/svgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
 import { fetchData, sendFormData } from '../../../../utils/fetchMethods';
 import { ServerEntity } from '../../../../types/server';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const { CopyIcon } = ButtonBarIcons;
 
@@ -14,19 +15,13 @@ const Form = styled.div`
   height: 100%;
   border-radius: 20px;
   margin: 0px 0px 0px 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const InputDiv = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
   margin-top: 10px;
   margin-bottom: 10px;
 `;
@@ -34,9 +29,7 @@ const InputDiv = styled.div`
 const ImageInputDiv = styled.div`
   width: 270px;
   height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
 `;
 
 const InputName = styled.span`

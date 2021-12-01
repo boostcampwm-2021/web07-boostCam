@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../Main/MainStore';
 import { BoostCamMainIcons } from '../../utils/svgIcons';
+import { flex } from '../../utils/styledComponentFunc';
 
 const { Close } = BoostCamMainIcons;
 
@@ -12,10 +13,7 @@ const Container = styled.div`
   height: 100vh;
   left: 0px;
   right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('column', 'space-around', 'center')}
 `;
 
 const ModalBackground = styled.div`
@@ -34,11 +32,7 @@ const Modal = styled.div<{ height: string; minHeight: string }>`
   min-height: ${(props) => `${props.minHeight}`};
 
   background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')};
 
   border-radius: 20px;
 
@@ -49,19 +43,12 @@ const ModalInnerBox = styled.div`
   width: 100%;
   height: 100%;
   padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const ModalHeader = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
+  ${flex('row', 'space-between', 'center')};
   flex: 1;
 `;
 
@@ -86,10 +73,7 @@ const ModalDescription = styled.span`
 const ModalCloseButton = styled.div`
   width: 32px;
   height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
+  ${flex('row', 'center', 'center')};
   cursor: pointer;
   margin-right: 25px;
 `;

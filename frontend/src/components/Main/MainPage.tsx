@@ -9,15 +9,13 @@ import MainDropdown from '../core/MainDropdown';
 import AlertModal from './AlertModal';
 import Loading from '../core/Loading';
 import { MainStoreContext } from './MainStore';
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')}
 `;
 
 function MainPage(): JSX.Element {

@@ -6,20 +6,18 @@ import { ToggleStoreContext } from '../ToggleStore';
 import { CamStoreContext } from '../CamStore';
 import getCurrentDate from '../../../utils/getCurrentDate';
 import { CamMessageInfo, CamRoomInfo } from '../../../types/cam';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
 
 const Container = styled.div<{ isActive: boolean; isMouseOnCamPage: boolean }>`
   height: 90vh;
   background-color: #ffffff;
-  display: flex;
+
   transition: right 0.5s, opacity 0.5s;
   position: absolute;
   width: 27vw;
   right: ${(props) => (props.isActive ? '0' : '-30vw')};
   opacity: ${(props) => (props.isActive ? '1' : '0')};
-
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('column', 'space-around', 'center')};
 `;
 
 const ChatLogs = styled.div`
@@ -28,38 +26,20 @@ const ChatLogs = styled.div`
   background-color: #ffffff;
 
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${flex('column', 'flex-start', 'center')};
+  ${customScroll()};
 `;
 
 const ChatContainer = styled.div<{ isMe: boolean }>`
   width: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  ${flex('column', 'flex-start')};
   align-items: ${(props) => (props.isMe ? 'flex-end' : 'flex-start')};
 `;
 
 const ChatTop = styled.div<{ isMe: boolean }>`
   width: 100%;
-  display: flex;
-  flex-direction: row;
+  ${flex('row', 'initial', 'center')};
   justify-content: ${(props) => (props.isMe ? 'end' : 'start')};
-  align-items: center;
   margin-top: 5px;
 `;
 
@@ -96,21 +76,7 @@ const ChatTextarea = styled.textarea`
   font-size: 16px;
   padding: 10px 8px;
   box-sizing: border-box;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-    padding: 0px 8px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-    padding: 0px 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-    padding: 0px 8px;
-  }
+  ${customScroll()};
 `;
 
 const TextContainer = styled.div`

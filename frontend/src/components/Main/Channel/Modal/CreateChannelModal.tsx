@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 import { MainStoreContext } from '../../MainStore';
 
@@ -9,20 +10,13 @@ const Container = styled.form`
   height: 70%;
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const InputDiv = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const InputName = styled.span`

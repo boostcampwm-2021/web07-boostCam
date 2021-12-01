@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { MainStoreContext } from '../../MainStore';
 
 import CamListHeader from './CamListHeader';
@@ -11,20 +12,12 @@ const Container = styled.div`
   background-color: #492148;
 
   margin-top: 10px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const CamListBody = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
+  ${flex('column', 'flex-start', 'flex-start')}
   color: #a69c96;
   font-size: 15px;
 `;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 import { BoostCamMainIcons } from '../../../../utils/svgIcons';
 import Dropdown from '../../../core/Dropdown';
@@ -15,12 +16,7 @@ const Container = styled.div`
   margin-left: 15px;
   color: #a69c96;
   font-size: 17px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-
+  ${flex('row', 'flex-start', 'center')}
   &:hover {
     cursor: pointer;
   }

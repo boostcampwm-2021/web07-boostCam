@@ -3,17 +3,14 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
 import { deleteApi } from '../../../../utils/fetchMethods';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const Container = styled.form`
   width: 90%;
   height: 40%;
   border-radius: 20px;
   margin: 30px 0px 0px 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const SubmitButton = styled.button<{ isButtonActive: boolean }>`

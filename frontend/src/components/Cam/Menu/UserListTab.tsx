@@ -7,6 +7,7 @@ import LocalUserScreen from '../Screen/LocalUserScreen';
 import Draggable from '../../core/Draggable';
 import type { Screen } from '../../../types/cam';
 import { ToggleStoreContext } from '../ToggleStore';
+import { customScroll } from '../../../utils/styledComponentFunc';
 
 const Container = styled.div<{ isActive: boolean }>`
   position: absolute;
@@ -17,17 +18,7 @@ const Container = styled.div<{ isActive: boolean }>`
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   overflow-y: auto;
 
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 function UserListTab(): JSX.Element {
