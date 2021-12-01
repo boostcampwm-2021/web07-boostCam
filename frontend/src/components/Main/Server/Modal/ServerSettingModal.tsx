@@ -151,11 +151,11 @@ const DeleteButton = styled.button`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen, setAlertModalContents, selectedServer, getUserServerList } =
+    useContext(MainStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const [serverName, setServerName] = useState<string>('');
   const [serverDescription, setServerDescription] = useState<string>('');
@@ -242,6 +242,11 @@ function ServerSettingModal(): JSX.Element {
     navigator.clipboard.writeText(`${code}`);
   };
 
+  const onClickDeleteServerButton = () => {
+    setIsAlertModalOpen(true);
+    setAlertModalContents(<ServerDeleteCheckModal serverId={serverId} />);
+  };
+
   useEffect(() => {
     getServerInfo();
     setServerParticipationCode();
@@ -250,7 +255,6 @@ function ServerSettingModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <>
-      {isDeleteModalOpen && <ServerDeleteCheckModal serverId={serverId} setIsDeleteModalOpen={setIsDeleteModalOpen} />}
       <Form>
         <InputName>새 서버 이름</InputName>
         <InputDiv>
@@ -291,7 +295,7 @@ function ServerSettingModal(): JSX.Element {
         </InputDiv>
         <InputDiv>
           <InputName>서버 삭제</InputName>
-          <DeleteButton type="submit" onClick={() => setIsDeleteModalOpen(true)}>
+          <DeleteButton type="submit" onClick={onClickDeleteServerButton}>
             서버 삭제
           </DeleteButton>
         </InputDiv>

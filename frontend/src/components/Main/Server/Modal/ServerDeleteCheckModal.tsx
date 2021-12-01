@@ -3,34 +3,13 @@ import styled from 'styled-components';
 import { deleteApi } from '../../../../utils/fetchMethods';
 import { MainStoreContext } from '../../MainStore';
 
-const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
-
 const MessageFailToPost = styled.span`
   color: red;
   font-size: 16px;
   font-family: Malgun Gothic;
 `;
 
-const ModalBox = styled.div`
+const Container = styled.div`
   position: relative;
   padding: 20px;
   width: 300px;
@@ -91,11 +70,10 @@ const CancelButton = styled.button`
 
 type ServerDeleteCheckModalProps = {
   serverId: number;
-  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element {
-  const { setIsDeleteModalOpen, serverId } = props;
-  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { serverId } = props;
+  const { setIsModalOpen, setIsAlertModalOpen, getUserServerList } = useContext(MainStoreContext);
   const [messageFailToDelete, setMessageFailToDelete] = useState<string>('');
 
   const onClickDeleteServer = async () => {
@@ -105,6 +83,7 @@ function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element
       if (statusCode === 204) {
         getUserServerList();
         setIsModalOpen(false);
+        setIsAlertModalOpen(false);
       } else {
         setMessageFailToDelete(`${message}`);
       }
@@ -113,15 +92,12 @@ function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element
 
   return (
     <Container>
-      <ModalBackground onClick={() => setIsDeleteModalOpen(false)} />
-      <ModalBox>
-        <Title>정말 삭제하시겠습니까?</Title>
-        <MessageFailToPost>{messageFailToDelete}</MessageFailToPost>
-        <ButtonBox>
-          <DeleteButton onClick={onClickDeleteServer}>삭제</DeleteButton>
-          <CancelButton onClick={() => setIsDeleteModalOpen(false)}>취소</CancelButton>
-        </ButtonBox>
-      </ModalBox>
+      <Title>정말 삭제하시겠습니까?</Title>
+      <MessageFailToPost>{messageFailToDelete}</MessageFailToPost>
+      <ButtonBox>
+        <DeleteButton onClick={onClickDeleteServer}>삭제</DeleteButton>
+        <CancelButton onClick={() => setIsAlertModalOpen(false)}>취소</CancelButton>
+      </ButtonBox>
     </Container>
   );
 }
