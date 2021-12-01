@@ -245,7 +245,7 @@ function ServerSettingModal(): JSX.Element {
       formData.append('description', serverDescription);
       if (files) formData.append('icon', files[0]);
 
-      const { statusCode, message } = await sendFormData('PATCH', `api/servers/${serverId}`, formData);
+      const { statusCode, message } = await sendFormData('PATCH', `/api/servers/${serverId}`, formData);
       if (statusCode === 204) {
         getUserServerList('updated');
         setIsModalOpen(false);
@@ -259,7 +259,7 @@ function ServerSettingModal(): JSX.Element {
 
   const onClickRefreshCode = async () => {
     if (serverId) {
-      const { statusCode, message, data } = await fetchData<null, string>('PATCH', `api/servers/${serverId}/code`);
+      const { statusCode, message, data } = await fetchData<null, string>('PATCH', `/api/servers/${serverId}/code`);
 
       if (statusCode === 200) {
         setCode(data);
@@ -273,7 +273,7 @@ function ServerSettingModal(): JSX.Element {
 
   const setServerParticipationCode = async () => {
     if (serverId) {
-      const { statusCode, message, data } = await fetchData<null, string>('GET', `api/servers/${serverId}/code`);
+      const { statusCode, message, data } = await fetchData<null, string>('GET', `/api/servers/${serverId}/code`);
 
       if (statusCode === 200) {
         setCode(data);

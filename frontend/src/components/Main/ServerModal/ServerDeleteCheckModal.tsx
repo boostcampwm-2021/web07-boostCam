@@ -100,7 +100,7 @@ function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element
 
   const onClickDeleteServer = async () => {
     if (serverId) {
-      const { statusCode, message } = await deleteApi(`api/servers/${serverId}`);
+      const { statusCode, message } = await deleteApi(`/api/servers/${serverId}`);
 
       if (statusCode === 204) {
         getUserServerList();

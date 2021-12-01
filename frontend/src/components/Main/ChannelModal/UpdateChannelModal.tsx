@@ -214,16 +214,10 @@ function UpdateChannelModal(): JSX.Element {
 
   const onSubmitUpdateChannelModal = async (data: { name: string; description: string }) => {
     const { name, description } = data;
-    await fetch(`api/channel/${rightClickedChannelId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name.trim(),
-        description: description.trim(),
-        serverId: selectedServer.server.id,
-      }),
+    await fetchData('PATCH', `/api/channel/${rightClickedChannelId}`, {
+      name: name.trim(),
+      description: description.trim(),
+      serverId: selectedServer.server.id,
     });
     getServerChannelList();
     setIsModalOpen(false);
