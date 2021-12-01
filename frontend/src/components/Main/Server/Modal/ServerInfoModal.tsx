@@ -87,7 +87,7 @@ const InfoDiv = styled.div`
   color: black;
   width: 95%;
   min-height: 80px;
-  max-height: 150px;
+  max-height: 110px;
   overflow-y: auto;
   margin: 0px;
 
