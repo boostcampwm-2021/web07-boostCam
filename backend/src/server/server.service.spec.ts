@@ -48,6 +48,7 @@ describe('ServerService', () => {
   const existsServerId = 1;
   const userId = 1;
   const newServerId = 2;
+  const newUserServerId = 1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -168,7 +169,7 @@ describe('ServerService', () => {
       serverRepository.save.mockResolvedValue(newServer);
       serverRepository.findOne.mockResolvedValue(newServer);
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
-      userServerRepository.save.mockResolvedValue(newUserServer);
+      userServerRepository.save.mockResolvedValue(newUserServerId);
 
       const createdServerId = await serverService.create(
         user,
@@ -294,5 +295,8 @@ describe('ServerService', () => {
     existsServer.owner = user;
     existsServer.userServer = [existsUserServer];
     existsServer.code = v4();
+
+    newUserServer = new UserServer();
+    newUserServer.id = newUserServerId;
   };
 });
