@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  ParseIntPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse } from '@nestjs/swagger';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
@@ -15,7 +21,9 @@ export class CommentController {
 
   @ApiOkResponse(commentDtoSchema)
   @Get()
-  async findCommentsByMessageId(@Query('messageId') messageId: number) {
+  async findCommentsByMessageId(
+    @Query('messageId', new ParseIntPipe()) messageId: number,
+  ) {
     const comments = await this.commentService.findCommentsByMessageId(
       messageId,
     );
