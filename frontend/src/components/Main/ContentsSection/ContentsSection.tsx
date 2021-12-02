@@ -55,6 +55,7 @@ function ContentsSection(props: ContentsSectionProps): JSX.Element {
     const selectedChannelInfo = await getSelectedChannelInfo(selectedChannel);
     if (selectedChannelInfo.statusCode > 300) {
       setIsLoading(false);
+      setChannelInfo(undefined);
       return;
     }
     const joinedUserList = await getJoinedUserList(selectedServer, selectedChannel);
