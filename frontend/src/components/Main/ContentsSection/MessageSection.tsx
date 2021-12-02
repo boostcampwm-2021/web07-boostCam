@@ -9,6 +9,7 @@ import { User } from '../../../types/user';
 import ChannelEntity from '../../../types/channel';
 import UserListModal from './UserListModal';
 import NotFoundChannel from './NotFoundChannel';
+import { ToggleStoreContext } from '../ToggleStore';
 
 const Container = styled.div`
   flex: 5 0 0;
@@ -102,8 +103,8 @@ type MessageSectionProps = {
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
-  const { selectedChannel, setSelectedMessageData, setIsModalOpen, setModalContents, socket } =
-    useContext(MainStoreContext);
+  const { selectedChannel, setSelectedMessageData, socket } = useContext(MainStoreContext);
+  const { setIsModalOpen, setModalContents } = useContext(ToggleStoreContext);
   const { messageList, setIsThreadOpen, userList, channelInfo } = props;
   const { messageData } = messageList;
   const textareaDivRef = useRef<HTMLDivElement>(null);

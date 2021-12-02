@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
 import { deleteApi } from '../../../../utils/fetchMethods';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.form`
   width: 90%;
@@ -47,7 +48,8 @@ const MessageFailToPost = styled.span`
 `;
 
 function QuitServerModal(): JSX.Element {
-  const { setIsModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const isButtonActive = true;
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 

@@ -4,7 +4,7 @@ import { Server } from '../server/server.entity';
 
 @Entity()
 export class UserServer {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })

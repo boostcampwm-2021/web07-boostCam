@@ -28,7 +28,7 @@ type ContentsSectionProps = {
   commentList: CommentListInfo;
 };
 
-const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: string) => {
+const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: number) => {
   const response = await fetchData<null, User[]>(
     'GET',
     `/api/user/servers/${selectedServer?.server.id}/channels/users?channelId=${selectedChannel}`,
@@ -36,7 +36,7 @@ const getJoinedUserList = async (selectedServer: MyServerData, selectedChannel: 
   return response;
 };
 
-const getSelectedChannelInfo = async (selectedChannel: string) => {
+const getSelectedChannelInfo = async (selectedChannel: number) => {
   const response = await fetchData<null, ChannelEntity>('GET', `/api/channels/${selectedChannel}`);
   return response;
 };

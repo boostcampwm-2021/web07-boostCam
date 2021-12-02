@@ -1,16 +1,15 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../Main/MainStore';
-
 import DropdownMenu from './DropdownMenu';
 import RightClickDropdown from './RightClickDropdown';
 import { ComponentInfo } from '../../types/dropdown';
+import { ToggleStoreContext } from '../Main/ToggleStore';
 
 const Container = styled.div``;
 
 function MainDropdown(): JSX.Element {
-  const { isDropdownOpen, setIsDropdownOpen, dropdownInfo } = useContext(MainStoreContext);
+  const { isDropdownOpen, setIsDropdownOpen, dropdownInfo } = useContext(ToggleStoreContext);
   const { position, components } = dropdownInfo;
 
   const dropdownMenuList = components.map((val: ComponentInfo) => {

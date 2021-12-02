@@ -12,6 +12,7 @@ import {
   UploadedFile,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
@@ -47,14 +48,14 @@ export class ServerController {
   @ApiOkResponse(serverWithUserDtoSchema)
   @Get('/:id/users')
   async findOneWithUsers(
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<ServerWithUsersDto>> {
     const serverWithUsers = await this.serverService.findOneWithUsers(id);
     return ResponseEntity.ok(serverWithUsers);
   }
 
   @Get('/:id/cam') async findCams(
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<ResponseCamDto[]>> {
     const cam = await this.camService.getCamList(id);
     return ResponseEntity.ok(cam);
@@ -62,7 +63,9 @@ export class ServerController {
 
   @ApiOkResponse(serverCodeSchema)
   @Get('/:id/code')
-  async findCode(@Param('id') id: number): Promise<ResponseEntity<string>> {
+  async findCode(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<ResponseEntity<string>> {
     const code = await this.serverService.findCode(id);
     return ResponseEntity.ok(code);
   }
@@ -72,7 +75,7 @@ export class ServerController {
   async refreshCode(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<string>> {
     const user = session.user;
     const code = await this.serverService.refreshCode(id, user);
@@ -114,7 +117,7 @@ export class ServerController {
   async updateServer(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
     @Body() requestServerDto: RequestServerDto,
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<string>> {
@@ -140,7 +143,7 @@ export class ServerController {
   async deleteServer(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<string>> {
     const user = session.user;
     await this.serverService.deleteServer(id, user);

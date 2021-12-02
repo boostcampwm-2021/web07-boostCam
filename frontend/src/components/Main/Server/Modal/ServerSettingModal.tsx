@@ -6,6 +6,7 @@ import { ButtonBarIcons } from '../../../../utils/svgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
 import { fetchData, sendFormData } from '../../../../utils/fetchMethods';
 import { ServerEntity } from '../../../../types/server';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const { CopyIcon } = ButtonBarIcons;
 
@@ -151,7 +152,8 @@ const DeleteButton = styled.button`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsModalOpen, selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
