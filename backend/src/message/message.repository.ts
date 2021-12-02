@@ -7,6 +7,7 @@ export class MessageRepository extends Repository<Message> {
     return this.createQueryBuilder('message')
       .innerJoinAndSelect('message.sender', 'user')
       .where('message.channelId = :channelId', { channelId })
+      .orderBy('message.id')
       .getMany();
   }
 }

@@ -8,7 +8,7 @@ import { Socket, Server } from 'socket.io';
 import { Status, MessageInfo } from '../types/cam';
 import { CamInnerService } from './cam-inner.service';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: '/cam' })
 export class CamGateway {
   @WebSocketServer() server: Server;
   constructor(private camInnerService: CamInnerService) {}

@@ -1,5 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import React, { createContext, useEffect, useRef, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
 import { fetchData } from '../../utils/fetchMethods';
@@ -9,15 +9,6 @@ export const MainStoreContext = createContext<React.ComponentState>(null);
 type MainStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
 };
-
-const socket = io({
-  withCredentials: true,
-  forceNew: true,
-});
-
-socket.on('connect', () => {
-  socket.emit('joinChannels');
-});
 
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
@@ -31,6 +22,22 @@ function MainStore(props: MainStoreProps): JSX.Element {
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
   const [serverCamList, setServerCamList] = useState<CamData[]>([]);
+
+  const socketRef = useRef<Socket>();
+
+  if (!socketRef.current) {
+    const socket = io({
+      withCredentials: true,
+      forceNew: true,
+      transports: ['polling'],
+    });
+
+    socket.on('connect', () => {
+      socket.emit('joinChannels');
+    });
+
+    socketRef.current = socket;
+  }
 
   const getServerChannelList = async (): Promise<void> => {
     const { data } = await fetchData<null, ChannelListData[]>(
@@ -86,7 +93,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   return (
     <MainStoreContext.Provider
       value={{
-        socket,
+        socket: socketRef.current,
         selectedServer,
         selectedChannel,
         selectedMessageData,

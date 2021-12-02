@@ -71,7 +71,7 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
 
   const [isMouseOnCamPage, setMouseOnCamPage] = useState<boolean>(true);
   const [isActiveNicknameModal, setIsActiveNicknameModal] = useState<boolean>(false);
-  const { localStream, setLocalStatus, localStatus, setUserInfo } = useContext(CamStoreContext);
+  const { localStream, setLocalStatus, localStatus, setUserInfo, socket } = useContext(CamStoreContext);
   const { handleChattingTabActive } = useContext(ToggleStoreContext);
   const { toggleSTTActive, isSTTActive } = useContext(STTStoreContext);
 
@@ -104,6 +104,7 @@ function ButtonBar(props: ButtonBarProps): JSX.Element {
   };
 
   const handleExit = () => {
+    socket.disconnect();
     window.history.back();
   };
 
