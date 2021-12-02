@@ -81,7 +81,7 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
               title: 'Cam 생성',
               description: '생성할 Cam의 이름을 작성해주세요',
               height: '40%',
-              minHeight: '250px',
+              minHeight: '350px',
             }}
           />
         </Dropdown>
