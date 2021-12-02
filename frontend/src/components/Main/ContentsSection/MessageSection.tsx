@@ -33,15 +33,19 @@ const MessageSectionHeader = styled.div`
   border-bottom: 1px solid gray;
 `;
 
-const ChannelName = styled.div`
+const ChannelName = styled.span`
   margin-left: 15px;
   padding: 8px 12px;
   border-radius: 10px;
   background-color: #f0e7e7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const ChannelUserButton = styled.div`
+const ChannelUserButton = styled.span`
   margin-right: 15px;
+  min-width: 55px;
   padding: 3px 5px;
   border: 1px solid gray;
   border-radius: 10px;
