@@ -28,7 +28,6 @@ export class UserServerController {
     session: ExpressSession,
   ): Promise<ResponseEntity<UserServerListDto[]>> {
     const userId = session.user.id;
-    console.log(userId);
     const data = await this.userServerService.getServerListByUserId(userId);
 
     return ResponseEntity.ok(data);
