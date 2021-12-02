@@ -46,6 +46,7 @@ const ServerImg = styled.div<{ imgUrl: string }>`
   background-repeat: no-repeat;
   border-radius: 20px;
   background-color: white;
+  background-position: center;
 `;
 
 const ServerName = styled.div`
