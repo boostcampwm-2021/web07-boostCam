@@ -1,5 +1,6 @@
 import { Controller, Get, Query, Session } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
+import ResponseEntity from '../common/response-entity';
 import { ExpressSession } from '../types/session';
 import { UserDto } from '../user/user.dto';
 
@@ -15,10 +16,10 @@ export class LoginController {
     @Session()
     session: ExpressSession,
     @Query('code') code: string,
-  ): Promise<UserDto> {
+  ): Promise<ResponseEntity<null>> {
     const user = await this.loginService.githubLogin(code);
     session.user = user;
     session.save();
-    return UserDto.fromEntity(user);
+    return ResponseEntity.noContent();
   }
 }
