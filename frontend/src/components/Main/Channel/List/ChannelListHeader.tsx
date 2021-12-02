@@ -32,7 +32,9 @@ const ChannelListHeaderSpan = styled.span`
 
 const ChannelListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
   margin-left: 70px;
+  margin-top: 3px;
   visibility: ${(props) => (props.isButtonVisible ? 'visible' : 'hidden')};
+  ${flex('column', 'center', 'center')}
 `;
 
 const ListArrowIcon = styled(ListArrow)<{ $isListOpen: boolean }>`
