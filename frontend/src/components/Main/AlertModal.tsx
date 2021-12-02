@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from './MainStore';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div`
   position: fixed;
@@ -27,7 +27,7 @@ const ModalBackground = styled.div`
 `;
 
 function AlertModal(): JSX.Element {
-  const { setIsAlertModalOpen, alertModalContents } = useContext(MainStoreContext);
+  const { setIsAlertModalOpen, alertModalContents } = useContext(ToggleStoreContext);
 
   return (
     <Container>

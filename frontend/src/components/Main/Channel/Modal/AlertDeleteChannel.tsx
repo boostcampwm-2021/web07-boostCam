@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../../MainStore';
 import { fetchData } from '../../../../utils/fetchMethods';
 import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const { Close } = BoostCamMainIcons;
 
@@ -148,8 +149,8 @@ const CloseIcon = styled(Close)`
 `;
 
 function AlertDeleteChannel(): JSX.Element {
-  const { rightClickedChannelId, rightClickedChannelName, setIsModalOpen, setIsAlertModalOpen, getServerChannelList } =
-    useContext(MainStoreContext);
+  const { rightClickedChannelId, rightClickedChannelName, getServerChannelList } = useContext(MainStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen } = useContext(ToggleStoreContext);
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
   const onClickSubmitButton = async () => {

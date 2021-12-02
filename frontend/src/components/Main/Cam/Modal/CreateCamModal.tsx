@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
 import { fetchData } from '../../../../utils/fetchMethods';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.form`
   width: 90%;
@@ -87,7 +88,8 @@ function CreateCamModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsModalOpen, getServerCamList } = useContext(MainStoreContext);
+  const { selectedServer, getServerCamList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateCamModal = async (data: { name: string; description: string }) => {

@@ -5,6 +5,7 @@ import { BoostCamMainIcons } from '../../../../utils/svgIcons';
 import { MainStoreContext } from '../../MainStore';
 import UpdateChannelModal from '../Modal/UpdateChannelModal';
 import QuitChannelModal from '../Modal/QuitChannelModal ';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const { Hash } = BoostCamMainIcons;
 
@@ -50,14 +51,9 @@ type ChannelListItemProps = {
 
 function ChannelListItem(props: ChannelListItemProps): JSX.Element {
   const { dataId, selected, name } = props;
-  const {
-    rightClickedChannelName,
-    setSelectedChannel,
-    setRightClickedChannelId,
-    setRightClickedChannelName,
-    setIsDropdownOpen,
-    setDropdownInfo,
-  } = useContext(MainStoreContext);
+  const { rightClickedChannelName, setSelectedChannel, setRightClickedChannelId, setRightClickedChannelName } =
+    useContext(MainStoreContext);
+  const { setIsDropdownOpen, setDropdownInfo } = useContext(ToggleStoreContext);
 
   const onClickChannelBlock = () => {
     setSelectedChannel(dataId);
