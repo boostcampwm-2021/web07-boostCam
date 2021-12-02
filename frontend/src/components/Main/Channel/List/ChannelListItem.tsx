@@ -59,9 +59,8 @@ function ChannelListItem(props: ChannelListItemProps): JSX.Element {
     setDropdownInfo,
   } = useContext(MainStoreContext);
 
-  const onClickChannelBlock = ({ currentTarget }: React.MouseEvent<HTMLDivElement>) => {
-    const channelId = currentTarget.dataset.id;
-    if (channelId) setSelectedChannel(channelId);
+  const onClickChannelBlock = () => {
+    setSelectedChannel(dataId);
   };
 
   const onRightClickChannelItem = (e: React.MouseEvent<HTMLDivElement>) => {

@@ -5,7 +5,7 @@ import { Channel } from '../channel/channel.entity';
 
 @Entity()
 export class UserChannel {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })

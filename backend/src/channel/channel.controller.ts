@@ -8,6 +8,7 @@ import {
   Patch,
   Session,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
@@ -29,14 +30,14 @@ export class ChannelController {
     this.userChannelService = userChannelService;
   }
   @Get(':channelId') async findOne(
-    @Param('channelId') id: number,
+    @Param('channelId', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<Channel>> {
     const foundChannel = await this.channelService.findOne(id);
     return ResponseEntity.ok<Channel>(foundChannel);
   }
 
   @Get(':channelId/auth') async checkAuthority(
-    @Param('channelId') id: number,
+    @Param('channelId', new ParseIntPipe()) id: number,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<boolean>> {
     const foundChannel = await this.channelService.findOne(id);
@@ -55,7 +56,7 @@ export class ChannelController {
     return ResponseEntity.ok<Channel>(savedChannel);
   }
   @Patch(':channelId') async updateChannel(
-    @Param('channelId') id: number,
+    @Param('channelId', new ParseIntPipe()) id: number,
     @Body() channel: ChannelFormDto,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<Channel>> {
@@ -68,7 +69,7 @@ export class ChannelController {
   }
 
   @Delete(':channelId') async deleteChannel(
-    @Param('channelId') id: number,
+    @Param('channelId', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<null>> {
     await this.channelService.deleteChannel(id);
     return ResponseEntity.noContent();
