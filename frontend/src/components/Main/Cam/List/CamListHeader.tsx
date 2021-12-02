@@ -28,7 +28,9 @@ const CamListHeaderSpan = styled.span`
 
 const CamListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
   margin-left: 70px;
+  margin-top: 3px;
   visibility: ${(props) => (props.isButtonVisible ? 'visible' : 'hidden')};
+  ${flex('column', 'center', 'center')}
 `;
 
 const ListArrowIcon = styled(ListArrow)<{ $isListOpen: boolean }>`
@@ -79,7 +81,7 @@ function CamListHeader(props: CamListHeaderProps): JSX.Element {
               title: 'Cam 생성',
               description: '생성할 Cam의 이름을 작성해주세요',
               height: '40%',
-              minHeight: '250px',
+              minHeight: '350px',
             }}
           />
         </Dropdown>
