@@ -93,7 +93,7 @@ function MainSection(): JSX.Element {
     }
 
     const receiveCommentHandler = (comment: CommentData) => {
-      if (selectedMessageData.id === comment.messageId) {
+      if (selectedMessageData && selectedMessageData.id === comment.messageId) {
         setCommentList((list) => {
           return {
             commentData: [...list.commentData, comment],
