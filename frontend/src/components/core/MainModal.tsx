@@ -14,6 +14,7 @@ const Container = styled.div`
   left: 0px;
   right: 0px;
   ${flex('column', 'space-around', 'center')}
+  z-index:3;
 `;
 
 const ModalBackground = styled.div`
@@ -36,7 +37,7 @@ const Modal = styled.div<{ height: string; minHeight: string }>`
 
   border-radius: 20px;
 
-  z-index: 3;
+  z-index: 5;
 `;
 
 const ModalInnerBox = styled.div`
