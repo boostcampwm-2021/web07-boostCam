@@ -24,7 +24,7 @@ const ChannelListBody = styled.div`
   font-size: 15px;
 `;
 function ChannelList(): JSX.Element {
-  const [isListOpen, setIsListOpen] = useState<boolean>(false);
+  const [isListOpen, setIsListOpen] = useState<boolean>(true);
   const { selectedServer, selectedChannel, serverChannelList } = useContext(MainStoreContext);
   const navigate = useNavigate();
   useEffect(() => {

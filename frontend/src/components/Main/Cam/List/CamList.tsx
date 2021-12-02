@@ -23,7 +23,7 @@ const CamListBody = styled.div`
 `;
 
 function CamList(): JSX.Element {
-  const [isListOpen, setIsListOpen] = useState<boolean>(false);
+  const [isListOpen, setIsListOpen] = useState<boolean>(true);
   const { serverCamList } = useContext(MainStoreContext);
 
   const listElements = serverCamList.map((cam: { id: number; name: string; url: string }) => (
