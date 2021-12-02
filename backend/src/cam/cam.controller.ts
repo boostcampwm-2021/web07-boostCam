@@ -7,9 +7,11 @@ import {
   Session,
   Delete,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 
 import ResponseEntity from '../common/response-entity';
+import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
 import { RequestCamDto } from './cam.dto';
 import { Cam } from './cam.entity';
@@ -19,7 +21,9 @@ import { CamService } from './cam.service';
 export class CamController {
   constructor(private camService: CamService) {}
 
-  @Post() async createCam(
+  @UseGuards(LoginGuard)
+  @Post()
+  async createCam(
     @Body() cam: RequestCamDto,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<number>> {
@@ -37,7 +41,9 @@ export class CamController {
     return ResponseEntity.ok<Cam>(cam);
   }
 
-  @Delete('/:id') async deleteCam(
+  @UseGuards(LoginGuard)
+  @Delete('/:id')
+  async deleteCam(
     @Param('id') id: number,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<number>> {
