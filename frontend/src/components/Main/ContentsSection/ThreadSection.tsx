@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ChannelEntity from '../../../types/channel';
 import { CommentListInfo, CommentRequestBody } from '../../../types/comment';
@@ -115,6 +115,7 @@ type ThreadSectionProps = {
 function ThreadSection(props: ThreadSectionProps): JSX.Element {
   const { selectedMessageData, selectedChannel, socket } = useContext(MainStoreContext);
   const { setIsThreadOpen, channelInfo, commentList } = props;
+  const [channelName, setChannelName] = useState<string>('');
   const textDivRef = useRef<HTMLDivElement>(null);
 
   const sendComment = async (contents: string) => {
@@ -145,12 +146,16 @@ function ThreadSection(props: ThreadSectionProps): JSX.Element {
   const mainMessage = buildCommentElement(selectedMessageData, false);
   const CommentItemList = buildCommentItemList();
 
+  useEffect(() => {
+    if (channelInfo) setChannelName(channelInfo.name);
+  }, [selectedMessageData]);
+
   return (
     <Container>
       <ThreadSectionHeader>
         <ChannelName>
           <ThreadSpan>쓰레드</ThreadSpan>
-          <ChannelNameSpan># {channelInfo && channelInfo.name}</ChannelNameSpan>
+          <ChannelNameSpan># {channelName}</ChannelNameSpan>
         </ChannelName>
         <CloseIcon onClick={onClickCloseIcon} />
       </ThreadSectionHeader>
