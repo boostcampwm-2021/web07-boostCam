@@ -8,6 +8,7 @@ import Dropdown from '../../../core/Dropdown';
 import DropdownMenu from '../../../core/DropdownMenu';
 import CreateChannelModal from '../Modal/CreateChannelModal';
 import JoinChannelModal from '../Modal/JoinChannelModal';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const { Plus, ListArrow } = BoostCamMainIcons;
 
@@ -18,11 +19,7 @@ const Container = styled.div`
   margin-left: 15px;
   color: #a69c96;
   font-size: 17px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')}
 
   &:hover {
     cursor: pointer;

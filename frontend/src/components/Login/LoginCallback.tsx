@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-
 import styled from 'styled-components';
+
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: #492148;
-  display: flex;
-  justify-content: center;
+  ${flex('row', 'center')}
+
   padding-top: 100px;
   font-size: 36px;
   font-weight: bold;

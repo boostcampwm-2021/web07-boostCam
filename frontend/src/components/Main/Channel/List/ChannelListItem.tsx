@@ -5,6 +5,7 @@ import { BoostCamMainIcons } from '../../../../utils/svgIcons';
 import { MainStoreContext } from '../../MainStore';
 import UpdateChannelModal from '../Modal/UpdateChannelModal';
 import QuitChannelModal from '../Modal/QuitChannelModal ';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { ToggleStoreContext } from '../../ToggleStore';
 
 const { Hash } = BoostCamMainIcons;
@@ -12,11 +13,7 @@ const { Hash } = BoostCamMainIcons;
 const Container = styled.div<{ selected: boolean }>`
   width: 100%;
   height: 25px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')}
 
   box-sizing: border-box;
   padding: 15px 0px 15px 25px;

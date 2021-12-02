@@ -1,15 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import noAuthImg from '../../../../assets/hmm.gif';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const ModalDescriptionDiv = styled.div`
   flex: 3 1 0;
   width: 90%;
   margin: 50px 0px 0px 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')};
 `;
 
 const ModalDescription = styled.span`

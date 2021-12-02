@@ -3,6 +3,7 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { ChannelListData } from '../../../../types/main';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { MainStoreContext } from '../../MainStore';
 import ChannelListHeader from './ChannelListHeader';
 import ChannelListItem from './ChannelListItem';
@@ -12,19 +13,12 @@ const Container = styled.div`
   background-color: #492148;
 
   margin-top: 10px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const ChannelListBody = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 
   color: #a69c96;
   font-size: 15px;

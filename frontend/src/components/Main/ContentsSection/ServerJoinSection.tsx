@@ -1,16 +1,14 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { fetchData } from '../../../utils/fetchMethods';
+import { flex } from '../../../utils/styledComponentFunc';
 import { MainStoreContext } from '../MainStore';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   color: #dcd6d0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')}
 `;
 
 const Title = styled.span`
@@ -21,8 +19,8 @@ const SubTitle = styled.span`
   margin-bottom: 10px;
 `;
 const CodeBox = styled.div`
-  display: flex;
-  align-items: center;
+  ${flex('row', 'center', 'center')}
+
   margin-bottom: 10px;
 `;
 const ServerCode = styled.input`

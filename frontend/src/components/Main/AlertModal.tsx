@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { flex } from '../../utils/styledComponentFunc';
 
 import { ToggleStoreContext } from './ToggleStore';
 
@@ -10,10 +11,7 @@ const Container = styled.div`
   left: 0px;
   right: 0px;
 
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-
+  ${flex('column', 'space-around', 'center')}
   z-index: 10;
 `;
 

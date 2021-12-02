@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import { flex } from '../../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 90%;
   max-height: 100%;
-  display: flex;
-  justify-content: center;
+  ${flex('row', 'center')};
 `;
 
 const DefaultImg = styled.img`

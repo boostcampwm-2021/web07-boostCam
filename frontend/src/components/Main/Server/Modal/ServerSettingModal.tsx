@@ -6,6 +6,7 @@ import { ButtonBarIcons } from '../../../../utils/svgIcons';
 import ServerDeleteCheckModal from './ServerDeleteCheckModal';
 import { fetchData, sendFormData } from '../../../../utils/fetchMethods';
 import { ServerEntity } from '../../../../types/server';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { ToggleStoreContext } from '../../ToggleStore';
 
 const { CopyIcon } = ButtonBarIcons;
@@ -15,19 +16,13 @@ const Form = styled.div`
   height: 100%;
   border-radius: 20px;
   margin: 0px 0px 0px 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const InputDiv = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
   margin-top: 10px;
   margin-bottom: 10px;
 `;
@@ -35,9 +30,7 @@ const InputDiv = styled.div`
 const ImageInputDiv = styled.div`
   width: 270px;
   height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
 `;
 
 const InputName = styled.span`
@@ -167,11 +160,10 @@ const DeleteButton = styled.button`
 
 function ServerSettingModal(): JSX.Element {
   const { selectedServer, getUserServerList } = useContext(MainStoreContext);
-  const { setIsModalOpen } = useContext(ToggleStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen, setAlertModalContents } = useContext(ToggleStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const [serverName, setServerName] = useState<string>('');
   const [serverDescription, setServerDescription] = useState<string>('');
@@ -258,6 +250,11 @@ function ServerSettingModal(): JSX.Element {
     navigator.clipboard.writeText(`${code}`);
   };
 
+  const onClickDeleteServerButton = () => {
+    setIsAlertModalOpen(true);
+    setAlertModalContents(<ServerDeleteCheckModal serverId={serverId} />);
+  };
+
   useEffect(() => {
     getServerInfo();
     setServerParticipationCode();
@@ -266,7 +263,6 @@ function ServerSettingModal(): JSX.Element {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <>
-      {isDeleteModalOpen && <ServerDeleteCheckModal serverId={serverId} setIsDeleteModalOpen={setIsDeleteModalOpen} />}
       <Form>
         <InputName>새 서버 이름</InputName>
         <InputDiv>
@@ -307,7 +303,7 @@ function ServerSettingModal(): JSX.Element {
         </InputDiv>
         <InputDiv>
           <InputName>서버 삭제</InputName>
-          <DeleteButton type="submit" onClick={() => setIsDeleteModalOpen(true)}>
+          <DeleteButton type="submit" onClick={onClickDeleteServerButton}>
             서버 삭제
           </DeleteButton>
         </InputDiv>

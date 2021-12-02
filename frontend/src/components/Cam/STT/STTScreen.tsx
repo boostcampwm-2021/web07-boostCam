@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { Status } from '../../../types/cam';
+import { flex } from '../../../utils/styledComponentFunc';
 import { STTStoreContext } from './STTStore';
 
 const Container = styled.div`
@@ -11,9 +12,7 @@ const Container = styled.div`
   height: 80px;
   border-bottom: 2px solid #999999;
   margin-top: 5px;
-
-  display: flex;
-  flex-direction: column;
+  ${flex('column')}
 `;
 
 const Title = styled.div`

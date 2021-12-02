@@ -1,15 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import { UserInfo } from '../../../types/cam';
+import { flex } from '../../../utils/styledComponentFunc';
 import CamDefaultPage from './CamDefaultPage';
 
 const Form = styled.form`
   background-color: rgba(0, 0, 0, 0.7);
   width: 100%;
   height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('row', 'center', 'center')};
   color: white;
   font-size: 44px;
 `;

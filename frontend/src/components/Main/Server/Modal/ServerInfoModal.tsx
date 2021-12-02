@@ -3,30 +3,25 @@ import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
 import { fetchData } from '../../../../utils/fetchMethods';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const ServerTitleBox = styled.div`
   margin-left: 25px;
   padding: 10px 5px;
   width: 350px;
-  display: flex;
+  ${flex('row')};
 `;
 
 const InformationBox = styled.div`
   margin-left: 25px;
   padding: 10px 5px;
   width: 350px;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  align-items: start;
+  ${flex('column', 'end', 'start')};
   color: #cbc4b9;
   font-size: 20px;
   font-weight: 600;

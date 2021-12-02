@@ -1,29 +1,9 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { deleteApi } from '../../../../utils/fetchMethods';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { MainStoreContext } from '../../MainStore';
 import { ToggleStoreContext } from '../../ToggleStore';
-
-const Container = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-`;
 
 const MessageFailToPost = styled.span`
   color: red;
@@ -31,7 +11,7 @@ const MessageFailToPost = styled.span`
   font-family: Malgun Gothic;
 `;
 
-const ModalBox = styled.div`
+const Container = styled.div`
   position: relative;
   padding: 20px;
   width: 300px;
@@ -39,9 +19,7 @@ const ModalBox = styled.div`
   background-color: #222322;
   border-radius: 10px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  ${flex('column', 'space-between')}
 `;
 
 const Title = styled.span`
@@ -92,12 +70,11 @@ const CancelButton = styled.button`
 
 type ServerDeleteCheckModalProps = {
   serverId: number;
-  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element {
-  const { setIsDeleteModalOpen, serverId } = props;
+  const { serverId } = props;
   const { getUserServerList } = useContext(MainStoreContext);
-  const { setIsModalOpen } = useContext(ToggleStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen } = useContext(ToggleStoreContext);
   const [messageFailToDelete, setMessageFailToDelete] = useState<string>('');
 
   const onClickDeleteServer = async () => {
@@ -107,6 +84,7 @@ function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element
       if (statusCode === 204) {
         getUserServerList();
         setIsModalOpen(false);
+        setIsAlertModalOpen(false);
       } else {
         setMessageFailToDelete(`${message}`);
       }
@@ -115,15 +93,12 @@ function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element
 
   return (
     <Container>
-      <ModalBackground onClick={() => setIsDeleteModalOpen(false)} />
-      <ModalBox>
-        <Title>정말 삭제하시겠습니까?</Title>
-        <MessageFailToPost>{messageFailToDelete}</MessageFailToPost>
-        <ButtonBox>
-          <DeleteButton onClick={onClickDeleteServer}>삭제</DeleteButton>
-          <CancelButton onClick={() => setIsDeleteModalOpen(false)}>취소</CancelButton>
-        </ButtonBox>
-      </ModalBox>
+      <Title>정말 삭제하시겠습니까?</Title>
+      <MessageFailToPost>{messageFailToDelete}</MessageFailToPost>
+      <ButtonBox>
+        <DeleteButton onClick={onClickDeleteServer}>삭제</DeleteButton>
+        <CancelButton onClick={() => setIsAlertModalOpen(false)}>취소</CancelButton>
+      </ButtonBox>
     </Container>
   );
 }

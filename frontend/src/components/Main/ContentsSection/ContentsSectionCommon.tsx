@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { MessageData } from '../../../types/message';
 import getCurrentDate from '../../../utils/getCurrentDate';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
 
 type CallbackFunc = {
   (contents: string): Promise<void>;
@@ -20,17 +21,11 @@ const MessageItem = styled.div`
   width: 90%;
   padding: 8px 0px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')};
 `;
 
 const MessageItemHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')};
 `;
 
 const MessageSender = styled.span`
@@ -51,11 +46,7 @@ const TextareaDiv = styled.div`
   min-height: 105px;
   max-height: 250px;
   background-color: #ece9e9;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('column', 'space-around', 'center')};
 `;
 
 const MessageTextarea = styled.textarea`
@@ -75,17 +66,7 @@ const MessageTextarea = styled.textarea`
 
   background-color: white;
 
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 export const messageInnerElement = (data: MessageData): JSX.Element => {

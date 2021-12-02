@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 import { BoostCamMainIcons } from '../../../../utils/svgIcons';
 import { ToggleStoreContext } from '../../ToggleStore';
@@ -17,11 +18,7 @@ type CamListItemProps = {
 const Container = styled.div`
   width: 100%;
   height: 25px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')}
 
   box-sizing: border-box;
   padding: 15px 0px 15px 25px;

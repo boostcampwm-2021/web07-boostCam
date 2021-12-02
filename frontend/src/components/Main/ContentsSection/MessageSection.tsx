@@ -9,6 +9,7 @@ import { User } from '../../../types/user';
 import ChannelEntity from '../../../types/channel';
 import UserListModal from './UserListModal';
 import NotFoundChannel from './NotFoundChannel';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
 import { ToggleStoreContext } from '../ToggleStore';
 
 const Container = styled.div`
@@ -17,9 +18,8 @@ const Container = styled.div`
 
   background-color: white;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  ${flex('column', 'flex-start')}
+
   border-right: 1px solid black;
 `;
 
@@ -28,10 +28,7 @@ const MessageSectionHeader = styled.div`
   flex: 1 1 0;
   max-height: 50px;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
 
   border-bottom: 1px solid gray;
 `;
@@ -66,30 +63,14 @@ const MessageSectionBody = styled.div`
   flex: 5 1 0;
   overflow-y: auto;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 const MessageItemBlock = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-
+  ${flex('row', 'flex-start')}
   &:hover {
     background-color: #f0e7e7;
   }
@@ -127,7 +108,7 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     setModalContents({
       contents: <UserListModal userList={userList} />,
       title: '사용자 목록',
-      description: '채널에 참여한 사용자들의 목록을 확인할 수 있습니다.',
+      description: '채널에 참여한 사용자들의 목록입니다.',
       height: '60%',
       minHeight: '450px',
     });

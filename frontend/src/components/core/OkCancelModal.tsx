@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { flex } from '../../utils/styledComponentFunc';
 
 const ModalButtonContainer = styled.div`
   width: 100%;
   margin-top: 15px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  ${flex('row', 'flex-end', 'center')}
 `;
 
 const Button = styled.button`

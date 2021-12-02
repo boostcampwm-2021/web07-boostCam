@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { User } from '../../../types/user';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 90%;
@@ -9,10 +10,7 @@ const Container = styled.div`
   margin-left: 25px;
   margin-bottom: 25px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('column', 'flex-start', 'center')};
 
   color: #e5e0d8;
 
@@ -20,33 +18,17 @@ const Container = styled.div`
 
   overflow-y: auto;
 
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 const ModalUserListItem = styled.div`
   width: 90%;
   padding: 15px 10px;
   margin: 3px 0px 0px 0px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')};
 
   font-size: 18px;
-
   border-top: 1px solid #e5e0d8;
-
   &:last-child {
     border-bottom: 1px solid #e5e0d8;
   }

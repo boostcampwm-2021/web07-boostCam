@@ -12,6 +12,7 @@ type MainStoreProps = {
 
 const socket = io({
   withCredentials: true,
+  forceNew: true,
 });
 
 socket.on('connect', () => {

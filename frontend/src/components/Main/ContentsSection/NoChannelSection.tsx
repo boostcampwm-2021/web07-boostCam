@@ -5,6 +5,7 @@ import { MainStoreContext } from '../MainStore';
 import { ChannelListData } from '../../../types/main';
 import { fetchData } from '../../../utils/fetchMethods';
 import { JoinChannelRequest } from '../../../types/join-channel-request';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
 import { ToggleStoreContext } from '../ToggleStore';
 
 const Container = styled.div`
@@ -16,10 +17,7 @@ const Container = styled.div`
   border: 5px solid #222322;
   background-color: #dfdbdb;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')}
 
   border-radius: 20px;
 `;
@@ -28,19 +26,12 @@ const ModalInnerBox = styled.div`
   width: 100%;
   height: 100%;
   padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const ModalHeader = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
+  ${flex('row', 'space-between', 'center')}
   flex: 1;
 `;
 
@@ -65,11 +56,7 @@ const ModalChannelList = styled.div`
   height: 70%;
   margin-left: 25px;
   margin-bottom: 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('column', 'flex-start', 'center')}
 
   border: 2px solid black;
   border-radius: 5px;
@@ -79,29 +66,14 @@ const ModalChannelList = styled.div`
   overflow-y: auto;
 
   background-color: #b9b5b5;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 const ModalChannelListItem = styled.div`
   width: 90%;
   padding: 15px 10px;
   margin: 3px 0px 0px 0px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')};
 
   font-size: 18px;
 
@@ -125,10 +97,7 @@ const ModalChannelListItem = styled.div`
 
 const ItemText = styled.div`
   flex: 4;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: flex-start;
+  ${flex('column', 'space-around', 'flex-start')}
 `;
 
 const ItemTitle = styled.span`
@@ -181,7 +150,12 @@ function NoChannelSection(): JSX.Element {
 
   useEffect(() => {
     getNotJoinedChannelList();
+    return () => setChannelList([]);
   }, []);
+
+  useEffect(() => {
+    getNotJoinedChannelList();
+  }, [selectedServer]);
 
   const notJoinedChannelList = channelList.map((val) => (
     <ModalChannelListItem key={val.id}>

@@ -9,6 +9,7 @@ import Dropdown from '../../../core/Dropdown';
 import DropdownMenu from '../../../core/DropdownMenu';
 import CreateServerModal from '../Modal/CreateServerModal';
 import JoinServerModal from '../Modal/JoinServerModal';
+import { flex } from '../../../../utils/styledComponentFunc';
 
 const { Plus } = BoostCamMainIcons;
 
@@ -19,10 +20,7 @@ const Container = styled.div`
   background-color: #492148;
   border-right: 1px solid #92508f;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('column', 'flex-start', 'center')}
 `;
 
 const ServerIconBox = styled.div<{ selected: boolean }>`
@@ -34,9 +32,7 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
   ${(props) => (props.selected ? ' background-color:gray;' : '')}
   border-radius: 20px;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')}
   &:hover {
     cursor: pointer;
   }
@@ -68,9 +64,7 @@ const AddServerButton = styled.div`
 
   margin-top: 10px;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')}
 
   &:hover {
     cursor: pointer;
@@ -91,7 +85,7 @@ function ServerListTab(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { selectedServer, setSelectedServer, serverList } = useContext(MainStoreContext);
 
-  const initChannel = '1';
+  const initChannel = '0';
   const navigate = useNavigate();
 
   const onClickServerAddButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {

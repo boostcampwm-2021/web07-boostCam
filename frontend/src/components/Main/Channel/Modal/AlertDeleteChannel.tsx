@@ -2,8 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../../MainStore';
-import { fetchData } from '../../../../utils/fetchMethods';
+import { deleteApi } from '../../../../utils/fetchMethods';
 import { BoostCamMainIcons } from '../../../../utils/svgIcons';
+import { flex } from '../../../../utils/styledComponentFunc';
 import { ToggleStoreContext } from '../../ToggleStore';
 
 const { Close } = BoostCamMainIcons;
@@ -15,12 +16,7 @@ const Container = styled.div`
   min-height: 250px;
 
   background-color: #222322;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
+  ${flex('column', 'center', 'center')}
   border-radius: 20px;
 
   z-index: 3;
@@ -30,19 +26,12 @@ const ModalInnerBox = styled.div`
   width: 100%;
   height: 100%;
   padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 `;
 
 const ModalHeader = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
+  ${flex('row', 'space-between', 'center')}
   flex: 1;
 `;
 
@@ -78,20 +67,14 @@ const HighlightDescriptionSpan = styled.span`
 const ModalCloseButton = styled.div`
   width: 32px;
   height: 32px;
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-
+  ${flex('row', 'center', 'center')}
   cursor: pointer;
   margin-right: 25px;
 `;
 
 const ModalButtonContainer = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  ${flex('row', 'space-around', 'center')}
 `;
 
 const SubmitButton = styled.button`
@@ -154,7 +137,7 @@ function AlertDeleteChannel(): JSX.Element {
   const [selectedChannelName, setSelectedChannelName] = useState<string>('');
 
   const onClickSubmitButton = async () => {
-    await fetchData<null, null>('DELETE', `/api/channels/${rightClickedChannelId}`);
+    await deleteApi(`/api/channels/${rightClickedChannelId}`);
     getServerChannelList();
     setIsAlertModalOpen(false);
     setIsModalOpen(false);

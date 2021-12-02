@@ -6,6 +6,7 @@ import type { Control, Status } from '../../../types/cam';
 import StreamStatusIndicator from './StreamStatusIndicator';
 import ControlMenu from './ControlMenu';
 import { CamStoreContext } from '../CamStore';
+import { flex } from '../../../utils/styledComponentFunc';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
@@ -17,10 +18,7 @@ const Container = styled.div<{ numOfScreen: number }>`
   position: relative;
   width: calc(100% / ${(props) => Math.ceil(props.numOfScreen ** 0.5)});
   height: calc(100% / ${(props) => Math.floor((props.numOfScreen + 1) ** 0.5)});
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flex('column', 'center', 'center')};
   aspect-ratio: 16/9;
   overflow: hidden;
 `;
