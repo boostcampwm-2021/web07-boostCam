@@ -28,6 +28,7 @@ const Container = styled.div`
 
 const ChannelListHeaderSpan = styled.span`
   margin-left: 5px;
+  min-width: 35px;
 `;
 
 const ChannelListHeaderButton = styled.div<{ isButtonVisible: boolean }>`
