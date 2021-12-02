@@ -12,6 +12,7 @@ type CamStoreProps = {
 
 const socket = io({
   withCredentials: true,
+  forceNew: true,
 });
 
 export const CamStoreContext = createContext<React.ComponentState>(null);
