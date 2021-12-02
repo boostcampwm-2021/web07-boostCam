@@ -17,7 +17,7 @@ const DropdownBackground = styled.div`
   width: 200vw;
   height: 200vh;
   margin-left: -50vw;
-  margin-top: -50vh;
+  margin-top: -100vh;
   background-color: rgb(0, 0, 0, 0.1);
   z-index: 3;
 `;

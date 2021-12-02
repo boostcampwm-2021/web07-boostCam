@@ -40,8 +40,8 @@ export class UserServerController {
     @Body() { code },
   ) {
     const user = session.user;
-    const newUserServer = await this.userServerService.create(user, code);
-    return ResponseEntity.created(newUserServer.id);
+    const newUserServerId = await this.userServerService.create(user, code);
+    return ResponseEntity.created(newUserServerId);
   }
 
   @Delete('/:id')
