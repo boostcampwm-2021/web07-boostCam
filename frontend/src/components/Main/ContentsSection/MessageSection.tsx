@@ -37,12 +37,7 @@ const ChannelName = styled.div`
   margin-left: 15px;
   padding: 8px 12px;
   border-radius: 10px;
-
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f0e7e7;
-  }
+  background-color: #f0e7e7;
 `;
 
 const ChannelUserButton = styled.div`
