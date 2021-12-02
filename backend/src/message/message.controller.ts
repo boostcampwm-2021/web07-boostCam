@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Session, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  ParseIntPipe,
+  Query,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse } from '@nestjs/swagger';
 import ResponseEntity from '../common/response-entity';
 import { LoginGuard } from '../login/login.guard';
@@ -18,7 +25,7 @@ export class MessageController {
   @Get()
   async findMessagesByChannelId(
     @Session() session: ExpressSession,
-    @Query('channelId') channelId: number,
+    @Query('channelId', new ParseIntPipe()) channelId: number,
   ): Promise<ResponseEntity<MessageDto[]>> {
     const sender = session.user;
     const channelMessages = await this.messageService.findMessagesByChannelId(

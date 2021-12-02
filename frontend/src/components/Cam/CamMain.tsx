@@ -30,7 +30,7 @@ const Container = styled.div`
 
 function CamMain(): JSX.Element {
   const user = useRecoilValue(userState);
-  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: user?.nickname || null });
+  const [userInfo, setUserInfo] = useState<UserInfo>({ roomId: null, nickname: null });
   const [statusCode, setStatusCode] = useState(0);
 
   const camRef = useRef<HTMLDivElement>(null);
@@ -49,6 +49,13 @@ function CamMain(): JSX.Element {
 
     setUserInfo((prev) => ({ ...prev, roomId }));
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setUserInfo((prev) => ({ ...prev, nickname: user.nickname }));
+  }, [user]);
 
   switch (statusCode) {
     case 0:

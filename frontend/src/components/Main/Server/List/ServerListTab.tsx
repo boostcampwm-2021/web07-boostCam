@@ -29,8 +29,7 @@ const ServerIconBox = styled.div<{ selected: boolean }>`
 
   margin-top: 10px;
   box-sizing: border-box;
-  ${(props) => (props.selected ? 'border: 5px solid gray;' : '')}
-
+  ${(props) => (props.selected ? ' background-color:gray;' : '')}
   border-radius: 20px;
 
   ${flex('column', 'center', 'center')}
@@ -46,7 +45,7 @@ const ServerImg = styled.div<{ imgUrl: string }>`
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 20px;
-  position: fixed;
+  background-color: white;
 `;
 
 const ServerName = styled.div`
@@ -57,7 +56,6 @@ const ServerName = styled.div`
   background-color: white;
   border-radius: 20px;
   text-align: center;
-  position: fixed;
 `;
 
 const AddServerButton = styled.div`

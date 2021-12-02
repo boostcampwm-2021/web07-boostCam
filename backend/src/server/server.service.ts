@@ -24,9 +24,6 @@ export class ServerService {
     @InjectRepository(ServerRepository)
     private serverRepository: ServerRepository,
   ) {}
-  findAll(): Promise<Server[]> {
-    return this.serverRepository.find({ relations: ['owner'] });
-  }
 
   findOne(id: number): Promise<Server> {
     return this.serverRepository.findOne({ id: id });
@@ -71,7 +68,7 @@ export class ServerService {
     user: User,
     requestServerDto: RequestServerDto,
     imgUrl: string | undefined,
-  ): Promise<Server> {
+  ): Promise<number> {
     const server = requestServerDto.toServerEntity();
     server.owner = user;
     server.imgUrl = imgUrl || '';
@@ -80,7 +77,7 @@ export class ServerService {
     const createdServer = await this.serverRepository.save(server);
     this.userServerService.create(user, createdServer.code);
 
-    return createdServer;
+    return createdServer.id;
   }
 
   async updateServer(

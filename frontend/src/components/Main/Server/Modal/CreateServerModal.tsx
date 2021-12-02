@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../../MainStore';
 import { sendFormData } from '../../../../utils/fetchMethods';
 import { flex } from '../../../../utils/styledComponentFunc';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.form`
   width: 90%;
@@ -119,7 +120,8 @@ function CreateServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
   const [imagePreview, setImagePreview] = useState<string>();

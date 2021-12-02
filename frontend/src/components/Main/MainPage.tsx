@@ -10,6 +10,7 @@ import AlertModal from './AlertModal';
 import Loading from '../core/Loading';
 import { MainStoreContext } from './MainStore';
 import { flex } from '../../utils/styledComponentFunc';
+import { ToggleStoreContext } from './ToggleStore';
 
 const Container = styled.div`
   width: 100vw;
@@ -19,7 +20,8 @@ const Container = styled.div`
 `;
 
 function MainPage(): JSX.Element {
-  const { isModalOpen, isAlertModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { getUserServerList } = useContext(MainStoreContext);
+  const { isModalOpen, isAlertModalOpen } = useContext(ToggleStoreContext);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const setUserServerList = async () => {

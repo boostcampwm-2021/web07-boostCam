@@ -41,7 +41,6 @@ function MainSection(): JSX.Element {
     const { data } = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
 
     if (data) {
-      data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
       setMessageList({
         messageData: data,
         isLoading: false,
@@ -53,7 +52,6 @@ function MainSection(): JSX.Element {
     if (!selectedMessageData) return;
     const { data } = await fetchData<null, CommentData[]>('GET', `/api/comments?messageId=${selectedMessageData.id}`);
     if (data) {
-      data.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
       setCommentList({
         commentData: data,
         isLoading: false,

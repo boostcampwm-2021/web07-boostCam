@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import MainPage from './MainPage';
 import MainStore from './MainStore';
+import ToggleStore from './ToggleStore';
 
 function Main(): JSX.Element {
-  useEffect(() => {}, []);
-
   return (
     <MainStore>
-      <MainPage />
+      <ToggleStore>
+        <MainPage />
+      </ToggleStore>
     </MainStore>
   );
 }

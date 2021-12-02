@@ -7,6 +7,7 @@ import ServerDeleteCheckModal from './ServerDeleteCheckModal';
 import { fetchData, sendFormData } from '../../../../utils/fetchMethods';
 import { ServerEntity } from '../../../../types/server';
 import { flex } from '../../../../utils/styledComponentFunc';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const { CopyIcon } = ButtonBarIcons;
 
@@ -94,7 +95,21 @@ const InputLabel = styled.label`
 const ImagePreview = styled.img`
   width: 40px;
   height: 40px;
+  background-color: white;
+  border-radius: 5px;
 `;
+
+const ServerName = styled.div`
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: #ffffff;
+  border-radius: 5px;
+  text-align: center;
+`;
+
 const MessageFailToPost = styled.span`
   color: red;
   font-size: 16px;
@@ -144,8 +159,8 @@ const DeleteButton = styled.button`
 `;
 
 function ServerSettingModal(): JSX.Element {
-  const { setIsModalOpen, setIsAlertModalOpen, setAlertModalContents, selectedServer, getUserServerList } =
-    useContext(MainStoreContext);
+  const { selectedServer, getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen, setAlertModalContents } = useContext(ToggleStoreContext);
   const isButtonActive = true;
   const [imagePreview, setImagePreview] = useState<string>();
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
@@ -273,7 +288,7 @@ function ServerSettingModal(): JSX.Element {
         <InputName>서버 아이콘 변경</InputName>
         <InputDiv>
           <ImageInputDiv>
-            <ImagePreview src={imagePreview} />
+            {imagePreview ? <ImagePreview src={imagePreview} /> : <ServerName>{serverName[0]}</ServerName>}
             <InputLabel htmlFor="file">파일을 선택하세요</InputLabel>
             <InputFile id="file" type="file" onChange={onChangePreviewImage} />
           </ImageInputDiv>

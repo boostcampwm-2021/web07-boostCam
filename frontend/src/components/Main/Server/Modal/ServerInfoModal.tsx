@@ -39,6 +39,7 @@ const ServerIcon = styled.img`
   height: 40px;
   margin-right: 10px;
   border-radius: 5px;
+  background-color: white;
 `;
 
 const ServerName = styled.div`
@@ -82,7 +83,7 @@ const InfoDiv = styled.div`
   color: black;
   width: 95%;
   min-height: 80px;
-  max-height: 150px;
+  max-height: 110px;
   overflow-y: auto;
   margin: 0px;
 

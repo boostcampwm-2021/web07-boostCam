@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { deleteApi } from '../../../../utils/fetchMethods';
 import { flex } from '../../../../utils/styledComponentFunc';
 import { MainStoreContext } from '../../MainStore';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const MessageFailToPost = styled.span`
   color: red;
@@ -72,7 +73,8 @@ type ServerDeleteCheckModalProps = {
 };
 function ServerDeleteCheckModal(props: ServerDeleteCheckModalProps): JSX.Element {
   const { serverId } = props;
-  const { setIsModalOpen, setIsAlertModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen, setIsAlertModalOpen } = useContext(ToggleStoreContext);
   const [messageFailToDelete, setMessageFailToDelete] = useState<string>('');
 
   const onClickDeleteServer = async () => {

@@ -3,9 +3,11 @@ import React, { useContext } from 'react';
 import { MainStoreContext } from '../../MainStore';
 import { fetchData } from '../../../../utils/fetchMethods';
 import OkCancelModal from '../../../core/OkCancelModal';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 function QuitChannelModal(): JSX.Element {
-  const { selectedServer, rightClickedChannelId, setIsModalOpen, getServerChannelList } = useContext(MainStoreContext);
+  const { selectedServer, rightClickedChannelId, getServerChannelList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
 
   const handleClickOk = async () => {
     await fetchData<null, null>(

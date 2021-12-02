@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Get,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LoginGuard } from '../login/login.guard';
 import { ExpressSession } from '../types/session';
@@ -39,8 +40,8 @@ export class UserServerController {
     @Body() { code },
   ) {
     const user = session.user;
-    const newUserServer = await this.userServerService.create(user, code);
-    return ResponseEntity.created(newUserServer.id);
+    const newUserServerId = await this.userServerService.create(user, code);
+    return ResponseEntity.created(newUserServerId);
   }
 
   @Delete('/:id')
@@ -48,7 +49,7 @@ export class UserServerController {
   async delete(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ) {
     const userId = session.user.id;
     await this.userServerService.deleteById(id, userId);

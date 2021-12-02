@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { MainStoreContext } from '../Main/MainStore';
 import { BoostCamMainIcons } from '../../utils/svgIcons';
 import { flex } from '../../utils/styledComponentFunc';
+import { ToggleStoreContext } from '../Main/ToggleStore';
 
 const { Close } = BoostCamMainIcons;
 
@@ -85,7 +85,7 @@ const CloseIcon = styled(Close)`
 `;
 
 function MainModal(): JSX.Element {
-  const { setIsModalOpen, modalContents } = useContext(MainStoreContext);
+  const { setIsModalOpen, modalContents } = useContext(ToggleStoreContext);
   const { contents, title, description, height, minHeight } = modalContents;
   return (
     <Container>

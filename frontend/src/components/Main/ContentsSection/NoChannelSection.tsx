@@ -6,6 +6,7 @@ import { ChannelListData } from '../../../types/main';
 import { fetchData } from '../../../utils/fetchMethods';
 import { JoinChannelRequest } from '../../../types/join-channel-request';
 import { customScroll, flex } from '../../../utils/styledComponentFunc';
+import { ToggleStoreContext } from '../ToggleStore';
 
 const Container = styled.div`
   width: 50%;
@@ -121,7 +122,8 @@ const ItemButton = styled.button`
 `;
 
 function NoChannelSection(): JSX.Element {
-  const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { selectedServer, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [channelList, setChannelList] = useState<ChannelListData[]>([]);
 
   const getNotJoinedChannelList = async () => {
@@ -136,7 +138,11 @@ function NoChannelSection(): JSX.Element {
     const resquestBody = {
       channelId: id,
     };
-    await fetchData<JoinChannelRequest, null>('POST', `/api/user/servers/${selectedServer}/channels`, resquestBody);
+    await fetchData<JoinChannelRequest, null>(
+      'POST',
+      `/api/user/servers/${selectedServer.server.id}/channels`,
+      resquestBody,
+    );
     getServerChannelList();
     socket.emit('joinChannel', { channelId: id });
     setIsModalOpen(false);

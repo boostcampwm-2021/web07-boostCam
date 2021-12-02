@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { MainStoreContext } from '../../MainStore';
 import { fetchData } from '../../../../utils/fetchMethods';
 import { flex } from '../../../../utils/styledComponentFunc';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.form`
   width: 90%;
@@ -82,7 +83,8 @@ function JoinServerModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<JoinServerModalForm>();
-  const { setIsModalOpen, getUserServerList } = useContext(MainStoreContext);
+  const { getUserServerList } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const [messageFailToPost, setMessageFailToPost] = useState<string>('');
 

@@ -4,10 +4,11 @@ import {
   Body,
   Get,
   Param,
-  UseGuards,
   Session,
   Delete,
   ForbiddenException,
+  UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import ResponseEntity from '../common/response-entity';
@@ -18,11 +19,12 @@ import { Cam } from './cam.entity';
 import { CamService } from './cam.service';
 
 @Controller('/api/cam')
-@UseGuards(LoginGuard)
 export class CamController {
   constructor(private camService: CamService) {}
 
-  @Post() async createCam(
+  @UseGuards(LoginGuard)
+  @Post()
+  async createCam(
     @Body() cam: RequestCamDto,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<number>> {
@@ -40,8 +42,9 @@ export class CamController {
     return ResponseEntity.ok<Cam>(cam);
   }
 
+  @UseGuards(LoginGuard)
   @Delete('/:id') async deleteCam(
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
     @Session() session: ExpressSession,
   ): Promise<ResponseEntity<number>> {
     const cam = await this.camService.findOneById(id);

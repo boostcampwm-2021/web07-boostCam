@@ -5,12 +5,14 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   RelationId,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { UserChannel } from '../user-channel/user-channel.entity';
 
 @Entity()
 export class Channel {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -24,6 +26,9 @@ export class Channel {
 
   @ManyToOne(() => User)
   owner: User;
+
+  @OneToMany(() => UserChannel, (userChannels) => userChannels.channel)
+  userChannels: UserChannel[];
 
   @RelationId((channel: Channel) => channel.owner)
   ownerId: number;

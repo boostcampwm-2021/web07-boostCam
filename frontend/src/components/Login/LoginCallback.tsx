@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import userState from '../../atoms/user';
 
-import { User } from '../../types/user';
 import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
@@ -19,13 +16,12 @@ const Container = styled.div`
   color: #eeeeee;
 `;
 
-const requestLogin = async (code: string, service: string): Promise<User> => {
+const requestLogin = async (code: string, service: string): Promise<void> => {
   const response = await fetch(`/api/login/${service}?code=${code}`);
   if (!response.ok) {
     throw new Error(`${response.status}`);
   }
-  const user: User = await response.json();
-  return user;
+  await response.json();
 };
 
 type LoginCallbackProps = {
@@ -36,7 +32,6 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   const { service } = props;
   const [loading, setLoading] = useState<boolean>(true);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
   const [loginStatus, setLoginStatus] = useState<string>('로그인 중');
   const loginStatusRef = useRef('로그인 중');
 
@@ -50,8 +45,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
   useEffect(() => {
     const tryLogin = async () => {
       try {
-        const user = await requestLogin(code, service);
-        setLoggedInUser(user);
+        await requestLogin(code, service);
         setIsSuccess(true);
       } catch (e) {
         setIsSuccess(false);
@@ -79,7 +73,7 @@ function LoginCallback(props: LoginCallbackProps): JSX.Element {
     };
   }, []);
 
-  if (loggedInUser || isSuccess) {
+  if (isSuccess) {
     return <Navigate to="/main" />;
   }
 

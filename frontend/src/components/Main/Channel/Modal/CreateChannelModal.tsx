@@ -6,6 +6,7 @@ import { flex } from '../../../../utils/styledComponentFunc';
 
 import { MainStoreContext } from '../../MainStore';
 import ChannelEntity from '../../../../types/channel';
+import { ToggleStoreContext } from '../../ToggleStore';
 
 const Container = styled.form`
   width: 90%;
@@ -83,7 +84,8 @@ function CreateChannelModal(): JSX.Element {
     watch,
     formState: { errors },
   } = useForm<CreateModalForm>();
-  const { selectedServer, setIsModalOpen, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { selectedServer, getServerChannelList, socket } = useContext(MainStoreContext);
+  const { setIsModalOpen } = useContext(ToggleStoreContext);
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
 
   const onSubmitCreateChannelModal = async (value: { name: string; description: string }) => {

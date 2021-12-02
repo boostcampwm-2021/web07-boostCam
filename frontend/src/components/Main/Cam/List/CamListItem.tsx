@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { flex } from '../../../../utils/styledComponentFunc';
 
 import { BoostCamMainIcons } from '../../../../utils/svgIcons';
-import { MainStoreContext } from '../../MainStore';
+import { ToggleStoreContext } from '../../ToggleStore';
 import CamDeleteModal from '../Modal/CamDeleteModal';
 
 const { Hash } = BoostCamMainIcons;
@@ -48,7 +48,7 @@ const CamNameSpan = styled.span`
 function CamListItem(props: CamListItemProps): JSX.Element {
   const { id, name, url } = props;
   const navigate = useNavigate();
-  const { setIsDropdownOpen, setDropdownInfo } = useContext(MainStoreContext);
+  const { setIsDropdownOpen, setDropdownInfo } = useContext(ToggleStoreContext);
 
   const onClickCam = () => {
     navigate(`/cam?roomid=${url}`);
