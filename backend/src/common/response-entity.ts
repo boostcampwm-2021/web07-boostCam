@@ -1,5 +1,9 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 class ResponseEntity<T> {
+  @ApiProperty()
   statusCode: number;
+  @ApiProperty()
   message: string;
   data: T;
   constructor(statusCode: number, message: string, data: T) {

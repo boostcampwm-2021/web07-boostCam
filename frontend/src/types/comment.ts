@@ -7,11 +7,17 @@ type CommentRequestBody = {
 };
 
 type CommentData = {
-  id: string;
-  channelId: string;
+  id: number;
+  messageId: string;
+  channelId: number;
   contents: string;
   createdAt: string;
   sender: MessageSender;
 };
 
-export type { CommentRequestBody, CommentData };
+type CommentListInfo = {
+  commentData: CommentData[];
+  isLoading: boolean;
+};
+
+export type { CommentRequestBody, CommentData, CommentListInfo };

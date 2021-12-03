@@ -1,8 +1,12 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from './user.entity';
 
 export class UserDto {
+  @ApiProperty()
   id: number;
+  @ApiProperty()
   nickname: string;
+  @ApiProperty()
   profile: string;
 
   static newInstance(id: number, nickname: string, profile: string) {

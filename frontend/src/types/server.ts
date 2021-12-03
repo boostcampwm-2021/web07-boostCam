@@ -4,4 +4,12 @@ type ServerInfo = {
   server: Server;
 };
 
-export type { ServerInfo, Server };
+type ServerEntity = {
+  code: string;
+  description: string;
+  id: number;
+  imgUrl: string;
+  name: string;
+};
+
+export type { ServerInfo, Server, ServerEntity };

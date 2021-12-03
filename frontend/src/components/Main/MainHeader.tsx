@@ -1,11 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import userState from '../../atoms/user';
 import Dropdown from '../core/Dropdown';
 import DropdownMenu from '../core/DropdownMenu';
 import { MainStoreContext } from './MainStore';
-import QuitServerModal from './ServerModal/QuitServerModal';
-import ServerInfoModal from './ServerModal/ServerInfoModal';
-import ServerSettingModal from './ServerModal/ServerSettingModal';
+import QuitServerModal from './Server/Modal/QuitServerModal';
+import ServerInfoModal from './Server/Modal/ServerInfoModal';
+import ServerSettingModal from './Server/Modal/ServerSettingModal';
 
 const Container = styled.div`
   width: 100%;
@@ -32,6 +34,8 @@ const CurrentServerName = styled.span`
 function MainHeader(): JSX.Element {
   const [isDropdownActivated, setIsDropdownActivated] = useState<boolean>(false);
   const { selectedServer } = useContext(MainStoreContext);
+  const [isOwnerOfServer, setIsOwnerOfServer] = useState<boolean>(false);
+  const user = useRecoilValue(userState);
 
   const onClickServerInfoButton = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     if (selectedServer !== undefined) {
@@ -40,6 +44,12 @@ function MainHeader(): JSX.Element {
     }
   };
 
+  useEffect(() => {
+    if (selectedServer && user) {
+      setIsOwnerOfServer(user.id === selectedServer.server.ownerId);
+    }
+  }, [selectedServer]);
+
   return (
     <Container>
       <HeaderBox>
@@ -47,21 +57,43 @@ function MainHeader(): JSX.Element {
           {selectedServer !== undefined ? selectedServer.server.name : '새로운 서버에 참여하세요.'}
         </CurrentServerName>
         <Dropdown isDropdownActivated={isDropdownActivated} setIsDropdownActivated={setIsDropdownActivated}>
-          <DropdownMenu
-            name="서버 설정"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<ServerSettingModal />}
-          />
+          {isOwnerOfServer && (
+            <DropdownMenu
+              name="서버 설정"
+              setIsDropdownActivated={setIsDropdownActivated}
+              modalContents={{
+                contents: <ServerSettingModal />,
+                title: '서버 설정',
+                description: '선택한 서버에 대한 내용을 변경할 수 있습니다.',
+                height: '70%',
+                minHeight: '570px',
+              }}
+            />
+          )}
           <DropdownMenu
             name="서버 정보"
             setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<ServerInfoModal />}
+            modalContents={{
+              contents: <ServerInfoModal />,
+              title: '서버 정보',
+              description: '접속하신 서버에 대한 정보입니다.',
+              height: '60%',
+              minHeight: '450px',
+            }}
           />
-          <DropdownMenu
-            name="서버 나가기"
-            setIsDropdownActivated={setIsDropdownActivated}
-            modalContents={<QuitServerModal />}
-          />
+          {!isOwnerOfServer && (
+            <DropdownMenu
+              name="서버 나가기"
+              setIsDropdownActivated={setIsDropdownActivated}
+              modalContents={{
+                contents: <QuitServerModal />,
+                title: '서버 나가기',
+                description: '서버에서 나가시겠습니까?',
+                height: '30%',
+                minHeight: '150px',
+              }}
+            />
+          )}
         </Dropdown>
       </HeaderBox>
     </Container>

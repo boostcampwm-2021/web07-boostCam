@@ -11,7 +11,7 @@ import { User } from '../user/user.entity';
 
 @Entity()
 export class Comment {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -26,7 +26,7 @@ export class Comment {
   @RelationId((comment: Comment) => comment.sender)
   senderId: number;
 
-  @ManyToOne(() => Message)
+  @ManyToOne(() => Message, { onDelete: 'CASCADE' })
   message: Message;
 
   @RelationId((comment: Comment) => comment.message)

@@ -7,6 +7,7 @@ export class CommentRepository extends Repository<Comment> {
     return this.createQueryBuilder('comment')
       .innerJoinAndSelect('comment.sender', 'user')
       .where('comment.messageId = :messageId', { messageId })
+      .orderBy('comment.id')
       .getMany();
   }
 }

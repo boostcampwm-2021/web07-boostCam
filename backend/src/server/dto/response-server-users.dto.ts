@@ -1,21 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Server } from '../../server/server.entity';
-
-type UserInfo = {
-  nickname: string;
-  profile: string;
-};
+import { UserDto } from '../../user/user.dto';
 
 class ServerWithUsersDto {
+  @ApiProperty()
   description: string;
+
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   imgUrl: string;
-  users: UserInfo[];
+
+  @ApiProperty()
+  users: UserDto[];
 
   constructor(
     description: string,
     name: string,
     imgUrl: string,
-    users: UserInfo[],
+    users: UserDto[],
   ) {
     this.description = description;
     this.name = name;
@@ -28,12 +32,13 @@ class ServerWithUsersDto {
       server.description,
       server.name,
       server.imgUrl,
-      server.userServer.map((userServer) => {
-        return {
-          nickname: userServer.user.nickname,
-          profile: userServer.user.profile,
-        };
-      }),
+      server.userServer.map((userServer) =>
+        UserDto.newInstance(
+          userServer.user.id,
+          userServer.user.nickname,
+          userServer.user.profile,
+        ),
+      ),
     );
   }
 }

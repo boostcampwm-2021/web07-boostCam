@@ -24,9 +24,6 @@ export class ServerService {
     @InjectRepository(ServerRepository)
     private serverRepository: ServerRepository,
   ) {}
-  findAll(): Promise<Server[]> {
-    return this.serverRepository.find({ relations: ['owner'] });
-  }
 
   findOne(id: number): Promise<Server> {
     return this.serverRepository.findOne({ id: id });
@@ -52,11 +49,14 @@ export class ServerService {
     return server.code;
   }
 
-  async refreshCode(id: number): Promise<string> {
-    const server = await this.serverRepository.findOne(id);
+  async refreshCode(id: number, user: User): Promise<string> {
+    const server = await this.serverRepository.findOneWithOwner(id);
 
     if (!server) {
       throw new BadRequestException('존재하지 않는 서버입니다.');
+    }
+    if (server.owner.id !== user.id) {
+      throw new ForbiddenException('권한이 없습니다.');
     }
 
     server.code = v4();
@@ -68,7 +68,7 @@ export class ServerService {
     user: User,
     requestServerDto: RequestServerDto,
     imgUrl: string | undefined,
-  ): Promise<Server> {
+  ): Promise<number> {
     const server = requestServerDto.toServerEntity();
     server.owner = user;
     server.imgUrl = imgUrl || '';
@@ -77,7 +77,7 @@ export class ServerService {
     const createdServer = await this.serverRepository.save(server);
     this.userServerService.create(user, createdServer.code);
 
-    return createdServer;
+    return createdServer.id;
   }
 
   async updateServer(

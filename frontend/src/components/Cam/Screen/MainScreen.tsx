@@ -9,16 +9,13 @@ import LocalUserScreen from './LocalUserScreen';
 import UserScreen from './UserScreen';
 import { SharedScreenStoreContext } from '../SharedScreen/SharedScreenStore';
 
-const Container = styled.div<{ activeTab: string[]; numOfScreen: number }>`
+const Container = styled.div<{ activeTab: string[] }>`
   width: ${(props) => props.activeTab[0]};
   height: 90vh;
   background-color: black;
-  display: grid;
-  grid-template-columns: repeat(${(props) => Math.ceil(props.numOfScreen ** 0.5)}, minmax(30%, auto));
-  grid-auto-rows: minmax(100px, auto);
-  gap: 20px;
-  justify-items: space-evenly;
+  display: flex;
   align-items: center;
+  flex-wrap: wrap;
   transition: all 0.5s ease;
 `;
 
@@ -38,17 +35,22 @@ function MainScreen(): JSX.Element {
 
   if (sharedScreen !== null) {
     return (
-      <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} numOfScreen={1}>
+      <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd}>
         <SharedScreen stream={sharedScreen} />
       </Container>
     );
   }
 
   return (
-    <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd} numOfScreen={screenList.length + 1}>
-      <LocalUserScreen />
+    <Container activeTab={countActiveTab()} onAnimationEnd={handleAnimationEnd}>
+      <LocalUserScreen numOfScreen={screenList.length + 1} />
       {screenList.map((screen: Screen) => (
-        <UserScreen key={screen.userId} stream={screen.stream} userId={screen.userId} />
+        <UserScreen
+          key={screen.userId}
+          stream={screen.stream}
+          userId={screen.userId}
+          numOfScreen={screenList.length + 1}
+        />
       ))}
     </Container>
   );

@@ -11,6 +11,18 @@ slack의 서버, 채널 기능과 zoom의 인스턴스 화상채팅 기능을 �
 |------|---|---|------|
 |<img src="https://avatars.githubusercontent.com/u/76931330?v=4" width="80"> |<img src="https://avatars.githubusercontent.com/u/62635664?v=4" width="80">|<img src="https://avatars.githubusercontent.com/u/49611158?v=4" width="80">|<img src="https://avatars.githubusercontent.com/u/75236235?v=4" width="80">|
 
+
+## 주요 기능
+### WebRTC를 이용한 실시간 화상, 음성채팅 기능
+![webrtc](https://user-images.githubusercontent.com/76931330/144179395-9a706456-062f-420c-92da-71f82211de1c.gif)
+
+### WebSpeech API를 이용한 Speech-To-Text 기능
+![stt](https://user-images.githubusercontent.com/76931330/144179406-eae4235d-eb2d-47ae-a9ca-0c08bb31af8c.gif)
+
+### Slack과 유사한 방식의 텍스트 채팅 서버, 채널 관리
+![channel](https://user-images.githubusercontent.com/76931330/144179409-844f97f5-403c-4a9c-a15a-1290a53b366f.gif)
+
+
 ## 기술 스택
 | division        | stack                             |
 | --------------- | --------------------------------- |
@@ -24,13 +36,12 @@ slack의 서버, 채널 기능과 zoom의 인스턴스 화상채팅 기능을 �
 
 [기술스택 상세]((https://github.com/boostcampwm-2021/web07-boostCam/wiki/Tech-Stack))
 
-## 기획서
-[기획서 링크](https://docs.google.com/presentation/d/1CMu3LHJmwsUydwi0grAzuaGcXTTmatm5mvMyuJue2Rs/edit?usp=sharing)
 
 ## 위키
 [위키](https://github.com/boostcampwm-2021/web07-boostCam/wiki)에 가시면 아래 내용들을 확인할 수 있습니다
+ - 기획서
  - 목업
  - 그라운드 룰
- - 데일리 스크럼
+ - 데일리 스크럼 기록
  - 회의록
  - 백로그

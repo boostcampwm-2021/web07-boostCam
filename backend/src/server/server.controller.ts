@@ -8,11 +8,11 @@ import {
   Patch,
   UseGuards,
   Session,
-  HttpException,
   UseInterceptors,
   UploadedFile,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { ServerService } from './server.service';
@@ -25,8 +25,19 @@ import { ImageService } from '../image/image.service';
 import ServerWithUsersDto from './dto/response-server-users.dto';
 import { CamService } from '../cam/cam.service';
 import { ResponseCamDto } from '../cam/cam.dto';
+import { ApiExtraModels, ApiOkResponse } from '@nestjs/swagger';
+import { UserDto } from '../user/user.dto';
+import {
+  serverWithUserDtoSchema,
+  serverCodeSchema,
+  emptyResponseSchema,
+} from './server.schema';
 
+@UseGuards(LoginGuard)
 @Controller('/api/servers')
+@ApiExtraModels(ResponseEntity)
+@ApiExtraModels(ServerWithUsersDto)
+@ApiExtraModels(UserDto)
 export class ServerController {
   constructor(
     private serverService: ServerService,
@@ -34,36 +45,44 @@ export class ServerController {
     private camService: CamService,
   ) {}
 
-  @Get('/:id/users') async findOneWithUsers(
-    @Param('id') id: number,
+  @ApiOkResponse(serverWithUserDtoSchema)
+  @Get('/:id/users')
+  async findOneWithUsers(
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<ServerWithUsersDto>> {
     const serverWithUsers = await this.serverService.findOneWithUsers(id);
     return ResponseEntity.ok(serverWithUsers);
   }
 
   @Get('/:id/cam') async findCams(
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<ResponseCamDto[]>> {
     const cam = await this.camService.getCamList(id);
     return ResponseEntity.ok(cam);
   }
 
-  @Get('/:id/code') async findCode(
-    @Param('id') id: number,
+  @ApiOkResponse(serverCodeSchema)
+  @Get('/:id/code')
+  async findCode(
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<string>> {
     const code = await this.serverService.findCode(id);
     return ResponseEntity.ok(code);
   }
 
-  @Patch('/:id/code') async refreshCode(
-    @Param('id') id: number,
+  @ApiOkResponse(serverCodeSchema)
+  @Patch('/:id/code')
+  async refreshCode(
+    @Session()
+    session: ExpressSession,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<string>> {
-    const code = await this.serverService.refreshCode(id);
+    const user = session.user;
+    const code = await this.serverService.refreshCode(id, user);
     return ResponseEntity.ok(code);
   }
 
   @Post()
-  @UseGuards(LoginGuard)
   @UseInterceptors(FileInterceptor('icon'))
   async createServer(
     @Session()
@@ -71,82 +90,64 @@ export class ServerController {
     @Body() requestServerDto: RequestServerDto,
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<number>> {
-    try {
-      requestServerDto = new RequestServerDto(
-        requestServerDto.name,
-        requestServerDto.description,
-      );
-      let imgUrl: string;
+    requestServerDto = new RequestServerDto(
+      requestServerDto.name,
+      requestServerDto.description,
+    );
+    let imgUrl: string;
 
-      if (icon && icon.mimetype.substring(0, 5) === 'image') {
-        const uploadedFile = await this.imageService.uploadFile(icon);
-        imgUrl = uploadedFile.Location;
-      }
-      const user = session.user;
-      const newServer = await this.serverService.create(
-        user,
-        requestServerDto,
-        imgUrl,
-      );
-      return ResponseEntity.created(newServer.id);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    if (icon && icon.mimetype.substring(0, 5) === 'image') {
+      const uploadedFile = await this.imageService.uploadFile(icon);
+      imgUrl = uploadedFile.Location;
     }
+    const user = session.user;
+    const newServerId = await this.serverService.create(
+      user,
+      requestServerDto,
+      imgUrl,
+    );
+
+    return ResponseEntity.created(newServerId);
   }
 
+  @ApiOkResponse(serverCodeSchema)
   @Patch('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(FileInterceptor('icon'))
   async updateServer(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
     @Body() requestServerDto: RequestServerDto,
     @UploadedFile() icon: Express.Multer.File,
   ): Promise<ResponseEntity<string>> {
-    try {
-      requestServerDto = new RequestServerDto(
-        requestServerDto.name,
-        requestServerDto.description,
-      );
-      let imgUrl: string;
+    requestServerDto = new RequestServerDto(
+      requestServerDto.name,
+      requestServerDto.description,
+    );
+    let imgUrl: string;
 
-      if (icon && icon.mimetype.substring(0, 5) === 'image') {
-        const uploadedFile = await this.imageService.uploadFile(icon);
-        imgUrl = uploadedFile.Location;
-      }
-      const user = session.user;
-
-      await this.serverService.updateServer(id, requestServerDto, user, imgUrl);
-
-      return ResponseEntity.noContent();
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    if (icon && icon.mimetype.substring(0, 5) === 'image') {
+      const uploadedFile = await this.imageService.uploadFile(icon);
+      imgUrl = uploadedFile.Location;
     }
+    const user = session.user;
+    await this.serverService.updateServer(id, requestServerDto, user, imgUrl);
+
+    return ResponseEntity.noContent();
   }
 
+  @ApiOkResponse(emptyResponseSchema)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteServer(
     @Session()
     session: ExpressSession,
-    @Param('id') id: number,
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<ResponseEntity<string>> {
-    try {
-      const user = session.user;
-      await this.serverService.deleteServer(id, user);
-      return ResponseEntity.noContent();
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    const user = session.user;
+    await this.serverService.deleteServer(id, user);
+
+    return ResponseEntity.noContent();
   }
 }

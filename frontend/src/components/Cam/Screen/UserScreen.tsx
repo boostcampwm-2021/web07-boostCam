@@ -6,30 +6,31 @@ import type { Control, Status } from '../../../types/cam';
 import StreamStatusIndicator from './StreamStatusIndicator';
 import ControlMenu from './ControlMenu';
 import { CamStoreContext } from '../CamStore';
+import { flex } from '../../../utils/styledComponentFunc';
 
 type UserScreenProps = {
   stream: MediaStream | undefined;
   userId: string;
+  numOfScreen: number;
 };
 
-const Container = styled.div`
+const Container = styled.div<{ numOfScreen: number }>`
   position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 90%;
+  width: calc(100% / ${(props) => Math.ceil(props.numOfScreen ** 0.5)});
+  height: calc(100% / ${(props) => Math.floor((props.numOfScreen + 1) ** 0.5)});
+  ${flex('column', 'center', 'center')};
+  aspect-ratio: 16/9;
+  overflow: hidden;
 `;
 
 const Video = styled.video<{ isSpeaking: boolean }>`
   max-height: 100%;
-  width: 100%;
+  width: 90%;
   border: ${(props) => (props.isSpeaking ? '2px solid green' : 'none')};
 `;
 
 function UserScreen(props: UserScreenProps): JSX.Element {
-  const { stream, userId } = props;
+  const { stream, userId, numOfScreen } = props;
   const { socket } = useContext(CamStoreContext);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [nickname, setNickname] = useState<string>('김철수');
@@ -109,7 +110,7 @@ function UserScreen(props: UserScreenProps): JSX.Element {
   }, [control]);
 
   return (
-    <Container onContextMenu={handleContextMenu}>
+    <Container onContextMenu={handleContextMenu} numOfScreen={numOfScreen}>
       {status.stream && status.video && control.video ? (
         <Video ref={videoRef} playsInline autoPlay isSpeaking={status.speaking && status.audio}>
           <track kind="captions" />

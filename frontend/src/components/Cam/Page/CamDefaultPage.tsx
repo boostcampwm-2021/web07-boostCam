@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { flex } from '../../../utils/styledComponentFunc';
 
 type CamDefaultPageProps = {
   backgroundSrc: string;
@@ -12,10 +13,7 @@ const Container = styled.div`
   height: 100vh;
   left: 0px;
   right: 0px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('row', 'center', 'center')}
   background-color: white;
 `;
 

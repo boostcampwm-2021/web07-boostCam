@@ -1,26 +1,29 @@
 type UserData = {
-  githubId: string;
-  id: string;
+  githubId: number;
+  id: number;
   nickname: string;
   profile: string;
 };
 
 type ServerData = {
   description: string;
-  id: string;
+  id: number;
   name: string;
   imgUrl: string;
+  owner: UserData;
 };
 
 type MyServerData = {
-  id: string;
+  id: number;
   server: ServerData;
 };
 
-type ChannelData = {
+type ChannelListData = {
   description: string;
-  id: string;
+  id: number;
   name: string;
+  ownerId: number;
+  serverId: number;
 };
 
 type CamData = {
@@ -28,4 +31,4 @@ type CamData = {
   url: string;
 };
 
-export type { UserData, ServerData, MyServerData, ChannelData, CamData };
+export type { UserData, ServerData, MyServerData, ChannelListData, CamData };

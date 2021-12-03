@@ -1,20 +1,25 @@
 type MessageRequestBody = {
-  channelId: string;
+  channelId: number;
   contents: string;
 };
 
 type MessageSender = {
-  id: string;
+  id: number;
   nickname: string;
   profile: string;
 };
 
 type MessageData = {
-  id: string;
-  channelId: string;
+  id: number;
+  channelId: number;
   contents: string;
   createdAt: string;
   sender: MessageSender;
 };
 
-export type { MessageRequestBody, MessageSender, MessageData };
+type MessageListInfo = {
+  messageData: MessageData[];
+  isLoading: boolean;
+};
+
+export type { MessageRequestBody, MessageSender, MessageData, MessageListInfo };

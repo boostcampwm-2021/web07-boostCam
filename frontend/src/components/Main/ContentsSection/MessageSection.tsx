@@ -1,18 +1,25 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { MainStoreContext } from '../MainStore';
-import { MessageData, MessageRequestBody } from '../../../types/message';
+import { MessageData, MessageListInfo, MessageRequestBody } from '../../../types/message';
+
+import { TextareaDiv, MessageTextarea, messageInnerElement, onKeyDownMessageTextarea } from './ContentsSectionCommon';
+import { User } from '../../../types/user';
+import ChannelEntity from '../../../types/channel';
+import UserListModal from './UserListModal';
+import NotFoundChannel from './NotFoundChannel';
+import { customScroll, flex } from '../../../utils/styledComponentFunc';
+import { ToggleStoreContext } from '../ToggleStore';
 
 const Container = styled.div`
-  width: 50%;
+  flex: 5 0 0;
   height: 100%;
 
   background-color: white;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  ${flex('column', 'flex-start')}
+
   border-right: 1px solid black;
 `;
 
@@ -21,28 +28,24 @@ const MessageSectionHeader = styled.div`
   flex: 1 1 0;
   max-height: 50px;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row', 'space-between', 'center')}
 
   border-bottom: 1px solid gray;
 `;
 
-const ChannelName = styled.div`
+const ChannelName = styled.span`
   margin-left: 15px;
   padding: 8px 12px;
   border-radius: 10px;
-
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f0e7e7;
-  }
+  background-color: #f0e7e7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const ChannelUserButton = styled.div`
+const ChannelUserButton = styled.span`
   margin-right: 15px;
+  min-width: 55px;
   padding: 3px 5px;
   border: 1px solid gray;
   border-radius: 10px;
@@ -59,126 +62,33 @@ const MessageSectionBody = styled.div`
   flex: 5 1 0;
   overflow-y: auto;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  ${flex('column', 'flex-start', 'flex-start')}
 
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
+  ${customScroll()};
 `;
 
 const MessageItemBlock = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-
+  ${flex('row', 'flex-start')}
   &:hover {
     background-color: #f0e7e7;
   }
 `;
 
-const MessageItemIcon = styled.div<{ imgUrl: string }>`
-  width: 36px;
-  height: 36px;
-  margin: 10px;
-  background-image: url(${(props) => props.imgUrl});
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 8px;
-`;
-
-const MessageItem = styled.div`
-  width: 90%;
-  padding: 8px 0px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
-const MessageItemHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const MessageSender = styled.span`
-  font-weight: 600;
-  font-size: 15px;
-`;
-
-const MessageTimelog = styled.span`
-  font-size: 12px;
-  margin-left: 15px;
-`;
-
-const MessageContents = styled.span`
-  font-size: 15px;
-`;
-
-const TextareaDiv = styled.div`
-  min-height: 105px;
-  max-height: 250px;
-  background-color: #ece9e9;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const MessageTextarea = styled.textarea`
-  width: 90%;
-  height: 22px;
-  max-height: 200px;
-  border: none;
-  outline: none;
-  resize: none;
-  background: none;
-
-  font-size: 15px;
-
-  padding: 10px;
-  border: 1px solid gray;
-  border-radius: 5px;
-
-  background-color: white;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #999999;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cccccc;
-    border-radius: 10px;
-  }
-`;
-
 type MessageSectionProps = {
-  messageList: MessageData[];
+  messageList: MessageListInfo;
+  setIsThreadOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userList: User[];
+  channelInfo: ChannelEntity | undefined;
 };
 
 function MessageSection(props: MessageSectionProps): JSX.Element {
   const { selectedChannel, setSelectedMessageData, socket } = useContext(MainStoreContext);
-  const { messageList } = props;
-  const textDivRef = useRef<HTMLDivElement>(null);
-  const tmpChannelName = '# ChannelName';
+  const { setIsModalOpen, setModalContents } = useContext(ToggleStoreContext);
+  const { messageList, setIsThreadOpen, userList, channelInfo } = props;
+  const { messageData } = messageList;
+  const textareaDivRef = useRef<HTMLDivElement>(null);
+  const messageSectionBodyRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = async (contents: string) => {
     const requestBody: MessageRequestBody = {
@@ -188,61 +98,59 @@ function MessageSection(props: MessageSectionProps): JSX.Element {
     socket.emit('sendMessage', requestBody);
   };
 
-  const onKeyDownMessageTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { key, currentTarget, shiftKey } = e;
-    const msg = currentTarget.value.trim();
-    const divRef = textDivRef.current;
-
-    currentTarget.style.height = '15px';
-    currentTarget.style.height = `${currentTarget.scrollHeight - 15}px`;
-    if (divRef) {
-      divRef.style.height = `105px`;
-      divRef.style.height = `${90 + currentTarget.scrollHeight - 27}px`;
-    }
-
-    if (!shiftKey && key === 'Enter') {
-      e.preventDefault();
-      if (!msg.length) currentTarget.value = '';
-      else {
-        sendMessage(currentTarget.value);
-        currentTarget.value = '';
-      }
-      currentTarget.style.height = '21px';
-      if (divRef) divRef.style.height = `105px`;
-    }
-  };
-
   const onClickMessageItemBlock = (data: MessageData) => {
     setSelectedMessageData(data);
+    setIsThreadOpen(true);
   };
 
-  const MessageItemList = messageList.map((val: MessageData): JSX.Element => {
-    const { id, contents, createdAt, sender } = val;
-    const { nickname, profile } = sender;
-    return (
-      <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
-        <MessageItemIcon imgUrl={profile} />
-        <MessageItem>
-          <MessageItemHeader>
-            <MessageSender> {nickname} </MessageSender>
-            <MessageTimelog>{createdAt}</MessageTimelog>
-          </MessageItemHeader>
-          <MessageContents>{contents}</MessageContents>
-        </MessageItem>
-      </MessageItemBlock>
-    );
-  });
+  const onClickChannelUserButton = () => {
+    setModalContents({
+      contents: <UserListModal userList={userList} />,
+      title: '사용자 목록',
+      description: '채널에 참여한 사용자들의 목록입니다.',
+      height: '60%',
+      minHeight: '450px',
+    });
+    setIsModalOpen(true);
+  };
+
+  const buildMessageItemList = () => {
+    return messageData.map((val: MessageData): JSX.Element => {
+      const { id } = val;
+      return (
+        <MessageItemBlock key={id} onClick={() => onClickMessageItemBlock(val)}>
+          {messageInnerElement(val)}
+        </MessageItemBlock>
+      );
+    });
+  };
+
+  useEffect(() => {
+    if (messageSectionBodyRef.current) {
+      messageSectionBodyRef.current.scroll({ top: messageSectionBodyRef.current.scrollHeight, behavior: 'smooth' });
+    }
+  }, [messageList]);
+
+  const MessageItemList = buildMessageItemList();
 
   return (
     <Container>
-      <MessageSectionHeader>
-        <ChannelName>{tmpChannelName}</ChannelName>
-        <ChannelUserButton>Users 5</ChannelUserButton>
-      </MessageSectionHeader>
-      <MessageSectionBody>{MessageItemList}</MessageSectionBody>
-      <TextareaDiv ref={textDivRef}>
-        <MessageTextarea onKeyDown={onKeyDownMessageTextarea} />
-      </TextareaDiv>
+      {!channelInfo ? (
+        <NotFoundChannel />
+      ) : (
+        <>
+          <MessageSectionHeader>
+            <ChannelName># {channelInfo && channelInfo.name}</ChannelName>
+            <ChannelUserButton onClick={onClickChannelUserButton}>
+              Users {userList && userList.length}
+            </ChannelUserButton>
+          </MessageSectionHeader>
+          <MessageSectionBody ref={messageSectionBodyRef}>{MessageItemList}</MessageSectionBody>
+          <TextareaDiv ref={textareaDivRef}>
+            <MessageTextarea onKeyDown={(e) => onKeyDownMessageTextarea(e, textareaDivRef, sendMessage)} />
+          </TextareaDiv>
+        </>
+      )}
     </Container>
   );
 }

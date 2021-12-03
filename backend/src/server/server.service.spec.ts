@@ -47,6 +47,8 @@ describe('ServerService', () => {
 
   const existsServerId = 1;
   const userId = 1;
+  const newServerId = 2;
+  const newUserServerId = 1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -126,24 +128,38 @@ describe('ServerService', () => {
 
   describe('refreshCode()', () => {
     it('코드 재생성에 성공할 경우', async () => {
-      serverRepository.findOne.mockResolvedValue(existsServer);
+      serverRepository.findOneWithOwner.mockResolvedValue(existsServer);
       const originCode = existsServer.code;
 
-      const code = await serverService.refreshCode(existsServerId);
+      const code = await serverService.refreshCode(existsServerId, user);
 
       expect(code).not.toBe(originCode);
     });
 
     it('서버가 존재하지 않을 경우', async () => {
       const nonExistsId = 0;
-      serverRepository.findOne.mockResolvedValue(undefined);
+      serverRepository.findOneWithOwner.mockResolvedValue(undefined);
 
       try {
-        await serverService.refreshCode(nonExistsId);
+        await serverService.refreshCode(nonExistsId, user);
       } catch (error) {
         expect(error.response.message).toBe('존재하지 않는 서버입니다.');
         expect(error.response.error).toBe('Bad Request');
         expect(error.response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+      }
+    });
+
+    it('권한이 없을 경우', async () => {
+      const userNotOwner = new User();
+      userNotOwner.id = 0;
+      serverRepository.findOneWithOwner.mockResolvedValue(existsServer);
+
+      try {
+        await serverService.refreshCode(existsServerId, userNotOwner);
+      } catch (error) {
+        expect(error.response.message).toBe('권한이 없습니다.');
+        expect(error.response.error).toBe('Forbidden');
+        expect(error.response.statusCode).toBe(HttpStatus.FORBIDDEN);
       }
     });
   });
@@ -153,17 +169,15 @@ describe('ServerService', () => {
       serverRepository.save.mockResolvedValue(newServer);
       serverRepository.findOne.mockResolvedValue(newServer);
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
-      userServerRepository.save.mockResolvedValue(newUserServer);
+      userServerRepository.save.mockResolvedValue(newUserServerId);
 
-      const createdServer = await serverService.create(
+      const createdServerId = await serverService.create(
         user,
         requestServerDto,
         '',
       );
 
-      expect(createdServer.name).toBe(requestServerDto.name);
-      expect(createdServer.description).toBe(requestServerDto.description);
-      expect(createdServer.owner.id).toBe(user.id);
+      expect(createdServerId).toBe(newServerId);
     });
   });
 
@@ -267,6 +281,7 @@ describe('ServerService', () => {
     user.id = userId;
     requestServerDto = new RequestServerDto(serverName, serverDescription);
     newServer = new Server();
+    newServer.id = newServerId;
     newServer.description = serverDescription;
     newServer.name = serverName;
     newServer.owner = user;
@@ -280,5 +295,8 @@ describe('ServerService', () => {
     existsServer.owner = user;
     existsServer.userServer = [existsUserServer];
     existsServer.code = v4();
+
+    newUserServer = new UserServer();
+    newUserServer.id = newUserServerId;
   };
 });

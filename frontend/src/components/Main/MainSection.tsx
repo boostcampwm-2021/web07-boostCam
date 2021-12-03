@@ -4,53 +4,78 @@ import styled from 'styled-components';
 import RoomListSection from './RoomListSection';
 import ContentsSection from './ContentsSection/ContentsSection';
 import MainHeader from './MainHeader';
-import { MessageData } from '../../types/message';
-import fetchData from '../../utils/fetchMethods';
+import { MessageData, MessageListInfo } from '../../types/message';
+import { fetchData } from '../../utils/fetchMethods';
 import { MainStoreContext } from './MainStore';
+import ServerJoinSection from './ContentsSection/ServerJoinSection';
+import { CommentData, CommentListInfo } from '../../types/comment';
+import { flex } from '../../utils/styledComponentFunc';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
+  ${flex('column')};
 `;
 
 const MainBody = styled.div`
   width: 100%;
   flex: 1;
   background-color: #222323;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  ${flex('row', 'flex-start', 'center')};
 `;
 
 function MainSection(): JSX.Element {
-  const { selectedChannel, socket } = useContext(MainStoreContext);
-  const [messageList, setMessageList] = useState<MessageData[]>([]);
+  const { serverList, selectedChannel, selectedMessageData, socket } = useContext(MainStoreContext);
+  const [messageList, setMessageList] = useState<MessageListInfo>({
+    messageData: [],
+    isLoading: true,
+  });
+  const isJoinedServerExists = !!serverList.length;
+
+  const [commentList, setCommentList] = useState<CommentListInfo>({
+    commentData: [],
+    isLoading: true,
+  });
 
   const getMessageList = async () => {
-    const responseData = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
+    const { data } = await fetchData<null, MessageData[]>('GET', `/api/messages?channelId=${selectedChannel}`);
 
-    if (responseData) {
-      responseData.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
-      setMessageList(responseData);
+    if (data) {
+      setMessageList({
+        messageData: data,
+        isLoading: false,
+      });
+    }
+  };
+
+  const getCommentList = async () => {
+    if (!selectedMessageData) return;
+    const { data } = await fetchData<null, CommentData[]>('GET', `/api/comments?messageId=${selectedMessageData.id}`);
+    if (data) {
+      setCommentList({
+        commentData: data,
+        isLoading: false,
+      });
     }
   };
 
   useEffect(() => {
-    socket.emit('joinChannels');
-  }, []);
-
-  useEffect(() => {
     const receiveMessageHandler = (message: MessageData) => {
-      if (selectedChannel === message.channelId) setMessageList((list) => [...list, message]);
+      if (selectedChannel === message.channelId)
+        setMessageList((list) => {
+          return {
+            messageData: [...list.messageData, message],
+            isLoading: false,
+          };
+        });
     };
 
     socket.on('receiveMessage', receiveMessageHandler);
     if (selectedChannel) {
+      setMessageList({
+        messageData: [],
+        isLoading: true,
+      });
       getMessageList();
     }
     return () => {
@@ -58,12 +83,40 @@ function MainSection(): JSX.Element {
     };
   }, [selectedChannel]);
 
+  useEffect(() => {
+    if (selectedMessageData) {
+      setCommentList({
+        commentData: [],
+        isLoading: true,
+      });
+      getCommentList();
+    }
+
+    const receiveCommentHandler = (comment: CommentData) => {
+      if (selectedMessageData && selectedMessageData.id === comment.messageId) {
+        setCommentList((list) => {
+          return {
+            commentData: [...list.commentData, comment],
+            isLoading: false,
+          };
+        });
+      }
+    };
+
+    socket.on('receiveComment', receiveCommentHandler);
+
+    return () => {
+      socket.off('receiveComment', receiveCommentHandler);
+    };
+  }, [selectedMessageData]);
+
   return (
     <Container>
       <MainHeader />
       <MainBody>
-        <RoomListSection />
-        <ContentsSection messageList={messageList} />
+        {isJoinedServerExists && <RoomListSection />}
+        {isJoinedServerExists && <ContentsSection messageList={messageList} commentList={commentList} />}
+        {!isJoinedServerExists && <ServerJoinSection />}
       </MainBody>
     </Container>
   );

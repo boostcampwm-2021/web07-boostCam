@@ -7,6 +7,7 @@ const Container = styled.div<{ activated: boolean }>`
   visibility: ${(props) => (props.activated ? 'visible' : 'hidden')};
   transform: translateY(${(props) => (props.activated ? '0' : '-20')}px);
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  z-index: 10;
 `;
 
 const DropdownBackground = styled.div`
@@ -16,7 +17,7 @@ const DropdownBackground = styled.div`
   width: 200vw;
   height: 200vh;
   margin-left: -50vw;
-  margin-top: -50vh;
+  margin-top: -100vh;
   background-color: rgb(0, 0, 0, 0.1);
   z-index: 3;
 `;
@@ -40,7 +41,7 @@ const MenuList = styled.ul`
 type DropdownProps = {
   isDropdownActivated: boolean;
   setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
-  children: React.ReactChild[] | React.ReactChild;
+  children: Array<boolean | React.ReactChild> | React.ReactChild;
 };
 function Dropdown(props: DropdownProps): JSX.Element {
   const { isDropdownActivated, setIsDropdownActivated, children } = props;

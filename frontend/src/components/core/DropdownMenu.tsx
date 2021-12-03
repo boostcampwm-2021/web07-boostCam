@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { MainStoreContext } from '../Main/MainStore';
+import ModalContents from '../../types/modal';
+import { ToggleStoreContext } from '../Main/ToggleStore';
 
 const Container = styled.li`
   border-bottom: 1px solid #dddddd;
@@ -19,11 +20,11 @@ const Container = styled.li`
 type DropdownMenuProps = {
   name: string;
   setIsDropdownActivated: React.Dispatch<React.SetStateAction<boolean>>;
-  modalContents: JSX.Element;
+  modalContents: ModalContents;
 };
 
 function DropdownMenu(props: DropdownMenuProps): JSX.Element {
-  const { setModalContents, setIsModalOpen } = useContext(MainStoreContext);
+  const { setModalContents, setIsModalOpen } = useContext(ToggleStoreContext);
   const { name, setIsDropdownActivated, modalContents } = props;
 
   const onClickMenu = (e: React.MouseEvent<HTMLLIElement>) => {

@@ -42,6 +42,7 @@ describe('UserServerService', () => {
   const userId = 1;
   const serverId = 1;
   const existUserServerId = 1;
+  const userServerId = 2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -75,10 +76,9 @@ describe('UserServerService', () => {
       serverRepository.findOne.mockResolvedValue(server);
       userServerRepository.findByUserIdAndServerId.mockResolvedValue(undefined);
 
-      const newUserServer = await service.create(user, server.code);
+      const newUserServerId = await service.create(user, server.code);
 
-      expect(newUserServer.user).toBe(user);
-      expect(newUserServer.server).toBe(server);
+      expect(newUserServerId).toBe(userServerId);
     });
 
     it('서버가 존재하지 않는 경우', async () => {
@@ -186,6 +186,7 @@ describe('UserServerService', () => {
     server.code = v4();
 
     userServer = new UserServer();
+    userServer.id = userServerId;
     userServer.user = user;
     userServer.server = server;
 

@@ -58,6 +58,17 @@ function useSTT(): {
     makeNewRecognition();
   }, [isSTTActive]);
 
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.onaudioend = null;
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
+      }
+    };
+  }, []);
+
   return { lastResult, isSTTActive, isSpeaking, toggleSTTActive };
 }
 

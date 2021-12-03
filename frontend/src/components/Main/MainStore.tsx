@@ -1,7 +1,8 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
-import { CamData, ChannelData, MyServerData } from '../../types/main';
+import React, { createContext, useEffect, useRef, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { CamData, ChannelListData, MyServerData } from '../../types/main';
 import { MessageData } from '../../types/message';
+import { fetchData } from '../../utils/fetchMethods';
 
 export const MainStoreContext = createContext<React.ComponentState>(null);
 
@@ -9,50 +10,65 @@ type MainStoreProps = {
   children: React.ReactChild[] | React.ReactChild;
 };
 
-const socket = io('/message', {
-  withCredentials: true,
-});
-
 function MainStore(props: MainStoreProps): JSX.Element {
   const { children } = props;
   const [selectedServer, setSelectedServer] = useState<MyServerData>();
-  const [selectedChannel, setSelectedChannel] = useState<string>('');
+  const [selectedChannel, setSelectedChannel] = useState<number>(0);
   const [selectedMessageData, setSelectedMessageData] = useState<MessageData>();
   const [rightClickedChannelId, setRightClickedChannelId] = useState<string>('');
   const [rightClickedChannelName, setRightClickedChannelName] = useState<string>('');
-  const [serverChannelList, setServerChannelList] = useState<ChannelData[]>([]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContents, setModalContents] = useState<JSX.Element>(<></>);
+  const [serverChannelList, setServerChannelList] = useState<ChannelListData[]>([]);
 
   const [serverList, setServerList] = useState<MyServerData[]>([]);
 
   const [serverCamList, setServerCamList] = useState<CamData[]>([]);
 
+  const socketRef = useRef<Socket>();
+
+  if (!socketRef.current) {
+    const socket = io({
+      withCredentials: true,
+      forceNew: true,
+      transports: ['polling'],
+    });
+
+    socket.on('connect', () => {
+      socket.emit('joinChannels');
+    });
+
+    socketRef.current = socket;
+  }
+
   const getServerChannelList = async (): Promise<void> => {
-    const response = await fetch(`/api/user/servers/${selectedServer?.server.id}/channels/joined/`);
-    const list = await response.json();
-    const channelList = list.data;
+    const { data } = await fetchData<null, ChannelListData[]>(
+      'GET',
+      `/api/user/servers/${selectedServer?.server.id}/channels/joined/`,
+    );
+    const channelList = data;
     if (channelList.length) {
       setSelectedChannel(channelList[0].id);
     } else {
-      setSelectedChannel('');
+      setSelectedChannel(0);
     }
     setServerChannelList(channelList);
   };
 
   const getUserServerList = async (calledStatus: string | undefined): Promise<void> => {
-    const response = await fetch(`/api/user/servers`);
-    const list = await response.json();
+    const { statusCode, data } = await fetchData<null, MyServerData[]>('GET', `/api/user/servers`);
 
-    if (response.status === 200 && list.data.length !== 0) {
-      setServerList(list.data);
+    if (statusCode === 200) {
+      setServerList(data);
       if (calledStatus === 'updated') {
         const updatedServerId = selectedServer?.server.id;
-        setSelectedServer(list.data.filter((userServer: MyServerData) => userServer.server.id === updatedServerId)[0]);
+        setSelectedServer(data.filter((userServer: MyServerData) => userServer.server.id === updatedServerId)[0]);
+      } else if (calledStatus === 'created') {
+        const selectedServerIndex = data.length - 1;
+        setSelectedServer(data[selectedServerIndex]);
+      } else if (calledStatus === 'deleted') {
+        if (!serverList.length) setSelectedServer(undefined);
+        else setSelectedServer(data[0]);
       } else {
-        const selectedServerIndex = calledStatus === 'created' ? list.data.length - 1 : 0;
-        setSelectedServer(list.data[selectedServerIndex]);
+        setSelectedServer(data[0]);
       }
     }
   };
@@ -77,9 +93,7 @@ function MainStore(props: MainStoreProps): JSX.Element {
   return (
     <MainStoreContext.Provider
       value={{
-        socket,
-        isModalOpen,
-        modalContents,
+        socket: socketRef.current,
         selectedServer,
         selectedChannel,
         selectedMessageData,
@@ -88,8 +102,6 @@ function MainStore(props: MainStoreProps): JSX.Element {
         serverChannelList,
         serverList,
         serverCamList,
-        setIsModalOpen,
-        setModalContents,
         setSelectedServer,
         setSelectedChannel,
         setSelectedMessageData,

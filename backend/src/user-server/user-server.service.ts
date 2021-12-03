@@ -22,7 +22,7 @@ export class UserServerService {
     private userServerRepository: UserServerRepository,
   ) {}
 
-  async create(user: User, code: string): Promise<UserServer> {
+  async create(user: User, code: string): Promise<number> {
     const newUserServer = new UserServer();
     newUserServer.user = user;
     newUserServer.server = await this.serverService.findByCode(code);
@@ -38,7 +38,8 @@ export class UserServerService {
       throw new BadRequestException('이미 등록된 서버입니다.');
     }
 
-    return this.userServerRepository.save(newUserServer);
+    const newUserServerId = await this.userServerRepository.save(newUserServer);
+    return newUserServerId.id;
   }
 
   async deleteById(id: number, userId: number): Promise<DeleteResult> {

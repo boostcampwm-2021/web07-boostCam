@@ -8,7 +8,7 @@ import { Socket, Server } from 'socket.io';
 import { Status, MessageInfo } from '../types/cam';
 import { CamInnerService } from './cam-inner.service';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: '/cam' })
 export class CamGateway {
   @WebSocketServer() server: Server;
   constructor(private camInnerService: CamInnerService) {}
@@ -117,14 +117,14 @@ export class CamGateway {
     });
   }
 
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage('sendCamMessage')
   handleSendMessage(client: Socket, payload: MessageInfo): void {
     if (!client.data.roomId || !client.data.userId) return;
     const { roomId } = client.data;
     const nicknameInfo = this.camInnerService.getRoomNicknameList(roomId);
     client.broadcast
       .to(roomId)
-      .emit('receiveMessage', { payload, nicknameInfo });
+      .emit('receiveCamMessage', { payload, nicknameInfo });
   }
 
   @SubscribeMessage('changeNickname')
